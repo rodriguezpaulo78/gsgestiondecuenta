@@ -1,0 +1,69 @@
+/* body */
+body,html{
+    padding: 0;
+    margin: 0;
+    background-color: rgb(255, 255, 255);
+} 
+.container {
+    max-width: 100%;
+}
+/* nav y tabs */
+.custom-logo-navbar{
+    height: 15px;
+    font-size: 10px;
+}
+.custom-content-nav{
+    margin-top: -5px;
+    font-family: bold;
+}
+.custom-main-tab{
+    top: 15px; 
+    background-color: #f8f9fa;
+} 
+.custom-sub-main-tab{
+    top : 45px;
+    background-color: #f8f9fa;
+}
+.custom-sub-tab-content{
+    margin-top: 60px;
+}
+.custom-menu-navbar{
+    position: fixed;
+    overflow-y: auto;
+    flex-direction: column !important;
+    left:2%;
+} 
+/* content*/
+.custom-ingresos-content, .custom-egresos-content, .custom-inventario-content{
+    margin-top:90px;
+}
+.custom-card{
+    width: 90%;
+} 
+.custom-card-body{
+    padding-left: 5%;
+    margin-bottom: 10%;
+}
+/* .custom-nuevo-ingreso-content, .custom-registro-ingresos-content{
+} */
+
+/* custom heights*/
+.custom-h-25{ /* +5 white space*/
+    height: 30px;
+}
+/* form input*/
+.form-control{
+    margin-top: -5px;
+    width: 80%;
+}
+.custom-text-area{
+    width:90.5%;
+}
+/* tabla registros*/
+.custom-mt-tabla{
+   /* margin-top: 10%;*/
+}
+.custom-update-table{
+   /* margin-top: 80px;*/
+    float: right;
+}

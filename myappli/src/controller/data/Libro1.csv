@@ -1,0 +1,3 @@
+﻿id;nombreProducto;stockProducto;precioProducto;costVenta;sucursal;serie;codUnidadMedida
+1;pepelucho;21;9.25;11.62;PRINCIPAL;2166957;PR
+1;jacinto;26;9.22;72.12;PRINCIPAL;3580045;PK

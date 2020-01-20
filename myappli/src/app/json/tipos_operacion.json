@@ -1,0 +1,23 @@
+[
+    { "tipOperacion": "101", "nombreOperacion": "Venta interna" },
+    { "tipOperacion": "112", "nombreOperacion": "Venta Interna - Sustenta Gastos Deducibles Persona Natural" },
+    { "tipOperacion": "113", "nombreOperacion": "Venta Interna-NRUS" },
+    { "tipOperacion": "200", "nombreOperacion": "Exportación de Bienes" },
+    { "tipOperacion": "201", "nombreOperacion": "Exportación de Servicios – Prestación servicios realizados íntegramente en el país" },
+    { "tipOperacion": "202", "nombreOperacion": "Exportación de Servicios – Prestación de servicios de hospedaje No Domiciliado" },
+    { "tipOperacion": "203", "nombreOperacion": "Exportación de Servicios – Transporte de navieras" },
+    { "tipOperacion": "204", "nombreOperacion": "Exportación de Servicios – Servicios a naves y aeronaves de bandera extranjera" },
+    { "tipOperacion": "205", "nombreOperacion": "Exportación de Servicios - Servicios que conformen un Paquete Turístico" },
+    { "tipOperacion": "206", "nombreOperacion": "Exportación de Servicios – Servicios complementarios al transporte de carga" },
+    { "tipOperacion": "207", "nombreOperacion": "Exportación de Servicios – Suministro de energía eléctrica a favor de sujetos domiciliados en ZED" },
+    { "tipOperacion": "208", "nombreOperacion": "Exportación de Servicios – Prestación servicios realizados parcialmente en el extranjero" },
+    { "tipOperacion": "301", "nombreOperacion": "Operaciones con Carta de porte aéreo (emitidas en el ámbito nacional)" },
+    { "tipOperacion": "302", "nombreOperacion": "Operaciones de Transporte ferroviario de pasajeros" },
+    { "tipOperacion": "303", "nombreOperacion": "Operaciones de Pago de regalía petrolera" },
+    { "tipOperacion": "401", "nombreOperacion": "Ventas no domiciliados que no califican como exportación" },
+    { "tipOperacion": "1001", "nombreOperacion": "Operación Sujeta a Detracción" },
+    { "tipOperacion": "1002", "nombreOperacion": "Operación Sujeta a Detracción- Recursos Hidrobiológicos" },
+    { "tipOperacion": "1003", "nombreOperacion": "Operación Sujeta a Detracción- Servicios de Transporte Pasajeros" },
+    { "tipOperacion": "1004", "nombreOperacion": "Operación Sujeta a Detracción- Servicios de Transporte Carga" },
+    { "tipOperacion": "2001", "nombreOperacion": "Operación Sujeta a Percepción" }
+]

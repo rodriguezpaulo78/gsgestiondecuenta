@@ -1,0 +1,15 @@
+/*
+Equivalencias de PIXELES a CENTIMETROS
+1cm = 37.795
+
+UNA A4 mide: 210 x 297
+UNA A5 mide: 210 x 148
+UNA A6 mide: 105 x 148
+UNA A7 mide: 105 x 74
+ */
+
+.contenedor{
+    width: 102px;
+    height: 500px;
+    border: #000 solid 1px;
+}

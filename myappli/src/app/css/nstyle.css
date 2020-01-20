@@ -1,0 +1,185 @@
+/* INICIO */
+.body-atajos{
+    margin-top: 90px;
+    margin-left: 30px;
+    margin-right: 30px;
+}
+@media screen and (max-width: 768px) {
+    .body-atajos { padding-top: 50px; }
+}
+
+/* nuevo ingreso */
+.body-nuevo-ingreso{
+    margin-top: 10px;
+    margin-left: 30px;
+    margin-right: 30px;
+}
+.body-nuevo-egreso{
+    margin-top: 10px;
+}
+@media screen and (max-width: 768px) {
+    .body-nuevo-ingreso { padding-top: 50px; }
+}
+.custom-nav{
+    height: 45px;
+}
+/* selected tab */
+#operacion-tab.nav-link.active{
+    color:#007bff;
+}
+#estados_financieros-tab.nav-link.active{
+    color:#007bff;
+}
+.title-select{
+    border-top: none;
+    border-right: none;
+    border-left: none;   
+    border-bottom-color: #007bff;
+}
+#egresos-tab.nav-link.active{
+    color:#007bff;
+}
+#inventario-tab.nav-link.active{
+    color:#007bff;
+} 
+.custom-h-25{ /* +5 white space*/
+    height: 30px;
+}
+/* sub tabs*/
+.custom-sub-main-tab{
+    top : 45px;
+    background-color: #f8f9fa;
+}
+/*nuevo ingreso*/
+.custom-footer-text{
+    font-size: 14px;
+}
+#a_agregar{
+    color: #007bff;
+}
+/*registro ingresos */ 
+.body-registro-ingresos{
+    margin-top:10px;
+}
+.search-ingresos{
+    margin-top: 80px; /* 80 */
+} 
+.refresh-button-ingresos{
+    margin-top:0px;
+}
+/*registro egresos */ 
+.body-registro-egresos{
+    margin-top:10px;
+} 
+.refresh-button-egresos{
+    margin-top:80px;
+}  
+/*inventario*/
+.refresh-button-inventario{
+    margin-top:0px;
+}
+.search-inventario{
+    margin-top: 60px;
+}
+/*estados*/
+.ver-estados-financieros{
+    margin-top: 80px;
+}
+/*tabla estados*/
+.table-estados{
+    width: 90%;
+    margin-left: 5%;
+} 
+/*react table */
+.centerText{
+    text-align: center;
+}
+/*show display number rows*/
+/*.-pageSizeOptions {
+    display: none;
+}*/
+/*.rt-td {
+    white-space: normal !important
+} */
+.rt-resizable-header-content{
+    white-space: normal !important;
+    overflow: visible; 
+}/*
+#tablaItem {
+    margin-top: 74px;
+  }
+#rt-tbody {
+    margin-top: 30px;
+} 
+#rt-thead {
+    background-color: white;
+    position: fixed;
+    top: 1;
+    z-index: 1;
+    width: calc(100% - 17px);
+    height: 31px;
+    overflow: visible; 
+}
+*/
+/*modal*/
+.modal-dialog{
+    overflow-y: unset !important
+}
+
+.modal-body{
+    height: 400px;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+.md-modal-body{
+    margin-left: 5px;
+    margin-right: 5px;
+    height: 400px;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+@media (min-width: 768px) {
+    .modal-xl {
+        width: 90%;
+        max-width:1200px;
+    }
+}
+
+.small-modal-body{
+    padding: 20px;
+    height: auto;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+.light-content{
+   background-color:  #ECEFF1;    
+}
+.verItems{
+    height: 350px; 
+} 
+/*modal items registros*/
+.contenido-modal-items{
+    width: 115%;
+    margin-left: -80px;
+}
+/*tablas*/
+.custom-doubleclicked{
+    text-transform: uppercase;
+}
+
+/*alerts*/
+#message {
+    position: fixed;
+    left: 0;
+    width: 100%;
+    z-index: 1;
+    top: 72px;
+}
+#inner-message {
+    margin: 0 auto;
+}
+#message-body{
+    padding: 5px;
+}  

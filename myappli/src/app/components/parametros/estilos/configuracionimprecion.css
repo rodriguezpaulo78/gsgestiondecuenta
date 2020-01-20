@@ -1,0 +1,8 @@
+#fixed-bar {
+    bottom: 20px;
+    height: 34px;
+    padding: 13px 0 4px;
+    position: fixed;
+    width: 100%;
+    z-index: 5000;
+}
