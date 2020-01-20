@@ -1,0 +1,7 @@
+/node_modules
+/.idea
+/.vscode
+/src/sql/DIAGRAMA.mwb
+/src/sql/DIAGRAMA.mwb.bak
+/Gestiondecuentas.exe
+/tmpFiles

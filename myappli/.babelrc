@@ -1,0 +1,4 @@
+//Este archivo se relaciona con las dev dependencies de package.json
+{
+    "presets": ["env","react" ]
+}
