@@ -6,7 +6,6 @@ import SelectComponent from "../common2/selectcomponent";
 
 class AdministrarUsuarios extends Component {
 
-    
     //Constructor 
     constructor(props){
         super(props);
@@ -17,6 +16,10 @@ class AdministrarUsuarios extends Component {
             listaPerfiles: [],
             opciones_grupos: [],
 
+            //DATOS PERFIL 
+            nuevoNombrePerfil: '',
+            fecCreacionPerfil: '',
+            //DATOS USUARIO 
             idUsuarioEditar: '',
             nuevoNombre: '', 
             nuevoRUC: '',
@@ -47,6 +50,7 @@ class AdministrarUsuarios extends Component {
 
         // HANDLE SECTION
         this.handleClickButtonMenu = this.handleClickButtonMenu.bind(this);   
+        this.handleChangeInputComponent = this.handleChangeInputComponent.bind(this);
 
         // FETCH SECTION
         this.fetchUsuarios = this.fetchUsuarios.bind(this);
@@ -59,6 +63,8 @@ class AdministrarUsuarios extends Component {
 
         //Crear Perfil
         this.renderCrearPerfil = this.renderCrearPerfil.bind(this);
+        this.crearPerfil = this.crearPerfil.bind(this);
+        
 
         //Listar Usuarios
         this.renderListarUsuarios = this.renderListarUsuarios.bind(this);     
@@ -165,6 +171,21 @@ class AdministrarUsuarios extends Component {
         this.fetchPerfilesRegistrados();
         console.log("DATA PERFILES:", this.state.listaPerfiles);
 
+    }
+
+
+    handleChangeInputComponent(evt){
+        if (evt.target.value.length < 0){
+            this.setState({
+                [evt.target.name]: null,
+            });
+        }else{
+            console.log(evt.target.name, ": ", evt.target.value);
+            console.log(evt.target.name, ": ", this.state[evt.target.name]);
+            this.setState({
+                [evt.target.name]: evt.target.value,
+            });
+        }
     }
 
     //Función para limpiar todos los campos
@@ -407,12 +428,13 @@ class AdministrarUsuarios extends Component {
                             <InputComponent
                                 bloques={"col-12"}
                                 etiqueta={"Nombre de Perfil "}
-                                idInput={"nuevoTipoPerfil"}
-                                nombreInput={"nuevoTipoPerfil"}
+                                idInput={"nuevoNombrePerfil"}
+                                nombreInput={"nuevoNombrePerfil"}
                                 readOnly={false}
-                                valorDefecto={this.state.nuevoTipoPerfil}
-                                //funcionControl={this.handleChangeInputComponent}
+                                valorDefecto={this.state.nuevoNombrePerfil}
+                                funcionControl={this.handleChangeInputComponent}
                             />
+                            
                         </div>
                         <div className="form-row mt-">
                             <button className="btn btn-success btn-circle btn-circle-sm m-1">
@@ -421,7 +443,7 @@ class AdministrarUsuarios extends Component {
                         </div>
                         
                         <div className="form-row mt-">
-                            <h6>Aqui ira el combobox de grupos al apretar añadir permisos</h6>
+                            <h6>SelectComponent para los grupos de permisos </h6>
                             <SelectComponent
                                 bloques={"col-12"}
                                 etiqueta={"Grupos de Permisos"}
@@ -432,17 +454,23 @@ class AdministrarUsuarios extends Component {
                                 nombreValor={"idGrupo"}
                                 nombreMostrar={"nombreGrupo"}
                                 valorDefecto={this.state.nuevoGrupo}
-                                //funcionControl={this.handleChangeSelectComponent}
+                                funcionControl={this.handleChangeSelectComponent}
                             />
                         </div>
 
                         <div className="form-row mt-">
-                            <h6>Aqui ira checkbutton para los permisos segun grupo escogido</h6>
+                            <h6>CheckBox para los permisos del perfil</h6>
+                            <div>
+                                <label>Check 1</label>
+                                <input type="checkbox" id="chk1"className="chk11" checked={ this.state.checked } onChange={ this.handleChange } />
+                                <label>Check 2</label>
+                                <input type="checkbox" id="chk2" className="chk22" checked={ this.state.checked2 } onChange={ this.handleChange2 } />
+                            </div>
                         </div>
                     
                         <div className="form-row mt-1">
                             <button className="btn btn-success btn-block" onClick={this.crearPerfil}>
-                                CREAR PERFIL 
+                                REGISTRAR PERFIL 
                             </button>
                             <button className="btn btn-success btn-block" onClick={this.borrarTodo}>
                                 CANCELAR 
@@ -456,10 +484,66 @@ class AdministrarUsuarios extends Component {
         );
     }
 
+    //Función para obtener la fecha actual y darle el formato que tiene en la BD
+    getCurrentDate(separator='-'){
+        let newDate = new Date()
+        let date = newDate.getDate();
+        let month = newDate.getMonth() + 1;
+        let year = newDate.getFullYear();
+        
+        return `${year}${separator}${month<10?`0${month}`:`${month}`}${separator}${date}`
+    }
+    
      /*
         Función BackEnd para crear un Usuario
     */
     crearPerfil(){
+        this.state.fecCreacionPerfil = this.getCurrentDate(); //dar el valor que retorna la funcion a la variable fecCreacionPerfil
+        //console.log(this.state.fecCreacionPerfil);
+        if (this.state.nuevoNombrePerfil  == '') {
+            toast.error('Por favor llene todos los campos', { 
+                position: "bottom-right", 
+                autoClose: 2000, 
+                hideProgressBar: false,
+                closeOnClick: true, 
+                pauseOnHover: true, 
+                draggable: true, 
+                transition: "slide" });
+            return;
+        }else {
+            fetch('/perfiles/perfiles', {
+                method: 'POST',
+                body: JSON.stringify({
+                    nombrePerfil: this.state.nuevoNombrePerfil.toUpperCase(),
+                    fechaCreacion: this.state.fecCreacionPerfil.toUpperCase(),
+                }),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === "error"){
+                        toast.error('Vuelva a iniciar sesión, hay fallas en su autenticación.', { position: "bottom-right", autoClose: 2000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
+                    }else{
+                        console.log(data); //id que retorno
+                        if (data != -1) {
+                            toast.success('Nueva perfil agregada', { position: "bottom-right", autoClose: 2000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
+                            this.borrarTodo.bind(this);
+                        }
+                        if (data == -1) {
+                            toast.error('Perfil actualizada', { position: "bottom-right", autoClose: 2000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
+                        }
+                    }
+                })
+                .catch(err => console.log(err));
+
+            //clear
+            this.setState({
+                nuevoNombrePerfil: '',
+            });
+        }
     }
 
     /*

@@ -11,3 +11,15 @@ exports.obtenerPerfiles = function (req, res) {
         }
     });
 };
+
+exports.create_a_perfil = function(req, res) {
+    var new_perfil = new Perfil(req.body);
+    
+    Perfil.createPerfil(req.body.dataToken.cadenaDeConexion, new_perfil, function(err, perfil) {
+      
+      if (err)
+        res.send(err);
+      res.json(perfil);
+    });
+  
+  };
