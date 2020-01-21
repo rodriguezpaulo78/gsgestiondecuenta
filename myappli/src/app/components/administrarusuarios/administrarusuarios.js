@@ -1,18 +1,21 @@
 import React, {Component} from 'react';
-import {ToastContainer} from "react-toastify";
+import {toast, ToastContainer} from "react-toastify";
 import Editardatosusuario from "./editardatosusuario";
-
 import InputComponent from "../common2/inputcomponent";
+import SelectComponent from "../common2/selectcomponent";
 
 class AdministrarUsuarios extends Component {
 
+    
+    //Constructor 
     constructor(props){
         super(props);
         this.state = {
-            opcionElegida: 0,
+            opcionElegida: 0,       //Al comienzo no se elije nada y se muestra el texto 0
 
             listaUsuarios: [],
             listaPerfiles: [],
+            opciones_grupos: [],
 
             idUsuarioEditar: '',
             nuevoNombre: '', 
@@ -20,26 +23,7 @@ class AdministrarUsuarios extends Component {
             nuevoClave: '',
             nuevoTipoPerfil: '',
 
-            //
             // DATOS DE LA EMPRESA
-            rucE: '',
-            razonSocialE: '',
-            nombresE: '',
-            apellidoPaternoE: '',
-            apellidoMaternoE: '',
-            nombreComercialE: '',
-            usuarioSolE: '',
-            claveSolE: '',
-            direccionE: '',
-            ubigeoE: '',
-            urbanizacionE: '',
-            distritoE: '',
-            provinciaE: '',
-            departamentoE: '',
-            rubroE: '',
-            numeroDeContactoE: '',
-            imagenEmpresaE: '',
-
             nuevoRuc: null,
             nuevaRazonSocial: null,
             nuevoNombres: null,
@@ -57,31 +41,38 @@ class AdministrarUsuarios extends Component {
             nuevoRubro: null,
             nuevoNumeroDeContacto: null,
             nuevaImagenEmpresa: null,
+
+            nuevoGrupo: '',
         };
 
-        // RENDER SECTION
-        this.renderListarUsuarios = this.renderListarUsuarios.bind(this);
-        this.renderCrearUsuario = this.renderCrearUsuario.bind(this);
-        this.renderCrearPerfil = this.renderCrearPerfil.bind(this);
+        // HANDLE SECTION
+        this.handleClickButtonMenu = this.handleClickButtonMenu.bind(this);   
 
         // FETCH SECTION
         this.fetchUsuarios = this.fetchUsuarios.bind(this);
         this.fetchDeshabilitarUsuario = this.fetchDeshabilitarUsuario.bind(this);
         this.fetchPerfilesRegistrados = this.fetchPerfilesRegistrados.bind(this);
 
-        // HANDLE SECTION
-        this.handleClickButtonMenu = this.handleClickButtonMenu.bind(this);
+        //Crear Usuarios
+        this.renderCrearUsuario = this.renderCrearUsuario.bind(this);
+        this.crearUsuario = this.crearUsuario.bind(this);
+
+        //Crear Perfil
+        this.renderCrearPerfil = this.renderCrearPerfil.bind(this);
+
+        //Listar Usuarios
+        this.renderListarUsuarios = this.renderListarUsuarios.bind(this);     
+        this.obtenerNombrePerfil = this.obtenerNombrePerfil.bind(this);
+        this.editarDatos = this.editarDatos.bind(this);
 
         // FUNCTIONS
-        this.obtenerNombrePerfil = this.obtenerNombrePerfil.bind(this);
-
-        //USUARIO 
-        this.crearUsuario = this.crearUsuario.bind(this);
         this.borrarTodo = this.borrarTodo.bind(this);
 
     }
 
-    //Maneja el evento según la opción elegida y cambia el valor de esta variable.
+     /*
+        Función que recibe un evento 'name' a través de una acción(button) y actualiza el valor de 'opcionElegida' según tal
+    */
     handleClickButtonMenu(evt){
         console.log(evt.target.name);
 
@@ -145,7 +136,6 @@ class AdministrarUsuarios extends Component {
     }
 
     fetchDeshabilitarUsuario(idUsr){
-        // FUNCIÓN PARA DESHABILITAR USUARIO
         console.log("USR", idUsr);
         fetch(
             '/usuarios/usuarios/' + idUsr,{
@@ -169,22 +159,7 @@ class AdministrarUsuarios extends Component {
             .catch(err => console.log("Error FetchDehabilitarUsuario", err));
     }
 
-    editarDatos(idUsuario){
-        this.setState({
-            idUsuarioEditar: idUsuario,
-            opcionElegida: 4,
-        });
-    }
-
-    obtenerNombrePerfil(idPerfil){
-        for (let i = 0; i < this.state.listaPerfiles.length; i++){
-            if (this.state.listaPerfiles.idPerfil === parseInt(idPerfil)){
-                return this.state.listaPerfiles.nombrePerfil.toString();
-            }
-        }
-        return "sin definir".toString();
-    }
-
+    //Función que muestra los datos en la interfaz(METODO REACT)
     componentDidMount() {
         this.fetchUsuarios();
         this.fetchPerfilesRegistrados();
@@ -192,7 +167,22 @@ class AdministrarUsuarios extends Component {
 
     }
 
-    //Función para listar usuarios registrados
+    //Función para limpiar todos los campos
+    borrarTodo(){
+        console.log("BORRANDO TODO");
+        this.setState({
+            nuevoNombre: '', 
+            nuevoRUC: '',
+            nuevoClave: '',
+            nuevoTipoPerfil: '',
+            mostrarInput: false,
+
+        });
+    }
+
+    /*
+        Renderizar la lista de usuarios registrados
+    */
     renderListarUsuarios(){
         return (
             <div className="col-12">
@@ -234,124 +224,189 @@ class AdministrarUsuarios extends Component {
                 </table>
             </div>
         );
+    }   
+
+    //Función para obtener el Perfil del usuario y que sea mostrado en la Lista de Usuarios
+    obtenerNombrePerfil(idPerfil){
+        for (let i = 0; i < this.state.listaPerfiles.length; i++){
+            if (this.state.listaPerfiles.idPerfil === parseInt(idPerfil)){
+                return this.state.listaPerfiles.nombrePerfil.toString();
+            }
+        }
+        return "sin definir".toString();
     }
 
-    crearUsuario(){
 
-            if (this.state.nuevoNombre == '' || this.state.nuevoRUC == '' || this.state.nuevoClave == '' ||
-                this.state.nuevoTipoPerfil == '') {
-                toast.error('Por favor llene todos los campos', { position: "bottom-right", autoClose: 2000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
-                return;
-            }
-            else {
-                //add to bd
-                fetch('/api/usuarios/usuarios', {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        nombreUM: this.state.nuevoNombre.toUpperCase(),
-                        rucUM: this.state.nuevoRUC.toUpperCase(),
-                        claveUM: this.state.nuevoClave.toUpperCase(),
-                        tipoPerfilUM: this.state.nuevoTipoPerfil.toUpperCase()
-                    }),
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    }
-                })
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.status === "error"){
-                            toast.error('Vuelva a iniciar sesión, hay fallas en su autenticación.', { position: "bottom-right", autoClose: 2000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
-                        }else{
-                            console.log(data); //id que retorno
-                            if (data != -1) {
-                                toast.success('Nuevo usuario agregado agregada', { position: "bottom-right", autoClose: 2000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
-                                this.borrarTodo.bind(this);
-                            }
-                            if (data == -1) {
-                                toast.error('Uusario actualizada', { position: "bottom-right", autoClose: 2000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
-                            }
-                        }
-                    })
-                    .catch(err => console.log(err));
 
-                //clear
-                this.setState({
-                    nuevoNombreSucursal: '',
-                    nuevodireccionSucursal: '',
-                    nuevoDistrito: '',
-                    nuevoProvincia: '',
-                    nuevoDepartamento: '',
-                });
-            }
-        
-    }
-
-    borrarTodo(){
-        console.log("BORRANDO TODO");
+    //Función que recoge el idUsuario del usuario a Editar para obtener sus datos en el siguiente formulario
+    editarDatos(idUsuario){
         this.setState({
-            nuevoNombre: '', 
-            nuevoRUC: '',
-            nuevoClave: '',
-            nuevoTipoPerfil: '',
-            mostrarInput: false,
-
+            idUsuarioEditar: idUsuario,
+            opcionElegida: 4,
         });
     }
 
-    //Función para mostrar formulario para crear usuario
+     /*
+        Renderizar el formulario para crear un usuario
+    */
     renderCrearUsuario(){
-        return(
-            
+        return(       
         <React.Fragment>
+            <div className="row justify-content-center mb-2">
+                <div className="col-6">
+                    <div className="row">
+                        <div className="col-12 text-center">
+                            <h3>Crear Usuario</h3>
+                        </div>
+                    </div>
+                    <hr/>
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="form-row mt-1">
+                                <InputComponent
+                                        bloques={"col-12"}
+                                        etiqueta={" Nombre"}
+                                        idInput={"nuevoNombre"}
+                                        nombreInput={"nuevoNombre"}
+                                        readOnly={false}
+                                        valorDefecto={this.state.nuevoNombre}
+                                        //funcionControl={this.handleChangeInputComponent}
+                                />
+                            </div>
+                            <div className="form-row mt-1">
+                                <InputComponent
+                                        bloques={"col-12"}
+                                        etiqueta={"RUC"}
+                                        idInput={"nuevoRUC"}
+                                        nombreInput={"nuevoRUC"}
+                                        readOnly={false}
+                                        valorDefecto={this.state.nuevoRUC}
+                                        //funcionControl={this.handleChangeInputComponent}
+                                />
+                            </div>
+                            <div className="form-row mt-1">
+                                <InputComponent
+                                        bloques={"col-12"}
+                                        etiqueta={"Clave"}
+                                        idInput={"nuevoClave"}
+                                        nombreInput={"nuevoClave"}
+                                        readOnly={false}
+                                        valorDefecto={this.state.nuevoClave}
+                                        //funcionControl={this.handleChangeInputComponent}
+                                />
+                            </div>
+                            <div className="form-row mt-1">
+                                <InputComponent
+                                        bloques={"col-12"}
+                                        etiqueta={"Perfil"}
+                                        idInput={"nuevoTipoPerfil"}
+                                        nombreInput={"nuevoTipoPerfil"}
+                                        readOnly={false}
+                                        valorDefecto={this.state.nuevoTipoPerfil}
+                                        //funcionControl={this.handleChangeInputComponent}
+                                />
+                            </div>
+                                
+                            <div className="form-row justify-content-center mt-3">
+                                <div className="col-6">
+                                    <button
+                                            className="btn btn-success btn-block"
+                                            onClick={this.crearUsuario}
+                                    >
+                                            REGISTRAR USUARIO 
+                                    </button>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </React.Fragment>
         
-        <div className="row justify-content-center mb-2">
-        <div className="col-6">
+        );
+    }
+
+    /*
+        Función BackEnd para crear un Usuario
+    */
+    crearUsuario(){
+
+        if (this.state.nuevoNombre == '' || this.state.nuevoRUC == '' || this.state.nuevoClave == '' ||
+            this.state.nuevoTipoPerfil == '') {
+            toast.error('Por favor llene todos los campos', { position: "bottom-right", autoClose: 2000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
+            return;
+        }
+        else {
+            //Añadiendo a la BD 
+            fetch('/api/usuarios/usuarios', {
+                method: 'POST',
+                body: JSON.stringify({
+                    nombreUM: this.state.nuevoNombre.toUpperCase(),
+                    rucUM: this.state.nuevoRUC.toUpperCase(),
+                    claveUM: this.state.nuevoClave.toUpperCase(),
+                    tipoPerfilUM: this.state.nuevoTipoPerfil.toUpperCase()
+                }),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === "error"){
+                        toast.error('Vuelva a iniciar sesión, hay fallas en su autenticación.', { position: "bottom-right", autoClose: 2000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
+                    }else{
+                        console.log(data); //id que retorno
+                        if (data != -1) {
+                            toast.success('Nuevo usuario agregado agregada', { position: "bottom-right", autoClose: 2000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
+                            this.borrarTodo.bind(this);
+                        }
+                        if (data == -1) {
+                            toast.error('Uusario actualizada', { position: "bottom-right", autoClose: 2000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
+                        }
+                    }
+                })
+                .catch(err => console.log(err));
+
+            //clear
+            this.setState({
+                nuevoNombreSucursal: '',
+                nuevodireccionSucursal: '',
+                nuevoDistrito: '',
+                nuevoProvincia: '',
+                nuevoDepartamento: '',
+            });
+        }
+    }
+
+
+    
+    /*
+        Renderizar el formulario para crear un perfil
+    */
+    renderCrearPerfil(){
+        return(
+            <React.Fragment>
+                <div className="col-6">
                 <div className="row">
                     <div className="col-12 text-center">
-                        <h3>Crear Usuario</h3>
+                        <h3>Crear Perfil</h3>
                     </div>
                 </div>
                 <hr/>
                 <div className="row">
                     <div className="col-12">
                         <div className="form-row mt-1">
-                            <InputComponent
-                                bloques={"col-12"}
-                                etiqueta={" Nombre"}
-                                idInput={"nuevoNombre"}
-                                nombreInput={"nuevoNombre"}
-                                readOnly={false}
-                                valorDefecto={this.state.nuevoNombre}
-                                //funcionControl={this.handleChangeInputComponent}
-                            />
+                            <h5>ID: <span className="label label-default">{
+                                //El ID del perfil que corresponda 
+                                this.state.opcionElegida
+                            }</span></h5>
                         </div>
                         <div className="form-row mt-1">
                             <InputComponent
                                 bloques={"col-12"}
-                                etiqueta={"RUC"}
-                                idInput={"nuevoRUC"}
-                                nombreInput={"nuevoRUC"}
-                                readOnly={false}
-                                valorDefecto={this.state.nuevoRUC}
-                                //funcionControl={this.handleChangeInputComponent}
-                            />
-                        </div>
-                        <div className="form-row mt-1">
-                            <InputComponent
-                                bloques={"col-12"}
-                                etiqueta={"Clave"}
-                                idInput={"nuevoClave"}
-                                nombreInput={"nuevoClave"}
-                                readOnly={false}
-                                valorDefecto={this.state.nuevoClave}
-                                //funcionControl={this.handleChangeInputComponent}
-                            />
-                        </div>
-                        <div className="form-row mt-1">
-                            <InputComponent
-                                bloques={"col-12"}
-                                etiqueta={"Perfil"}
+                                etiqueta={"Nombre de Perfil "}
                                 idInput={"nuevoTipoPerfil"}
                                 nombreInput={"nuevoTipoPerfil"}
                                 readOnly={false}
@@ -359,362 +414,66 @@ class AdministrarUsuarios extends Component {
                                 //funcionControl={this.handleChangeInputComponent}
                             />
                         </div>
+                        <div className="form-row mt-">
+                            <button className="btn btn-success btn-circle btn-circle-sm m-1">
+                                <i className="fa fa-plus">  Añadir permisos</i>
+                            </button>
+                        </div>
                         
-                        <div className="form-row justify-content-center mt-3">
-                            <div className="col-6">
-                                <button
-                                    className="btn btn-success btn-block"
-                                    onClick={this.crearUsuario}
-                                >
-                                    REGISTRAR USUARIO 
-                                </button>
-                            </div>
+                        <div className="form-row mt-">
+                            <h6>Aqui ira el combobox de grupos al apretar añadir permisos</h6>
+                            <SelectComponent
+                                bloques={"col-12"}
+                                etiqueta={"Grupos de Permisos"}
+                                idSelect={"nuevoGrupo"}
+                                nombreSelect={"nuevoGrupo"}
+                                esJson={true}
+                                contenido={this.state.opciones_grupos}
+                                nombreValor={"idGrupo"}
+                                nombreMostrar={"nombreGrupo"}
+                                valorDefecto={this.state.nuevoGrupo}
+                                //funcionControl={this.handleChangeSelectComponent}
+                            />
                         </div>
+
+                        <div className="form-row mt-">
+                            <h6>Aqui ira checkbutton para los permisos segun grupo escogido</h6>
+                        </div>
+                    
+                        <div className="form-row mt-1">
+                            <button className="btn btn-success btn-block" onClick={this.crearPerfil}>
+                                CREAR PERFIL 
+                            </button>
+                            <button className="btn btn-success btn-block" onClick={this.borrarTodo}>
+                                CANCELAR 
+                            </button>
+                        </div>
+                       
                     </div>
                 </div>
             </div>
-
-
-            <ToastContainer
-                position="bottom-right"
-                autoClose={1000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnVisibilityChange
-                draggable
-                pauseOnHover
-            />
-            <div className="row">
-                <div className="col-12">
-                    <div className="row">
-                        <div className="col-12 text-center">
-                            <h3>Cambiar Datos Empresa</h3>
-                        </div>
-                    </div>
-                    <hr/>
-                    <div className="row">
-                        <div className="col-4">
-                            <div className="form-row mt-2">
-                                <InputComponent
-                                    tipoInput={"number"}
-                                    unaLinea={true}
-                                    labelBloques={"col-4"}
-                                    bloques={"col-8"}
-                                    etiqueta={"RUC"}
-                                    idInput={"nuevoRuc"}
-                                    nombreInput={"nuevoRuc"}
-                                    readOnly={false}
-                                    valorDefecto={this.state.nuevoRuc}
-                                    placeholder={this.state.rucE}
-                                    funcionControl={this.handleChangeInputComponent}
-                                />
-                            </div>
-                        </div>
-                        <div className="col-8">
-                            <div className="form-row mt-2">
-                                <InputComponent
-                                    unaLinea={true}
-                                    labelBloques={"col-2"}
-                                    bloques={"col-10"}
-                                    etiqueta={"Razón Social"}
-                                    idInput={"nuevaRazonSocial"}
-                                    nombreInput={"nuevaRazonSocial"}
-                                    readOnly={false}
-                                    valorDefecto={this.state.nuevaRazonSocial}
-                                    placeholder={this.state.razonSocialE}
-                                    funcionControl={this.handleChangeInputComponent}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-4">
-                            <div className="form-row mt-2">
-                                <InputComponent
-                                    unaLinea={true}
-                                    labelBloques={"col-4"}
-                                    bloques={"col-8"}
-                                    etiqueta={"Nombres"}
-                                    idInput={"nuevoNombres"}
-                                    nombreInput={"nuevoNombres"}
-                                    readOnly={false}
-                                    valorDefecto={this.state.nuevoNombres}
-                                    placeholder={this.state.nombresE}
-                                    funcionControl={this.handleChangeInputComponent}
-                                />
-                            </div>
-                        </div>
-                        <div className="col-4">
-                            <div className="form-row mt-2">
-                                <InputComponent
-                                    unaLinea={true}
-                                    labelBloques={"col-4"}
-                                    bloques={"col-8"}
-                                    etiqueta={"Apellidos Paternos"}
-                                    idInput={"nuevoApellidoPaterno"}
-                                    nombreInput={"nuevoApellidoPaterno"}
-                                    readOnly={false}
-                                    valorDefecto={this.state.nuevoApellidoPaterno}
-                                    placeholder={this.state.apellidoPaternoE}
-                                    funcionControl={this.handleChangeInputComponent}
-                                />
-                            </div>
-                        </div>
-                        <div className="col-4">
-                            <div className="form-row mt-2">
-                                <InputComponent
-                                    unaLinea={true}
-                                    labelBloques={"col-4"}
-                                    bloques={"col-8"}
-                                    etiqueta={"Apellido Materno"}
-                                    idInput={"nuevoApellidoMaterno"}
-                                    nombreInput={"nuevoApellidoMaterno"}
-                                    readOnly={false}
-                                    valorDefecto={this.state.nuevoApellidoMaterno}
-                                    placeholder={this.state.apellidoMaternoE}
-                                    funcionControl={this.handleChangeInputComponent}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-12">
-                            <div className="form-row mt-2">
-                                <InputComponent
-                                    unaLinea={true}
-                                    labelBloques={"col-2"}
-                                    bloques={"col-10"}
-                                    etiqueta={"Nombre Comercial"}
-                                    idInput={"nuevoNombreComercial"}
-                                    nombreInput={"nuevoNombreComercial"}
-                                    readOnly={false}
-                                    valorDefecto={this.state.nuevoNombreComercial}
-                                    placeholder={this.state.nombreComercialE}
-                                    funcionControl={this.handleChangeInputComponent}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-6">
-                            <div className="form-row mt-2">
-                                <InputComponent
-                                    unaLinea={true}
-                                    labelBloques={"col-4"}
-                                    bloques={"col-8"}
-                                    etiqueta={"Usuario Sol"}
-                                    idInput={"nuevoUsuarioSol"}
-                                    nombreInput={"nuevoUsuarioSol"}
-                                    readOnly={false}
-                                    valorDefecto={this.state.nuevoUsuarioSol}
-                                    placeholder={this.state.usuarioSolE}
-                                    funcionControl={this.handleChangeInputComponent}
-                                />
-                            </div>
-                        </div>
-                        <div className="col-6">
-                            <div className="form-row mt-2">
-                                <InputComponent
-                                    tipoInput={"password"}
-                                    unaLinea={true}
-                                    labelBloques={"col-4"}
-                                    bloques={"col-8"}
-                                    etiqueta={"Clave Sol"}
-                                    idInput={"nuevaClaveSol"}
-                                    nombreInput={"nuevaClaveSol"}
-                                    readOnly={false}
-                                    valorDefecto={this.state.nuevaClaveSol}
-                                    funcionControl={this.handleChangeInputComponent}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-12">
-                            <div className="form-row mt-2">
-                                <InputComponent
-                                    unaLinea={true}
-                                    labelBloques={"col-2"}
-                                    bloques={"col-10"}
-                                    etiqueta={"Dirección"}
-                                    idInput={"nuevaDireccion"}
-                                    nombreInput={"nuevaDireccion"}
-                                    readOnly={false}
-                                    valorDefecto={this.state.nuevaDireccion}
-                                    placeholder={this.state.direccionE}
-                                    funcionControl={this.handleChangeInputComponent}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-6">
-                            <div className="form-row mt-2">
-                                <InputComponent
-                                    unaLinea={true}
-                                    labelBloques={"col-4"}
-                                    bloques={"col-8"}
-                                    etiqueta={"Urbanizacion"}
-                                    idInput={"nuevaUrbanizacion"}
-                                    nombreInput={"nuevaUrbanizacion"}
-                                    readOnly={false}
-                                    valorDefecto={this.state.nuevaUrbanizacion}
-                                    placeholder={this.state.urbanizacionE}
-                                    funcionControl={this.handleChangeInputComponent}
-                                />
-                            </div>
-                        </div>
-                        <div className="col-6">
-                            <div className="form-row mt-2">
-                                <InputComponent
-                                    unaLinea={true}
-                                    labelBloques={"col-4"}
-                                    bloques={"col-8"}
-                                    etiqueta={"Distrito"}
-                                    idInput={"nuevoDistritoE"}
-                                    nombreInput={"nuevoDistritoE"}
-                                    readOnly={false}
-                                    valorDefecto={this.state.nuevoDistritoE}
-                                    placeholder={this.state.distritoE}
-                                    funcionControl={this.handleChangeInputComponent}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-6">
-                            <div className="form-row mt-2">
-                                <InputComponent
-                                    unaLinea={true}
-                                    labelBloques={"col-4"}
-                                    bloques={"col-8"}
-                                    etiqueta={"Provincia"}
-                                    idInput={"nuevaProvincia"}
-                                    nombreInput={"nuevaProvincia"}
-                                    readOnly={false}
-                                    valorDefecto={this.state.nuevaProvincia}
-                                    placeholder={this.state.provinciaE}
-                                    funcionControl={this.handleChangeInputComponent}
-                                />
-                            </div>
-                        </div>
-                        <div className="col-6">
-                            <div className="form-row mt-2">
-                                <InputComponent
-                                    unaLinea={true}
-                                    labelBloques={"col-4"}
-                                    bloques={"col-8"}
-                                    etiqueta={"Departamento"}
-                                    idInput={"nuevoDepartamentoE"}
-                                    nombreInput={"nuevoDepartamentoE"}
-                                    readOnly={false}
-                                    valorDefecto={this.state.nuevoDepartamentoE}
-                                    placeholder={this.state.departamentoE}
-                                    funcionControl={this.handleChangeInputComponent}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-6">
-                            <div className="form-row mt-2">
-                                <InputComponent
-                                    unaLinea={true}
-                                    labelBloques={"col-4"}
-                                    bloques={"col-8"}
-                                    etiqueta={"Ubigeo"}
-                                    idInput={"nuevoUbigeo"}
-                                    nombreInput={"nuevoUbigeo"}
-                                    readOnly={false}
-                                    valorDefecto={this.state.nuevoUbigeo}
-                                    placeholder={this.state.ubigeoE}
-                                    funcionControl={this.handleChangeInputComponent}
-                                />
-                            </div>
-                        </div>
-                        <div className="col-6">
-                            <div className="form-row mt-2">
-                                <InputComponent
-                                    tipoInput={"number"}
-                                    unaLinea={true}
-                                    labelBloques={"col-4"}
-                                    bloques={"col-8"}
-                                    etiqueta={"Número de Contacto"}
-                                    idInput={"nuevoNumeroDeContacto"}
-                                    nombreInput={"nuevoNumeroDeContacto"}
-                                    readOnly={false}
-                                    valorDefecto={this.state.nuevoNumeroDeContacto}
-                                    placeholder={this.state.numeroDeContactoE}
-                                    funcionControl={this.handleChangeInputComponent}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-12">
-                            <div className="form-row mt-2">
-                                <InputComponent
-                                    unaLinea={true}
-                                    labelBloques={"col-2"}
-                                    bloques={"col-10"}
-                                    etiqueta={"Rubros"}
-                                    idInput={"nuevoRubro"}
-                                    nombreInput={"nuevoRubro"}
-                                    readOnly={false}
-                                    valorDefecto={this.state.nuevoRubro}
-                                    placeholder={this.state.rubroE}
-                                    funcionControl={this.handleChangeInputComponent}
-                                />
-                            </div>
-
-                            <div className="form-row mt-2">
-                                <InputComponent
-                                    unaLinea={true}
-                                    labelBloques={"col-2"}
-                                    bloques={"col-10"}
-                                    etiqueta={"Imagen de la Empresa(link)"}
-                                    idInput={"nuevaImagenEmpresa"}
-                                    nombreInput={"nuevaImagenEmpresa"}
-                                    readOnly={false}
-                                    valorDefecto={this.state.nuevaImagenEmpresa}
-                                    placeholder={this.state.imagenEmpresaE}
-                                    funcionControl={this.handleChangeInputComponent}
-                                />
-                            </div>
-                            <div className="form-row justify-content-center mt-3">
-                                <div className="col-6">
-                                    <button
-                                        className="btn btn-success btn-block"
-                                        onClick={this.crearNuevo}
-                                    >
-                                        ACTUALIZAR DATOS DE EMPRESA
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        </React.Fragment>
-        
+            </React.Fragment>
         );
     }
 
-    //Función para mostrar formulario para crear PERFIL
-    renderCrearPerfil(){
-        return(
-            <div></div>
-        );
+     /*
+        Función BackEnd para crear un Usuario
+    */
+    crearPerfil(){
     }
 
-    //Función para renderizar la vista.
+    /*
+        Función para dibujar la vista a través de los métodos y clases
+        - ToastContainer: Sirve para mostrar alertas al usuario
+        -   1RA PARTE: al presionar entre las opciones Listar, Crear u, Crear p, llama a la función handleClick()  la cual según el 'name' del 
+            button le dará un valor a 'opcion elegida' 
+        -   2DA PARTE: Dibuja la interfaz  a través de la obtención del valor de 'opcion elegida'  
+    */
     render() {
         return (
             <React.Fragment>
                 <div className="row justify-content-center mb-2">
+                
                     <ToastContainer
                         position="bottom-right"
                         autoClose={1000}
@@ -726,6 +485,7 @@ class AdministrarUsuarios extends Component {
                         draggable
                         pauseOnHover
                     />
+                    
                     <div className="col-6 text-center">
                         <button
                             name="btnListarUsuarios"
@@ -750,6 +510,7 @@ class AdministrarUsuarios extends Component {
                         </button>
                     </div>
                 </div>
+
                 <div className="row justify-content-center mt-5">
                     {
                         this.state.opcionElegida === 0 && (
@@ -764,6 +525,7 @@ class AdministrarUsuarios extends Component {
                     { this.state.opcionElegida === 3 && this.renderCrearPerfil() }
                     { this.state.opcionElegida === 4 && <Editardatosusuario idUsuario={this.state.idUsuarioEditar}/> }
                 </div>
+
             </React.Fragment>
         );
     }
