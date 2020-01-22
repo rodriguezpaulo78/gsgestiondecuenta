@@ -77,6 +77,24 @@ class Perfil{
                 }
             });
     }
+
+    //Función que hace la consulta a la BD para obtener todos los grupos de permisos.
+    static getAllGrupo(cadenaDeConexion, result) {
+        sqlNegocio(
+            cadenaDeConexion,
+            `select  nombreGrupo from   grupos   ` ,
+            [],
+            function (err, res) {
+                if (err) {
+                    console.log("error: ", err);
+                    result(null, err);
+                }
+                else {
+                    console.log('grupos : ', res);
+                    result(null, res);
+                }
+            });
+    }
 }
 
 module.exports = Perfil;

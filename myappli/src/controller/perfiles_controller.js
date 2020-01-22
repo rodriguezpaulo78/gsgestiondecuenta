@@ -23,3 +23,14 @@ exports.create_a_perfil = function(req, res) {
     });
   
   };
+
+  exports.list_all_grupo = function(req, res) {
+    Perfil.getAllGrupo(req.body.dataToken.cadenaDeConexion, function(err, grupo) {
+  
+      console.log('controller')
+      if (err)
+        res.send(err);
+        console.log('res', grupo);
+      res.send(grupo);
+    });
+  };

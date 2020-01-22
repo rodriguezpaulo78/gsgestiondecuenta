@@ -47,8 +47,10 @@ app.use('/api/utilidad', require('./src/routes/ingresos.routes'));
 app.use('/api/cuentasxpagar', require('./src/routes/ingresos.routes'));
 app.use('/api/inventarios', require('./src/routes/inventarios.routes'));
 app.use('/api/sucursales', require('./src/routes/sucursales.routes'));
+
 app.use('/api/partidas', require('./src/routes/partidas.routes'));
 app.use('/api/grupos', require('./src/routes/partidas.routes'));
+
 app.use('/api/clientes', require('./src/routes/clientes.routes'));
 app.use('/api/productos', require('./src/routes/productos.routes'));
 app.use('/api/detalles', require('./src/routes/detalles.routes'));
@@ -58,5 +60,8 @@ app.use('/api/negocio', require('./src/routes/negocio.router'));
 app.use('/api/comprobante', require('./src/routes/contadores.routes'));
 app.use('/myappli/', require('./src/routes/acceso.routes'));
 app.use('/usuarios', require('./src/routes/usuarios.routes'));
+
+//para perfiles.routes hay 2 rutas que seguir (revisar)
 app.use('/perfiles', require('./src/routes/perfiles.routes'));
+app.use('/api/grupos', require('./src/routes/perfiles.routes'));
 

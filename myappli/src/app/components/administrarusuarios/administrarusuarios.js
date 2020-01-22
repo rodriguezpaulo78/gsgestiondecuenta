@@ -14,11 +14,14 @@ class AdministrarUsuarios extends Component {
 
             listaUsuarios: [],
             listaPerfiles: [],
-            opciones_grupos: [],
-
+            
             //DATOS PERFIL 
             nuevoNombrePerfil: '',
             fecCreacionPerfil: '',
+            //Permisos
+            opciones_grupos: [],
+            nuevoGrupo: '',
+
             //DATOS USUARIO 
             idUsuarioEditar: '',
             nuevoNombre: '', 
@@ -45,17 +48,19 @@ class AdministrarUsuarios extends Component {
             nuevoNumeroDeContacto: null,
             nuevaImagenEmpresa: null,
 
-            nuevoGrupo: '',
+            
         };
 
         // HANDLE SECTION
         this.handleClickButtonMenu = this.handleClickButtonMenu.bind(this);   
         this.handleChangeInputComponent = this.handleChangeInputComponent.bind(this);
+        this.handleChangeSelectComponent = this.handleChangeSelectComponent.bind(this);
 
         // FETCH SECTION
         this.fetchUsuarios = this.fetchUsuarios.bind(this);
         this.fetchDeshabilitarUsuario = this.fetchDeshabilitarUsuario.bind(this);
         this.fetchPerfilesRegistrados = this.fetchPerfilesRegistrados.bind(this);
+        this.fetchPerfilesGrupo = this.fetchPerfilesGrupo.bind(this);
 
         //Crear Usuarios
         this.renderCrearUsuario = this.renderCrearUsuario.bind(this);
@@ -64,7 +69,6 @@ class AdministrarUsuarios extends Component {
         //Crear Perfil
         this.renderCrearPerfil = this.renderCrearPerfil.bind(this);
         this.crearPerfil = this.crearPerfil.bind(this);
-        
 
         //Listar Usuarios
         this.renderListarUsuarios = this.renderListarUsuarios.bind(this);     
@@ -169,11 +173,12 @@ class AdministrarUsuarios extends Component {
     componentDidMount() {
         this.fetchUsuarios();
         this.fetchPerfilesRegistrados();
+        this.fetchPerfilesGrupo();
         console.log("DATA PERFILES:", this.state.listaPerfiles);
 
     }
 
-
+    //Funcion necesaria para poder cambiar los valores del INPUTCOMPONENT
     handleChangeInputComponent(evt){
         if (evt.target.value.length < 0){
             this.setState({
@@ -188,6 +193,25 @@ class AdministrarUsuarios extends Component {
         }
     }
 
+    //Funcion necesaria para poder elegir entre  los valores del SELECTCOMPONENT
+    handleChangeSelectComponent(evt){
+        if (evt.target.name === "nuevoGrupo"){
+            if (evt.target.value === "OTRO"){
+                this.setState({
+                    //mostrarInput: true,
+                });
+            }else{
+                this.setState({
+                    //mostrarInput: false,
+                });
+            }
+            this.setState({
+                nuevoGrupo: evt.target.value,
+            });
+        }
+    }
+
+
     //Función para limpiar todos los campos
     borrarTodo(){
         console.log("BORRANDO TODO");
@@ -197,6 +221,8 @@ class AdministrarUsuarios extends Component {
             nuevoClave: '',
             nuevoTipoPerfil: '',
             mostrarInput: false,
+            nuevoNombrePerfil: '',
+            nuevoGrupo: '',
 
         });
     }
@@ -291,7 +317,7 @@ class AdministrarUsuarios extends Component {
                                         nombreInput={"nuevoNombre"}
                                         readOnly={false}
                                         valorDefecto={this.state.nuevoNombre}
-                                        //funcionControl={this.handleChangeInputComponent}
+                                        funcionControl={this.handleChangeInputComponent}
                                 />
                             </div>
                             <div className="form-row mt-1">
@@ -302,7 +328,7 @@ class AdministrarUsuarios extends Component {
                                         nombreInput={"nuevoRUC"}
                                         readOnly={false}
                                         valorDefecto={this.state.nuevoRUC}
-                                        //funcionControl={this.handleChangeInputComponent}
+                                        funcionControl={this.handleChangeInputComponent}
                                 />
                             </div>
                             <div className="form-row mt-1">
@@ -313,7 +339,7 @@ class AdministrarUsuarios extends Component {
                                         nombreInput={"nuevoClave"}
                                         readOnly={false}
                                         valorDefecto={this.state.nuevoClave}
-                                        //funcionControl={this.handleChangeInputComponent}
+                                        funcionControl={this.handleChangeInputComponent}
                                 />
                             </div>
                             <div className="form-row mt-1">
@@ -324,7 +350,7 @@ class AdministrarUsuarios extends Component {
                                         nombreInput={"nuevoTipoPerfil"}
                                         readOnly={false}
                                         valorDefecto={this.state.nuevoTipoPerfil}
-                                        //funcionControl={this.handleChangeInputComponent}
+                                        funcionControl={this.handleChangeInputComponent}
                                 />
                             </div>
                                 
@@ -443,7 +469,7 @@ class AdministrarUsuarios extends Component {
                         </div>
                         
                         <div className="form-row mt-">
-                            <h6>SelectComponent para los grupos de permisos </h6>
+                            <h6>Al hacer click en añadir permisos abrir el Select </h6>
                             <SelectComponent
                                 bloques={"col-12"}
                                 etiqueta={"Grupos de Permisos"}
@@ -459,8 +485,9 @@ class AdministrarUsuarios extends Component {
                         </div>
 
                         <div className="form-row mt-">
-                            <h6>CheckBox para los permisos del perfil</h6>
+                            <h6>Al hacer click en un grupo mostrar sus permisos checkbox</h6>
                             <div>
+                                
                                 <label>Check 1</label>
                                 <input type="checkbox" id="chk1"className="chk11" checked={ this.state.checked } onChange={ this.handleChange } />
                                 <label>Check 2</label>
@@ -494,13 +521,28 @@ class AdministrarUsuarios extends Component {
         return `${year}${separator}${month<10?`0${month}`:`${month}`}${separator}${date}`
     }
     
+    //Funcion que obtiene los nombres de los Grupos y los inserta en el arreglo opciones_grupos
+    fetchPerfilesGrupo() {
+        fetch('/perfiles/grupos')
+            .then(res => res.json())
+            .then(
+                data => {
+                    if (data.status === "error"){
+                        toast.error('Vuelva a iniciar sesión, hay fallas en su autenticación.', { position: "bottom-right", autoClose: 2000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
+                    }else{
+                        this.setState({ opciones_grupos: [...data] });
+                    }
+                })
+            .catch(err => console.log(err));
+    }
+
      /*
         Función BackEnd para crear un Usuario
     */
     crearPerfil(){
         this.state.fecCreacionPerfil = this.getCurrentDate(); //dar el valor que retorna la funcion a la variable fecCreacionPerfil
         //console.log(this.state.fecCreacionPerfil);
-        if (this.state.nuevoNombrePerfil  == '') {
+        if (this.state.nuevoNombrePerfil  == '' || this.state.nuevoGrupo == '') {
             toast.error('Por favor llene todos los campos', { 
                 position: "bottom-right", 
                 autoClose: 2000, 
@@ -516,6 +558,7 @@ class AdministrarUsuarios extends Component {
                 body: JSON.stringify({
                     nombrePerfil: this.state.nuevoNombrePerfil.toUpperCase(),
                     fechaCreacion: this.state.fecCreacionPerfil.toUpperCase(),
+                    idGrupo: this.state.nuevoGrupo,
                 }),
                 headers: {
                     'Accept': 'application/json',
@@ -542,6 +585,7 @@ class AdministrarUsuarios extends Component {
             //clear
             this.setState({
                 nuevoNombrePerfil: '',
+                nuevoGrupo: '',
             });
         }
     }
