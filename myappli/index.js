@@ -40,11 +40,13 @@ app.listen(app.get('port'), () => {
 
 //Routes
 app.use('/api/tasks', require('./src/routes/app.routes'));
+
 app.use('/api/ingresos', require('./src/routes/ingresos.routes'));
 app.use('/api/pagos', require('./src/routes/ingresos.routes'));
 app.use('/api/reportes', require('./src/routes/ingresos.routes'));
 app.use('/api/utilidad', require('./src/routes/ingresos.routes'));
 app.use('/api/cuentasxpagar', require('./src/routes/ingresos.routes'));
+
 app.use('/api/inventarios', require('./src/routes/inventarios.routes'));
 app.use('/api/sucursales', require('./src/routes/sucursales.routes'));
 
@@ -64,4 +66,5 @@ app.use('/usuarios', require('./src/routes/usuarios.routes'));
 //para perfiles.routes hay 2 rutas que seguir (revisar)
 app.use('/perfiles', require('./src/routes/perfiles.routes'));
 app.use('/api/grupos', require('./src/routes/perfiles.routes'));
+
 

@@ -34,3 +34,14 @@ exports.create_a_perfil = function(req, res) {
       res.send(grupo);
     });
   };
+
+  exports.list_all_permisos = function(req, res) {
+    Perfil.getAllPermisos(req.body.dataToken.cadenaDeConexion, function(err, permiso) {
+  
+      console.log('controller')
+      if (err)
+        res.send(err);
+        console.log('res', permiso);
+      res.send(permiso);
+    });
+  };

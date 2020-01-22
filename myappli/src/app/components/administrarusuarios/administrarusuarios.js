@@ -20,6 +20,7 @@ class AdministrarUsuarios extends Component {
             fecCreacionPerfil: '',
             //Permisos
             opciones_grupos: [],
+            opciones_permisos: [],
             nuevoGrupo: '',
 
             //DATOS USUARIO 
@@ -61,6 +62,7 @@ class AdministrarUsuarios extends Component {
         this.fetchDeshabilitarUsuario = this.fetchDeshabilitarUsuario.bind(this);
         this.fetchPerfilesRegistrados = this.fetchPerfilesRegistrados.bind(this);
         this.fetchPerfilesGrupo = this.fetchPerfilesGrupo.bind(this);
+        this.fetchPermisosGrupo = this.fetchPermisosGrupo.bind(this);
 
         //Crear Usuarios
         this.renderCrearUsuario = this.renderCrearUsuario.bind(this);
@@ -316,7 +318,7 @@ class AdministrarUsuarios extends Component {
                                         idInput={"nuevoNombre"}
                                         nombreInput={"nuevoNombre"}
                                         readOnly={false}
-                                        valorDefecto={this.state.nuevoNombre}
+                                        //valorDefecto={this.state.nuevoNombre}
                                         funcionControl={this.handleChangeInputComponent}
                                 />
                             </div>
@@ -327,7 +329,7 @@ class AdministrarUsuarios extends Component {
                                         idInput={"nuevoRUC"}
                                         nombreInput={"nuevoRUC"}
                                         readOnly={false}
-                                        valorDefecto={this.state.nuevoRUC}
+                                        //valorDefecto={this.state.nuevoRUC}
                                         funcionControl={this.handleChangeInputComponent}
                                 />
                             </div>
@@ -338,7 +340,7 @@ class AdministrarUsuarios extends Component {
                                         idInput={"nuevoClave"}
                                         nombreInput={"nuevoClave"}
                                         readOnly={false}
-                                        valorDefecto={this.state.nuevoClave}
+                                        //valorDefecto={this.state.nuevoClave}
                                         funcionControl={this.handleChangeInputComponent}
                                 />
                             </div>
@@ -349,7 +351,7 @@ class AdministrarUsuarios extends Component {
                                         idInput={"nuevoTipoPerfil"}
                                         nombreInput={"nuevoTipoPerfil"}
                                         readOnly={false}
-                                        valorDefecto={this.state.nuevoTipoPerfil}
+                                        //valorDefecto={this.state.nuevoTipoPerfil}
                                         funcionControl={this.handleChangeInputComponent}
                                 />
                             </div>
@@ -457,7 +459,7 @@ class AdministrarUsuarios extends Component {
                                 idInput={"nuevoNombrePerfil"}
                                 nombreInput={"nuevoNombrePerfil"}
                                 readOnly={false}
-                                valorDefecto={this.state.nuevoNombrePerfil}
+                                //valorDefecto={this.state.nuevoNombrePerfil}
                                 funcionControl={this.handleChangeInputComponent}
                             />
                             
@@ -479,7 +481,7 @@ class AdministrarUsuarios extends Component {
                                 contenido={this.state.opciones_grupos}
                                 nombreValor={"idGrupo"}
                                 nombreMostrar={"nombreGrupo"}
-                                valorDefecto={this.state.nuevoGrupo}
+                                //valorDefecto={this.state.nuevoGrupo}
                                 funcionControl={this.handleChangeSelectComponent}
                             />
                         </div>
@@ -487,8 +489,12 @@ class AdministrarUsuarios extends Component {
                         <div className="form-row mt-">
                             <h6>Al hacer click en un grupo mostrar sus permisos checkbox</h6>
                             <div>
-                                
-                                <label>Check 1</label>
+
+                                <label>{
+                                        //Si muestra la longitud del array de 
+                                        this.state.opciones_permisos.length
+                                    }
+                                </label>
                                 <input type="checkbox" id="chk1"className="chk11" checked={ this.state.checked } onChange={ this.handleChange } />
                                 <label>Check 2</label>
                                 <input type="checkbox" id="chk2" className="chk22" checked={ this.state.checked2 } onChange={ this.handleChange2 } />
@@ -534,6 +540,21 @@ class AdministrarUsuarios extends Component {
                     }
                 })
             .catch(err => console.log(err));
+    }
+     
+    //Funcion que obtiene los permisos de los Grupos y los muestra segun el elegido (FALTA)
+     fetchPermisosGrupo() {
+        fetch('/perfiles/grupos')
+            .then(res => res.json())
+            .then(
+                data => {
+                    if (data.status === "error"){
+                        toast.error('Vuelva a iniciar sesión, hay fallas en su autenticación.', { position: "bottom-right", autoClose: 2000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
+                    }else{
+                        this.setState({ opciones_permisos: [...data] });
+                    }
+                })
+            .catch(err => console.log("err"));
     }
 
      /*
@@ -585,7 +606,7 @@ class AdministrarUsuarios extends Component {
             //clear
             this.setState({
                 nuevoNombrePerfil: '',
-                nuevoGrupo: '',
+                idGrupo: '',
             });
         }
     }
