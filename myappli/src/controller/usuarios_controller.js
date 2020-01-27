@@ -4,29 +4,17 @@ let Usuario = require('../models/usuarios_model');
 
 exports.crearNuevoUsuario = function (req, res) {
     let nuevoUsuario = new Usuario(req.body);
+    nuevoUsuario.claveUM = Usuario.toHash(nuevoUsuario.claveUM);
 
-    nuevoUsuario.claveHash = Usuario.toHash(nuevoUsuario.claveUM);
     Usuario.registrarUsuarioSesion(nuevoUsuario, function(err, result) {
         if (err){
-            res.send(err);
+            res.sendStatus(err);
         }else{
-            res.send(result);
+            res.sendStatus(result);
         }
     })
 
 };
-
-exports.create_a_user = function(req, res) {
-    var new_user = new Usuario(req.body);
-    
-    Usuario.createUsuario(req.body.dataToken.cadenaDeConexion, new_user, function(err, user) {
-      
-      if (err)
-        res.send(err);
-      res.json(user);
-    });
-  
-  };
 
   exports.list_all_perfiles= function(req, res) {
     Usuario.getAllPerfil(req.body.dataToken.cadenaDeConexion, function(err, perfil) {

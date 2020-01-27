@@ -10,6 +10,7 @@ class CrearPerfil extends Component {
                 
             nombrePerfil: '',
             fecCreacionPerfil: '',
+            
             controlPerfilDuplicado: 0,
 
             //Permisos

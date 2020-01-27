@@ -34,64 +34,12 @@ class Usuario{
         }
     }
 
-    //FUNCION PARA CREAR UN NUEVO USUARIO EN LA BD
-    static createUsuario(cadenaDeConexion, newUsuario, result){
-        let fechaSistema = momentTimezone(new Date()).tz('america/Lima'); // libreria para convertir zona horaria - para cuando este en servidor en la nube.
-        fechaSistema = fechaSistema.format("YYYY-MM-DD");
-        sql.query(
-            
-            `select idUsuarioMaster from usuariosmaster where nombreUM=?`,
-            [newUsuario.nombreUM],
-            function (err, res) {
-                if (err) {
-                    console.log("error: ", err);
-                    result(null, err);
-                }
-                else {
-
-                    if(res.length>0)
-                    {
-                        newUsuario.idUsuarioMaster=res[0].idUsuarioMaster;
-                        sql.query(
-                            
-                            "update usuariosmaster set ?  where nombreUM=?",
-                            [ newUsuario , newUsuario.nombreUM],
-                            function (err_1, res_1) {
-                                if (err_1) {
-                                    console.log("error: ", err_1);
-                                    result(err_1, null);
-                                }
-                                else {
-                                    console.log(-1);
-                                    result(null,-1);
-                                }
-                            });
-                    }
-                    else{
-                        sql.query(
-                            
-                            "insert into usuariosmaster set ?",
-                            [newUsuario],
-                            function (err_2, res_2) {
-                                if (err_2) {
-                                    console.log("error: ", err_2);
-                                    result(err_2, null);
-                                }
-                                else {
-                                    console.log(res_2.insertId);
-                                    result(null, res_2.insertId);
-                                }
-                            });
-                    }
-                }
-            });
-    }
 
     //Función que hace la consulta a la BD para obtener todos los grupos de permisos.
     static getAllPerfil(cadenaDeConexion, result) {
         sqlDbNegocios(
             cadenaDeConexion,
-            `select  nombrePerfil from   perfiles   ` ,
+            `select  idPerfil, nombrePerfil from   perfiles   ` ,
             [],
             function (err, res) {
                 if (err) {
@@ -108,8 +56,9 @@ class Usuario{
     // FUNCIÓN PARA REGISTRAR UN USUARIO NUEVO
     // {nombreUsuario: "", claveUsuario: "", creadoPor: "", tipoPerfil: ""}
     static registrarUsuarioSesion(nuevoUsuario, result){
-        let fechaSistema = momentTimezone(new Date()).tz('america/Lima'); // libreria para convertir zona horaria - para cuando este en servidor en la nube.
-        fechaSistema = fechaSistema.format("YYYY-MM-DD");
+        //let fechaSistema = momentTimezone(new Date()).tz('america/Lima'); // libreria para convertir zona horaria - para cuando este en servidor en la nube.
+        //fechaSistema = fechaSistema.format("YYYY-MM-DD");
+        /*
         sql.query(
             'INSERT INTO usuariosmaster(nombreUM,rucUM,claveUM,tokenUM,fechaCreacionUM,creadoPorUM,tipoPerfilUM,habilitadoUM,idNegocioAsignadoUM) VALUES (?,?,?,?,?,?,?,?,?)',
             [this.nombreUM,this.rucUM,this.claveUM,'-',fechaSistema,this.creadoPorUM !== undefined? this.creadoPorUM: 1,this.tipoPerfilUM !== undefined?this.tipoPerfilUM:2,this.habilitadoUM,this.creadoPorUM !== undefined?this.idNegocioAsignadoUM:1],
@@ -121,6 +70,21 @@ class Usuario{
                 }
             }
         );
+        */
+
+        sql.query(
+            "insert into usuariosmaster set ?",
+            [nuevoUsuario],
+            function (err_2, res_2) {
+                if (err_2) {
+                    console.log("error: ", err_2);
+                    result(err_2, null);
+                }
+                else {
+                    console.log(res_2.insertId);
+                    result(null, res_2.insertId);
+                }
+            });
     }
 
     static registrarUsuarioDatos(nuevoUsuario, result){

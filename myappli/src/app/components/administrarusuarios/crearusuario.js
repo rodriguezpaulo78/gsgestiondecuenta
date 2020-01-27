@@ -11,6 +11,7 @@ class Crearusuario extends Component {
             clave1: "",
             clave2: "",
             ruc: "",
+            perfilUsuario: '',      //tipo de perfil seleccionado
 
             listaPerfiles: [],
         
@@ -19,7 +20,7 @@ class Crearusuario extends Component {
             correctoClaveRepetida: true,
             esLargoClave: true,
             
-            perfilUsuario: '',
+            
 
         };
 
@@ -183,8 +184,9 @@ class Crearusuario extends Component {
 
     //Función BackEnd para crear un Usuario
     crearUsuario(){
-        this.state.fecCreacionPerfil = this.getCurrentDate(); //dar el valor que retorna la funcion a la variable fecCreacionPerfil
+        this.state.fecCreacionUsuario = this.getCurrentDate(); //dar el valor que retorna la funcion a la variable fecCreacionUsuario
 
+        //Comprobar si los campos están vacios
         if (this.state.nombreUsuario == '' || this.state.ruc == '' || this.state.clave1 == '' ||
             this.state.perfilUsuario == '') {
             toast.error('Por favor llene todos los campos', { 
@@ -192,20 +194,24 @@ class Crearusuario extends Component {
                 closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
             return;
         }
+        //falta añadir mas comprobaciones
         else {
-            //Añadiendo a la BD 
+            //Añadiendo a la BD - Mandar estos parametros a través de esta ruta.
             fetch('/usuarios/usuarios', {
                 method: 'POST',
                 body: JSON.stringify({
-                    nombreUM: this.state.nombreUsuario.toUpperCase(),
+                    //Sesion
+                    nombreUM: this.state.nombreUsuario,
                     rucUM: this.state.ruc.toUpperCase(),
                     claveUM: this.state.clave1.toUpperCase(),
-                    fechaCreacionUM: this.state.fecCreacionPerfil.toUpperCase(),
+                    fechaCreacionUM: this.state.fecCreacionUsuario.toUpperCase(),
                     tipoPerfilUM: this.state.perfilUsuario.toUpperCase(),
                     creadoPorUM: 1,
-                    tipoPerfilUM: 2,
                     habilitadoUM: 1,
-                    idNegocioAsignado: 2,
+                    idNegocioAsignadoUM: 3,
+
+                    //Cuenta
+
                 }),
                 headers: {
                     'Accept': 'application/json',
@@ -252,7 +258,7 @@ class Crearusuario extends Component {
             <div className="row">
                 <hr/>
                 <div className="col-12 text-center">
-                    <h3>Datos de la Cuenta</h3>
+                    <h3>Datos de la Sesión</h3>
                     <div className="form-row">
 
                         <InputComponent
@@ -313,7 +319,8 @@ class Crearusuario extends Component {
                             esJson={true}
                             contenido={this.state.listaPerfiles}
                             nombreValor={"tipoPerfilUM"}
-                            nombreMostrar={"nombrePerfil"}  //Aquí se coloca el campo de la BD que se mostrará en el Select (via método Handle)
+                            //Falta poner id - nombre perfil 
+                            nombreMostrar={"idPerfil"}  //Aquí se coloca el campo de la BD que se mostrará en el Select (via método Handle)
                             //valorDefecto={this.state.perfilUsuario}
                             funcionControl={this.handleChangeSelectComponent}
                         />          
@@ -321,7 +328,7 @@ class Crearusuario extends Component {
                     </div>
 
                     <hr/>
-                    <h3>Datos del Usuario</h3>
+                    <h3>Datos de la Cuenta de Usuario </h3>
 
                     <div className="form-row">
                         <InputComponent
