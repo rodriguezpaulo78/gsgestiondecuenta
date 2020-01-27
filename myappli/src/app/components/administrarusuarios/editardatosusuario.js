@@ -52,7 +52,8 @@ class Editardatosusuario extends Component {
                         tipoPerfilUsuario: usuario.data[0].tipoPerfil,
                         nombrePerfil: usuario.data[0].nombrePerfil,
                         habilitadoUsuario: usuario.data[0].habilitado,
-                        fechaCreacionUsuario: (new Date(usuario.data[0].fechaCreacion).getDay() < 10? '0' + new Date(usuario.data[0].fechaCreacion).getDay():new Date(usuario.data[0].fechaCreacion).getDay()) + "/" + (new Date(usuario.data[0].fechaCreacion).getMonth()) + "/" + (new Date(usuario.data[0].fechaCreacion).getFullYear()),
+                        fechaCreacionUsuario: (new Date(usuario.data[0].fechaCreacion).getDay() < 10? '0' + new Date(usuario.data[0].fechaCreacion).getDay():new Date(usuario.data[0].fechaCreacion).getDay()) + "/" 
+                        + (new Date(usuario.data[0].fechaCreacion).getMonth()) + "/" + (new Date(usuario.data[0].fechaCreacion).getFullYear()),
                     });
                 }else{
                     alert(data.msg);

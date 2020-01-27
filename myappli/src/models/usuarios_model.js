@@ -210,7 +210,9 @@ class Usuario{
     static toHash(clave){
         console.log("clave:", clave);
         const salt = bcrypt.genSaltSync(10);
+        console.log(bcrypt.hashSync(clave, salt));
         return bcrypt.hashSync(clave, salt);
+        
     }
 
     static compareHash(hashClave, clavePlano){

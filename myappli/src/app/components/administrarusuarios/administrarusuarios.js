@@ -170,8 +170,8 @@ class AdministrarUsuarios extends Component {
                         this.state.listaUsuarios.map((ele, ind) => {
                             let fecha = (   new Date(ele.fechaCreacionUM).getDate() < 10? '0' + 
                                             new Date(ele.fechaCreacionUM).getDate():new Date(ele.fechaCreacionUM).getDate()) + "/" + 
-                                            (new Date(ele.fechaCreacionUM).getMonth() < 10? '0' + 
-                                            new Date(ele.fechaCreacionUM).getMonth():new Date(ele.fechaCreacionUM).getMonth()) + "/" + 
+                                            (new Date(ele.fechaCreacionUM).getMonth() + 1 < 10? '0' + 
+                                            (new Date(ele.fechaCreacionUM).getMonth()+1):new Date(ele.fechaCreacionUM).getMonth()+1) + "/" + 
                                             new Date(ele.fechaCreacionUM).getFullYear();
                             return (
                                 <tr key={ind}>

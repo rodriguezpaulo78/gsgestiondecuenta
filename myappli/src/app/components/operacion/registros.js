@@ -172,9 +172,13 @@ class Registros extends Component {
           }
           else {
             this.setState({ registros: data.map(e => {
-                e.fecEmision = (new Date(e.fecEmision).getDate() < 10? "0" + new Date(e.fecEmision).getDate():new Date(e.fecEmision).getDate()) + "/" + (new Date(e.fecEmision).getMonth() < 10? "0" + new Date(e.fecEmision).getMonth():new Date(e.fecEmision).getMonth()) + "/" + new Date(e.fecEmision).getFullYear();
+                e.fecEmision = 
+                (new Date(e.fecEmision).getDate() < 10? "0" + new Date(e.fecEmision).getDate():new Date(e.fecEmision).getDate()) + "/" + 
+                (new Date(e.fecEmision).getMonth() +1 < 10? "0" + (new Date(e.fecEmision).getMonth()+1):new Date(e.fecEmision).getMonth()+1) + "/" 
+                + new Date(e.fecEmision).getFullYear();
                 return e;
               }) });
+              //Error solucionado, este debe ser el formato para mostrar una fecha en el sistema , antes solo mostraba 00 en vez de 01
           }
           console.log('Done');
         })

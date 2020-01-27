@@ -33,7 +33,19 @@ class Crearusuario extends Component {
 
         // ONBLUR FUNCTIONS
         this.onBlurInput = this.onBlurInput.bind(this);
+        this.borrarTodo = this.borrarTodo.bind(this);
         
+    }
+
+    //Función para limpiar todos los campos
+    borrarTodo(){
+        console.log("BORRANDO TODO");
+        this.setState({
+            nombreUsuario: '',
+            clave1: '',
+            clave2: '',
+            ruc: '',
+        });
     }
 
     //Función para obtener la fecha actual y darle el formato que tiene en la BD
@@ -175,7 +187,9 @@ class Crearusuario extends Component {
 
         if (this.state.nombreUsuario == '' || this.state.ruc == '' || this.state.clave1 == '' ||
             this.state.perfilUsuario == '') {
-            toast.error('Por favor llene todos los campos', { position: "bottom-right", autoClose: 2000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
+            toast.error('Por favor llene todos los campos', { 
+                position: "bottom-right", autoClose: 2000, hideProgressBar: false, 
+                closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
             return;
         }
         else {
@@ -187,7 +201,11 @@ class Crearusuario extends Component {
                     rucUM: this.state.ruc.toUpperCase(),
                     claveUM: this.state.clave1.toUpperCase(),
                     fechaCreacionUM: this.state.fecCreacionPerfil.toUpperCase(),
-                    tipoPerfilUM: this.state.perfilUsuario.toUpperCase()
+                    tipoPerfilUM: this.state.perfilUsuario.toUpperCase(),
+                    creadoPorUM: 1,
+                    tipoPerfilUM: 2,
+                    habilitadoUM: 1,
+                    idNegocioAsignado: 2,
                 }),
                 headers: {
                     'Accept': 'application/json',
@@ -197,15 +215,21 @@ class Crearusuario extends Component {
                 .then(res => res.json())
                 .then(data => {
                     if (data.status === "error"){
-                        toast.error('Vuelva a iniciar sesión, hay fallas en su autenticación.', { position: "bottom-right", autoClose: 2000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
+                        toast.error('Vuelva a iniciar sesión, hay fallas en su autenticación.', { 
+                            position: "bottom-right", autoClose: 2000, hideProgressBar: false, 
+                            closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
                     }else{
                         console.log(data); //id que retorno
                         if (data != -1) {
-                            toast.success('Nuevo usuario agregado agregada', { position: "bottom-right", autoClose: 2000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
+                            toast.success('Nuevo usuario agregado agregada', { 
+                                position: "bottom-right", autoClose: 2000, hideProgressBar: false, 
+                                closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
                             this.borrarTodo.bind(this);
                         }
                         if (data == -1) {
-                            toast.error('Uusario actualizada', { position: "bottom-right", autoClose: 2000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
+                            toast.error('Uusario actualizada', { 
+                                position: "bottom-right", autoClose: 2000, hideProgressBar: false, 
+                                closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
                         }
                     }
                 })
@@ -555,8 +579,9 @@ class Crearusuario extends Component {
                     </div>
 
                     <div className="form-row justify-content-center mt-3">
-                        <div className="col-6">
+                        <div className="col-5">
                             <button className="btn btn-success btn-block" onClick={this.crearUsuario}> REGISTRAR USUARIO </button>
+                            <button className="btn btn-success btn-block" onClick={this.borrarTodo}> limpiar USUARIO </button>
                         </div>
                     </div>
                 </div>

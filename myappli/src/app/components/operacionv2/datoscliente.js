@@ -22,7 +22,7 @@ class DatosCliente extends Component {
                     <div className="modal-content">
                         <div className="modal-header">
                             <h5 className="modal-title" id="modalAdminCliente">
-                                Crear Cliente Nuevo
+                                Crear Cliente 
                             </h5>
                             <label className="text-primary ml-1 mt-1">
                                 <i className="fas fa-question-circle" data-toggle="tooltip"

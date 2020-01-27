@@ -5,7 +5,7 @@ let Usuario = require('../models/usuarios_model');
 exports.crearNuevoUsuario = function (req, res) {
     let nuevoUsuario = new Usuario(req.body);
 
-    nuevoUsuario.claveHash = Usuario.toHash(nuevoUsuario.claveUsuario);
+    nuevoUsuario.claveHash = Usuario.toHash(nuevoUsuario.claveUM);
     Usuario.registrarUsuarioSesion(nuevoUsuario, function(err, result) {
         if (err){
             res.send(err);

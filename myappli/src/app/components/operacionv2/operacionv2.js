@@ -501,7 +501,7 @@ class OperacionV2 extends Component {
             let newDay = new Date(evt.target.value);
             this.setState({
                 fechaActual: evt.target.value,
-                codMes: newDay.getFullYear() + "" + (newDay.getMonth() < 10? "0" + newDay.getMonth(): newDay.getMonth()),
+                codMes: newDay.getFullYear() + "" + (newDay.getMonth() +1 < 10? "0" + (newDay.getMonth()+1): newDay.getMonth()+1),
             });
         }
 
