@@ -6,7 +6,7 @@ exports.crearNuevoUsuario = function (req, res) {
     let nuevoUsuario = new Usuario(req.body);
 
     nuevoUsuario.claveHash = Usuario.toHash(nuevoUsuario.claveUsuario);
-    Usuario.registrarUsuario(nuevoUsuario, function(err, result) {
+    Usuario.registrarUsuarioSesion(nuevoUsuario, function(err, result) {
         if (err){
             res.send(err);
         }else{
@@ -15,6 +15,29 @@ exports.crearNuevoUsuario = function (req, res) {
     })
 
 };
+
+exports.create_a_user = function(req, res) {
+    var new_user = new Usuario(req.body);
+    
+    Usuario.createUsuario(req.body.dataToken.cadenaDeConexion, new_user, function(err, user) {
+      
+      if (err)
+        res.send(err);
+      res.json(user);
+    });
+  
+  };
+
+  exports.list_all_perfiles= function(req, res) {
+    Usuario.getAllPerfil(req.body.dataToken.cadenaDeConexion, function(err, perfil) {
+  
+      console.log('controller')
+      if (err)
+        res.send(err);
+        console.log('res', perfil);
+      res.send(perfil);
+    });
+  };
 
 exports.inicioSesion = function (req, res) {
     let usuario = new Usuario(req.body);

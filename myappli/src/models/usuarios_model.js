@@ -9,61 +9,100 @@ class Usuario{
         if (usuario !== null){
             // DATOS DE USUARIO PARA INCIAR SESIÓN Y PRIMER REGISTRO
             this.nombreUM = usuario.nombreUM;
-            this.claveHashUM = "";
+            //this.claveHashUM = "";
+            this.tokenUM = "-";
+            this.fechaCreacionUM = usuario.fechaCreacionUM;
             // Se usara para registrar los datos del usuario
-            if (usuario.idUsuarioMaster !== undefined){
-                this.idUsuarioMaster = usuario.idUsuarioMaster;
-            }
-            if (usuario.rucUM !== undefined){
-                this.rucUM = usuario.rucUM;
-            }
-            if (usuario.claveUM !== undefined){
-                this.claveUM = usuario.claveUM;
-            }
-            if (usuario.creadoPorUM !== undefined){
-                this.creadoPorUM = usuario.creadoPorUM;
-            }
-            if (usuario.tipoPerfilUM !== undefined){
-                this.tipoPerfilUM = usuario.tipoPerfilUM;
-            }
-            if (usuario.habilitadoUM !== undefined){
-                this.habilitadoUM = usuario.habilitadoUM;
-            }
-            if (usuario.idNegocioAsignadoUM !== undefined){
-                this.idNegocioAsignadoUM = usuario.idNegocioAsignadoUM;
-            }
+            if (usuario.idUsuarioMaster !== undefined){ this.idUsuarioMaster = usuario.idUsuarioMaster;}
+            if (usuario.rucUM !== undefined){           this.rucUM = usuario.rucUM;}
+            if (usuario.claveUM !== undefined){         this.claveUM = usuario.claveUM;}
+            if (usuario.creadoPorUM !== undefined){     this.creadoPorUM = usuario.creadoPorUM;}
+            if (usuario.tipoPerfilUM !== undefined){    this.tipoPerfilUM = usuario.tipoPerfilUM;}
+            if (usuario.habilitadoUM !== undefined){    this.habilitadoUM = usuario.habilitadoUM;}
+            if (usuario.idNegocioAsignadoUM !== undefined){ this.idNegocioAsignadoUM = usuario.idNegocioAsignadoUM;}
             // DATOS DE USUARIOS EN OTRA TABLA
-            if (usuario.numDocumentoUM !== undefined){
-                this.numDocumentoUM = usuario.numDocumentoUM;
-            }
-            if (usuario.tipoDocumentoUM !== undefined){
-                this.tipoDocumentoUM = usuario.tipoDocumentoUM;
-            }
-            if (usuario.nombresUM !== undefined){
-                this.nombresUM = usuario.nombresUM;
-            }
-            if (usuario.apellidosUM !== undefined){
-                this.apellidosUM = usuario.apellidosUM;
-            }
-            if (usuario.telefonosUM !== undefined){
-                this.telefonosUM = usuario.telefonosUM;
-            }
-            if (usuario.direccionUM !== undefined){
-                this.direccionUM = usuario.direccionUM;
-            }
-            if (usuario.correosUM !== undefined){
-                this.correosUM = usuario.correosUM;
-            }
-            if (usuario.ciudad !== undefined){
-                this.ciudad = usuario.ciudad;
-            }
-            if (usuario.departamento !== undefined){
-                this.departamento = usuario.departamento;
-            }
-            if (usuario.provincia !== undefined){
-                this.provincia = usuario.provincia;
-            }
+            if (usuario.numDocumentoUM !== undefined){      this.numDocumentoUM = usuario.numDocumentoUM;}
+            if (usuario.tipoDocumentoUM !== undefined){     this.tipoDocumentoUM = usuario.tipoDocumentoUM;}
+            if (usuario.nombresUM !== undefined){   this.nombresUM = usuario.nombresUM;}
+            if (usuario.apellidosUM !== undefined){ this.apellidosUM = usuario.apellidosUM;}
+            if (usuario.telefonosUM !== undefined){ this.telefonosUM = usuario.telefonosUM;}
+            if (usuario.direccionUM !== undefined){ this.direccionUM = usuario.direccionUM;}
+            if (usuario.correosUM !== undefined){   this.correosUM = usuario.correosUM;}
+            if (usuario.ciudad !== undefined){      this.ciudad = usuario.ciudad;}
+            if (usuario.departamento !== undefined){this.departamento = usuario.departamento;}
+            if (usuario.provincia !== undefined){   this.provincia = usuario.provincia;}
         }
+    }
+
+    //FUNCION PARA CREAR UN NUEVO USUARIO EN LA BD
+    static createUsuario(cadenaDeConexion, newUsuario, result){
+        let fechaSistema = momentTimezone(new Date()).tz('america/Lima'); // libreria para convertir zona horaria - para cuando este en servidor en la nube.
+        fechaSistema = fechaSistema.format("YYYY-MM-DD");
+        sql.query(
+            
+            `select idUsuarioMaster from usuariosmaster where nombreUM=?`,
+            [newUsuario.nombreUM],
+            function (err, res) {
+                if (err) {
+                    console.log("error: ", err);
+                    result(null, err);
+                }
+                else {
+
+                    if(res.length>0)
+                    {
+                        newUsuario.idUsuarioMaster=res[0].idUsuarioMaster;
+                        sql.query(
+                            
+                            "update usuariosmaster set ?  where nombreUM=?",
+                            [ newUsuario , newUsuario.nombreUM],
+                            function (err_1, res_1) {
+                                if (err_1) {
+                                    console.log("error: ", err_1);
+                                    result(err_1, null);
+                                }
+                                else {
+                                    console.log(-1);
+                                    result(null,-1);
+                                }
+                            });
+                    }
+                    else{
+                        sql.query(
+                            
+                            "insert into usuariosmaster set ?",
+                            [newUsuario],
+                            function (err_2, res_2) {
+                                if (err_2) {
+                                    console.log("error: ", err_2);
+                                    result(err_2, null);
+                                }
+                                else {
+                                    console.log(res_2.insertId);
+                                    result(null, res_2.insertId);
+                                }
+                            });
+                    }
+                }
+            });
+    }
+
+    //Función que hace la consulta a la BD para obtener todos los grupos de permisos.
+    static getAllPerfil(cadenaDeConexion, result) {
+        sqlDbNegocios(
+            cadenaDeConexion,
+            `select  nombrePerfil from   perfiles   ` ,
+            [],
+            function (err, res) {
+                if (err) {
+                    console.log("error: ", err);
+                    result(null, err);
+                }
+                else {
+                    console.log('perfiles : ', res);
+                    result(null, res);
+                }
+            });
     }
 
     // FUNCIÓN PARA REGISTRAR UN USUARIO NUEVO
@@ -72,8 +111,8 @@ class Usuario{
         let fechaSistema = momentTimezone(new Date()).tz('america/Lima'); // libreria para convertir zona horaria - para cuando este en servidor en la nube.
         fechaSistema = fechaSistema.format("YYYY-MM-DD");
         sql.query(
-            'INSERT INTO usuariosmaestro(nombreUM,rucUM,claveUM,tokenUM,fechaCreacionUM,creadoPorUM,tipoPerfilUM,habilitadoUM,idNegocioAsignadoUM) VALUES (?,?,?,?,?,?,?,?,?)',
-            [this.nombreUM,this.rucUM,this.claveUM,'-',fechaSistema,this.creadoPorUM !== undefined? this.creadoPorUM: 1,this.creadoPorUM !== undefined?this.tipoPerfilUM:2,this.habilitadoUM,this.creadoPorUM !== undefined?this.idNegocioAsignadoUM:1],
+            'INSERT INTO usuariosmaster(nombreUM,rucUM,claveUM,tokenUM,fechaCreacionUM,creadoPorUM,tipoPerfilUM,habilitadoUM,idNegocioAsignadoUM) VALUES (?,?,?,?,?,?,?,?,?)',
+            [this.nombreUM,this.rucUM,this.claveUM,'-',fechaSistema,this.creadoPorUM !== undefined? this.creadoPorUM: 1,this.tipoPerfilUM !== undefined?this.tipoPerfilUM:2,this.habilitadoUM,this.creadoPorUM !== undefined?this.idNegocioAsignadoUM:1],
             (err, res) => {
                 if (err){
                     result(err, null);

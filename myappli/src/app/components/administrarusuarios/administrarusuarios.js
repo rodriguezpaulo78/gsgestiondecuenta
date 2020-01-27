@@ -29,6 +29,7 @@ class AdministrarUsuarios extends Component {
             nuevoRUC: '',
             nuevoClave: '',
             nuevoTipoPerfil: '',
+            
 
             // DATOS DE LA EMPRESA
             nuevoRuc: null,
@@ -60,9 +61,10 @@ class AdministrarUsuarios extends Component {
         // FETCH SECTION
         this.fetchUsuarios = this.fetchUsuarios.bind(this);
         this.fetchDeshabilitarUsuario = this.fetchDeshabilitarUsuario.bind(this);
-        this.fetchPerfilesRegistrados = this.fetchPerfilesRegistrados.bind(this);
+        //this.fetchPerfilesRegistrados = this.fetchPerfilesRegistrados.bind(this);
         this.fetchPerfilesGrupo = this.fetchPerfilesGrupo.bind(this);
         this.fetchPermisosGrupo = this.fetchPermisosGrupo.bind(this);
+        this.fetchPerfilesUsuario = this.fetchPerfilesUsuario.bind(this);
 
         //Crear Usuarios
         this.renderCrearUsuario = this.renderCrearUsuario.bind(this);
@@ -74,7 +76,7 @@ class AdministrarUsuarios extends Component {
 
         //Listar Usuarios
         this.renderListarUsuarios = this.renderListarUsuarios.bind(this);     
-        this.obtenerNombrePerfil = this.obtenerNombrePerfil.bind(this);
+        //this.obtenerNombrePerfil = this.obtenerNombrePerfil.bind(this);
         this.editarDatos = this.editarDatos.bind(this);
 
         // FUNCTIONS
@@ -112,7 +114,7 @@ class AdministrarUsuarios extends Component {
           }
        
     }
-
+/*
     fetchPerfilesRegistrados(){
         fetch(
             '/perfiles/perfiles'
@@ -127,7 +129,7 @@ class AdministrarUsuarios extends Component {
             })
             .catch(err => console.log("Error FETCH LISTA PERFILES REGISTRADOS", err));
     }
-
+*/
     fetchUsuarios(){
         fetch(
             '/usuarios/usuarios'
@@ -174,8 +176,9 @@ class AdministrarUsuarios extends Component {
     //Función que muestra los datos en la interfaz(METODO REACT)
     componentDidMount() {
         this.fetchUsuarios();
-        this.fetchPerfilesRegistrados();
+        //this.fetchPerfilesRegistrados();
         this.fetchPerfilesGrupo();
+        this.fetchPerfilesUsuario();
         console.log("DATA PERFILES:", this.state.listaPerfiles);
 
     }
@@ -210,7 +213,20 @@ class AdministrarUsuarios extends Component {
             this.setState({
                 nuevoGrupo: evt.target.value,
             });
-        }
+        }else if(evt.target.name === "nuevoTipoPerfil"){
+            if (evt.target.value === "OTRO"){
+                this.setState({
+                    //mostrarInput: true,
+                });
+            }else{
+                this.setState({
+                    //mostrarInput: false,
+                });
+            }
+            this.setState({
+                nuevoTipoPerfil: evt.target.value,
+            });}
+    
     }
 
 
@@ -225,7 +241,8 @@ class AdministrarUsuarios extends Component {
             mostrarInput: false,
             nuevoNombrePerfil: '',
             nuevoGrupo: '',
-
+            nuevoTipoPerfil: '',
+            listaPerfiles: '',
         });
     }
 
@@ -253,7 +270,7 @@ class AdministrarUsuarios extends Component {
                             return (
                                 <tr key={ind}>
                                     <td>{ele.nombreUM}</td>
-                                    <td>{this.obtenerNombrePerfil.bind(this, ele.tipoPerfilUM)}</td>
+                                    <td>{this.fetchPerfilesUsuario.bind(this, ele.nuevoTipoPerfil)}</td>
                                     <td>{ele.nombresUM}</td>
                                     <td>{ele.apellidosUM}</td>
                                     <td>{fecha}</td>
@@ -275,6 +292,7 @@ class AdministrarUsuarios extends Component {
         );
     }   
 
+    /*
     //Función para obtener el Perfil del usuario y que sea mostrado en la Lista de Usuarios
     obtenerNombrePerfil(idPerfil){
         for (let i = 0; i < this.state.listaPerfiles.length; i++){
@@ -284,8 +302,7 @@ class AdministrarUsuarios extends Component {
         }
         return "sin definir".toString();
     }
-
-
+    */
 
     //Función que recoge el idUsuario del usuario a Editar para obtener sus datos en el siguiente formulario
     editarDatos(idUsuario){
@@ -345,15 +362,20 @@ class AdministrarUsuarios extends Component {
                                 />
                             </div>
                             <div className="form-row mt-1">
-                                <InputComponent
-                                        bloques={"col-12"}
-                                        etiqueta={"Perfil"}
-                                        idInput={"nuevoTipoPerfil"}
-                                        nombreInput={"nuevoTipoPerfil"}
-                                        readOnly={false}
-                                        //valorDefecto={this.state.nuevoTipoPerfil}
-                                        funcionControl={this.handleChangeInputComponent}
-                                />
+                                <h6>Al hacer click en añadir permisos abrir el Select </h6>
+                                <SelectComponent
+                                    bloques={"col-12"}
+                                    etiqueta={"Grupos de Perfiles"}
+                                    idSelect={"nuevoTipoPerfil"}
+                                    nombreSelect={"nuevoTipoPerfil"}
+                                    esJson={true}
+                                    contenido={this.state.listaPerfiles}
+                                    nombreValor={"tipoPerfilUM"}
+                                    nombreMostrar={"nuevoTipoPerfil"}
+                                    //valorDefecto={this.state.nuevoPerfilUsuario}
+                                    funcionControl={this.handleChangeSelectComponent}
+                                />          
+                                {this.state.listaPerfiles.length} 
                             </div>
                                 
                             <div className="form-row justify-content-center mt-3">
@@ -376,10 +398,26 @@ class AdministrarUsuarios extends Component {
         );
     }
 
+    //Funcion que obtiene los nombres de los Perfiles y los inserta en el arreglo listaPerfiles
+    fetchPerfilesUsuario() {
+        fetch('/usuarios/perfiles')
+            .then(res => res.json())
+            .then(
+                data => {
+                    if (data.status === "error"){
+                        toast.error('Vuelva a iniciar sesión, hay fallas en su autenticación.', { position: "bottom-right", autoClose: 2000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
+                    }else{
+                        this.setState({ listaPerfiles: [...data] });
+                    }
+                })
+            .catch(err => console.log(err));
+    }
+
     /*
         Función BackEnd para crear un Usuario
     */
     crearUsuario(){
+        this.state.fecCreacionPerfil = this.getCurrentDate(); //dar el valor que retorna la funcion a la variable fecCreacionPerfil
 
         if (this.state.nuevoNombre == '' || this.state.nuevoRUC == '' || this.state.nuevoClave == '' ||
             this.state.nuevoTipoPerfil == '') {
@@ -388,12 +426,13 @@ class AdministrarUsuarios extends Component {
         }
         else {
             //Añadiendo a la BD 
-            fetch('/api/usuarios/usuarios', {
+            fetch('/usuarios/usuarios', {
                 method: 'POST',
                 body: JSON.stringify({
                     nombreUM: this.state.nuevoNombre.toUpperCase(),
                     rucUM: this.state.nuevoRUC.toUpperCase(),
                     claveUM: this.state.nuevoClave.toUpperCase(),
+                    fechaCreacionUM: this.state.fecCreacionPerfil.toUpperCase(),
                     tipoPerfilUM: this.state.nuevoTipoPerfil.toUpperCase()
                 }),
                 headers: {
@@ -420,17 +459,15 @@ class AdministrarUsuarios extends Component {
 
             //clear
             this.setState({
-                nuevoNombreSucursal: '',
-                nuevodireccionSucursal: '',
-                nuevoDistrito: '',
-                nuevoProvincia: '',
-                nuevoDepartamento: '',
+                nuevoNombre: '',
+                nuevoRUC: '',
+                nuevoClave: '',
+                nuevoTipoPerfil: '',
+                fecCreacionPerfil: '',
             });
         }
     }
 
-
-    
     /*
         Renderizar el formulario para crear un perfil
     */
