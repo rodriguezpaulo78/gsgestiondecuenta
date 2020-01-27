@@ -69,7 +69,7 @@ exports.inicioSesion = function (req, res) {
                         maxAge: new Date(Date.now() + 3600000),
                         //httpOnly: true
                     });
-                    res.redirect('/myappli/');
+                    res.redirect('/');
 
                 }else{
                     console.log("Credenciales incorrectos");
@@ -158,6 +158,19 @@ exports.deshabilitarUsuarios = function (req, res){
             res.send({status: 'error', msg: 'Error al solicitar consultar al servidor', data: []});
         }else{
             res.send({status: 'ok', msg: 'Usuario deshabilitado', data: result});
+        }
+    });
+};
+
+exports.existeUsuario = function (req, res) {
+    console.log("CONTROLADOR:", req.body);
+    Usuario.existeUsuario(req.body.dataToken.cadenaDeConexion, req.body.nombreUsuario, (err, result) => {
+        if (err){
+            console.log(err);
+            res.send({status: "error", msg: "Error al validar si existe usuario", data: []});
+        }else{
+            console.log("validar usuario:", result);
+            res.send({status: "ok", msg: "Validación con éxito, compruebe respuesta", data: result});
         }
     });
 };

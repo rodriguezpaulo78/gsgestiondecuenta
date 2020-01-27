@@ -11,5 +11,6 @@ router.put('/usuarios/:idUsuario', RevisarTokenReact, UsuarioController.deshabil
 router.get('/usuarios/:idUsuario', RevisarTokenReact, UsuarioController.obtenerUsuarios);
 
 router.get('/perfiles', RevisarTokenReact, UsuarioController.list_all_perfiles);
+router.post('/validarusuario', RevisarTokenReact, UsuarioController.existeUsuario);
 
 module.exports = router;

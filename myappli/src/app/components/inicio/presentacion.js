@@ -58,7 +58,7 @@ class Presentacion extends Component{
 
         setTimeout(() => {
             fetch(
-                '/myappli/permisos',{
+                '/permisos',{
                 //'/permisos',{
                     method: 'POST',
                     body: JSON.stringify({
@@ -178,6 +178,8 @@ class Presentacion extends Component{
                 titulo: "Configuración de Impresión",
             });
         }
+        //Cerrar Sesion
+        
     }
 
     renderSide(){
@@ -315,6 +317,16 @@ class Presentacion extends Component{
                             </li>
                         )
                     }
+                    
+                    {
+                        //Boton cerrar sesion
+                            <li>
+                                <a href="/ingresar" onClick={this.handleMenu} name="cerrarsesion">Cerrar Sesion</a>
+                            </li>
+                        
+                    }
+                        
+                    
                 </ul>
 
                 <ul className="list-unstyled CTAs">

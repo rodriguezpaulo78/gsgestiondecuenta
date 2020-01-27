@@ -157,9 +157,7 @@ class Usuario{
     // FUNCION PARA GENERAR EL TOKEN, EN "DATA" CONTIENE LOS DATOS GUARDAR EN EL TOKEN
     static generarToken(data){
         const JWT = require('jsonwebtoken');
-
         const dataToken = data; // -----------------
-
         let JWT_PASS_SECRET = "";
 
         if (process.env.JWT_PASS_SERVER) {
@@ -195,7 +193,6 @@ class Usuario{
             }
          );
     }
-
 
     static guardarTokenDb(usuario, token){
         sql.query(
@@ -277,8 +274,22 @@ class Usuario{
             }
         );
     }
-
-
+    
+    static existeUsuario(cadenaDeConexion, nombreUsuario, result){
+        console.log("PARAMETRO:", nombreUsuario);
+        sql.query(
+            "SELECT idUsuarioMaster FROM usuariosmaster WHERE nombreUM=?",
+            [nombreUsuario],
+            (err, res) => {
+                if (err){
+                    result(err, null);
+                }else{
+                    console.log("VALIDAR:", res);
+                    result(null, res);
+                }
+            }
+        );
+    }
 }
 
 module.exports = Usuario;

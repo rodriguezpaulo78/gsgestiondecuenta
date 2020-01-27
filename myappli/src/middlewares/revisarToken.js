@@ -14,7 +14,7 @@ module.exports = (req, res, next) => {
                 next();
             } else {
                 console.log("DATO TOKEN ROOT:", decoded);
-                res.redirect('/myappli/ingresar');
+                res.redirect('/ingresar');
             }
         }
     );

@@ -14,7 +14,7 @@ class InputComponent extends Component{
                     <div className = {this.props.bloques}>
                         <input
                             type={this.props.tipoInput? this.props.tipoInput :"text"}
-                            className = "form-control"
+                            className = {"form-control " + this.props.classInput}
                             readOnly={this.props.readOnly}
                             id={this.props.idInput}
                             name={this.props.nombreInput}
@@ -24,6 +24,12 @@ class InputComponent extends Component{
                             onBlur={this.props.blurFuncionControl}
                             disabled={this.props.desactivado? "disabled":""}
                         />
+                        <div className="invalid-feedback">
+                            {this.props.mensajeValidacionError}
+                        </div>
+                        <div className="valid-feedback">
+                            {this.props.mensajeValidacionOk}
+                        </div>
                     </div>
                 </React.Fragment>
             );
@@ -52,7 +58,7 @@ class InputComponent extends Component{
                         }
                         <input
                             type={this.props.tipoInput? this.props.tipoInput :"text"}
-                            className="form-control"
+                            className = {"form-control " + this.props.classInput}
                             id={this.props.idInput}
                             name={this.props.nombreInput}
                             placeholder={this.props.placeholder}
@@ -62,6 +68,12 @@ class InputComponent extends Component{
                             readOnly={this.props.readOnly}
                             disabled={this.props.desactivado? "disabled":""}
                         />
+                        <div className="invalid-feedback">
+                            {this.props.mensajeValidacionError}
+                        </div>
+                        <div className="valid-feedback">
+                            {this.props.mensajeValidacionOk}
+                        </div>
                     </div>
                 </React.Fragment>
             );
@@ -86,6 +98,10 @@ InputComponent.propTypes = {
 
     valorDefecto: PropTypes.string,
     placeholder: PropTypes.string,
+    mensajeValidacionError: PropTypes.string,
+    mensajeValidacionOk: PropTypes.string,
+
+    classInput: PropTypes.string,
 
     funcionControl: PropTypes.func.isRequired,
     blurFuncionControl: PropTypes.func,

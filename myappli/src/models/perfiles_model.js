@@ -113,6 +113,38 @@ class Perfil{
                 }
             });
     }
+
+    static obtenerPerfilesYpermisos(cadenaDeConexion, result){
+        sqlNegocio(
+            cadenaDeConexion,
+            'SELECT idPerfilAsignado,idPermisoAperfil,nombrePermiso,descripcion, nombrePerfil FROM (SELECT * FROM permisosperfiles INNER JOIN permisos ON permisosperfiles.idPermisoAperfil=permisos.idPermiso) AS PermisoPerfil INNER JOIN perfiles ON PermisoPerfil.idPerfilAsignado=perfiles.idPerfil WHERE PermisoPerfil.habilitado=true',
+            [],
+            (err, res) => {
+                if (err){
+                    result(err, null);
+                }else{
+                    result(null, res);
+                }
+            }
+        );
+    }
+
+    static existePerfil(cadenaDeConexion, nombrePerfil, result){
+        console.log("PARAMETRO:", nombrePerfil);
+        sqlNegocio(
+            cadenaDeConexion,
+            "SELECT idPerfil FROM perfiles WHERE nombrePerfil=?",
+            [nombrePerfil],
+            (err, res) => {
+                if (err){
+                    result(err, null);
+                }else{
+                    console.log("VALIDAR:", res);
+                    result(null, res);
+                }
+            }
+        );
+    }
 }
 
 module.exports = Perfil;

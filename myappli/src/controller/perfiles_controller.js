@@ -45,3 +45,26 @@ exports.create_a_perfil = function(req, res) {
       res.send(permiso);
     });
   };
+
+  exports.obtenerPerfilesYpermisos = function (req, res) {
+    Perfil.obtenerPerfilesYpermisos(req.body.dataToken.cadenaDeConexion, (err, result) => {
+        if (err){
+            res.send({status: "error", msg: "Error al obtener los perfiles y permisos", data: []});
+        }else{
+            res.send({status: "ok", msg: "Lista de perfiles y permisos obtenidos con éxito", data: result});
+        }
+    });
+};
+
+exports.existePerfil = function (req, res) {
+  console.log("CONTROLADOR:", req.body);
+  Perfil.existePerfil(req.body.dataToken.cadenaDeConexion, req.body.nombrePerfil, (err, result) => {
+      if (err){
+          console.log(err);
+          res.send({status: "error", msg: "Error al validar si existe usuario", data: []});
+      }else{
+          console.log("validar usuario:", result);
+          res.send({status: "ok", msg: "Validación con éxito, compruebe respuesta", data: result});
+      }
+  });
+};

@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
-    "rundev": "nodemon index.js && webpack --mode development --watch",
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "rundev": "nodemon src/index.js && webpack --mode development --watch",
     "webpack": "webpack --mode development --watch",
     "react": "react-scripts start"
   },
