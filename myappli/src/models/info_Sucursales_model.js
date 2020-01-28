@@ -15,7 +15,7 @@ class Sucursal {
     static getSucursalById(cadenaDeConexion, sucursalId, result) {
         sqlNegocio(
             cadenaDeConexion,
-            "Select * from info_Sucursales where codSucursal = ? ",
+            "Select * from info_sucursales where codSucursal = ? ",
             [sucursalId],
             function (err, res) {
                 if (err) {
@@ -32,7 +32,7 @@ class Sucursal {
     static getAllSucursal(cadenaDeConexion, result) {
         sqlNegocio(
             cadenaDeConexion,
-            `select codSucursal,nombreSucursal from info_Sucursales`,
+            `select codSucursal,nombreSucursal from info_sucursales`,
             [],
             function (err, res) {
                 if (err) {
@@ -50,7 +50,7 @@ class Sucursal {
 
         sqlNegocio(
             cadenaDeConexion,
-            `select codSucursal from info_Sucursales where nombreSucursal=?`,
+            `select codSucursal from info_sucursales where nombreSucursal=?`,
             [newSucursal.nombreSucursal],
             function (err, res) {
                 if (err) {
@@ -64,7 +64,7 @@ class Sucursal {
                         newSucursal.codSucursal=res[0].codSucursal;
                         sqlNegocio(
                             cadenaDeConexion,
-                            "update info_Sucursales set ?  where nombreSucursal=?",
+                            "update info_sucursales set ?  where nombreSucursal=?",
                             [ newSucursal , newSucursal.nombreSucursal],
                             function (err_1, res_1) {
                                 if (err_1) {
@@ -80,7 +80,7 @@ class Sucursal {
                     else{
                         sqlNegocio(
                             cadenaDeConexion,
-                            "insert into info_Sucursales set ?",
+                            "insert into info_sucursales set ?",
                             [newSucursal],
                             function (err_2, res_2) {
                                 if (err_2) {

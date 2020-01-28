@@ -8,10 +8,10 @@ class Usuario{
     constructor(usuario = null){
         if (usuario !== null){
             // DATOS DE USUARIO PARA INCIAR SESIÓN Y PRIMER REGISTRO
-            this.nombreUM = usuario.nombreUM;
+            if (usuario.nombreUM !== undefined){        this.nombreUM = usuario.nombreUM;}
             //this.claveHashUM = "";
-            this.tokenUM = "-";
-            this.fechaCreacionUM = usuario.fechaCreacionUM;
+            if (usuario.tokenUM !== undefined){         this.tokenUM = "-";}
+            if (usuario.fechaCreacionUM !== undefined){ this.fechaCreacionUM = usuario.fechaCreacionUM;}
             // Se usara para registrar los datos del usuario
             if (usuario.idUsuarioMaster !== undefined){ this.idUsuarioMaster = usuario.idUsuarioMaster;}
             if (usuario.rucUM !== undefined){           this.rucUM = usuario.rucUM;}
@@ -87,11 +87,13 @@ class Usuario{
             });
     }
 
-    /*
-    static registrarUsuarioDatos(nuevoUsuario, result){
+    
+    static registrarUsuarioCuenta(nuevoUsuario, result){
         /*
         sqlDbNegocios(
             cadenaDeConexion,
+            */
+         sql.query(
             'INSERT INTO datosusuariosmaster(idDatosUM,nombresUM,apellidosUM,numDocumentoUM,tipoDocumentoUM,telefonosUM,direccionUM,correosUM,ciudad,departamento,provincia) VALUES (?,?,?,?,?,?,?,?,?,?,?)',
             [this.idUsuarioMaster,this.nombresUM,this.apellidosUM,this.numDocumentoUM,this.tipoDocumentoUM,this.telefonosUM,this.direccionUM,this.correosUM,this.ciudad,this.departamento,this.provincia],
             (err, res) => {
@@ -102,8 +104,7 @@ class Usuario{
                 }
             }
         );
-*/
-
+        
 /*
         sql.query(
             "insert into datosusuariosmaster set ?",
@@ -118,10 +119,40 @@ class Usuario{
                     result(null, res_2.insertId);
                 }
             });
+            */
     }
 
-    */
-   
+    static registrarUsuarioNegocio(nuevoUsuario, result){
+        /*
+        sqlDbNegocios(
+            cadenaDeConexion,
+            'INSERT INTO datosusuariosmaster(idDatosUM,nombresUM,apellidosUM,numDocumentoUM,tipoDocumentoUM,telefonosUM,direccionUM,correosUM,ciudad,departamento,provincia) VALUES (?,?,?,?,?,?,?,?,?,?,?)',
+            [this.idUsuarioMaster,this.nombresUM,this.apellidosUM,this.numDocumentoUM,this.tipoDocumentoUM,this.telefonosUM,this.direccionUM,this.correosUM,this.ciudad,this.departamento,this.provincia],
+            (err, res) => {
+                if (err){
+                    result(err, null);
+                }else{
+                    result(null, res);
+                }
+            }
+        );
+        */
+
+        sql.query(
+            "insert into datosnegocios set ?",
+            [nuevoUsuario],
+            function (err_2, res_2) {
+                if (err_2) {
+                    console.log("error: ", err_2);
+                    result(err_2, null);
+                }
+                else {
+                    console.log(res_2.insertId);
+                    result(null, res_2.insertId);
+                }
+            });
+    }
+
     // FUNCIÓN PARA INICIAR SESIÓN, SE BUSCAN LOS DATOS DE TODOS DEL USUARIO ASÍ COMO LOS DATOS DEL
     // NEGOCIO AL CUAL FUE ASIGNADO, DE ESTA MANERA YA RECUPERAMOS LA CADENA DE CONEXION
     static inicioSesionMaster(usuario, result){

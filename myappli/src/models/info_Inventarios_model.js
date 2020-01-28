@@ -27,7 +27,7 @@ class Inventario {
     static getInventarioById(cadenaDeConexion, inventariosId, result) {
         sqlNegocio(
             cadenaDeConexion,
-            "Select * from detalle_Inventarios where idDetalle = ? ",
+            "Select * from detalle_inventarios where idDetalle = ? ",
             [inventariosId],
             function (err, res) {
                 if (err) {
@@ -45,16 +45,16 @@ class Inventario {
     static getAllInventario(cadenaDeConexion, fI, fF, result) {
         sqlNegocio(
             cadenaDeConexion,
-            `select detalle_Inventarios.idDetalle as numRegistro,info_Ingresos.codMes,info_Sucursales.nombreSucursal,info_Ingresos.tipOperacion,info_Ingresos.idPartida, nombrePartida, nombreGrupo,
-        detalle_Inventarios.codUnidadMedida,detalle_Inventarios.idDetalle as codItem, detalle_Inventarios.desItem, detalle_Inventarios.mtoValorUnitario,detalle_Inventarios.mtoPrecioUnitario,detalle_Inventarios.tipoAfecto,detalle_Inventarios.ctdUnidadItem, detalle_Inventarios.mtoValorVenta,detalle_Inventarios.igv,detalle_Inventarios.isc,detalle_Inventarios.mtoSumTributos,detalle_Inventarios.mtoVentaTotal,info_Ingresos.idIngreso as codOperacion
+            `select detalle_inventarios.idDetalle as numRegistro,info_ingresos.codMes,info_sucursales.nombreSucursal,info_ingresos.tipOperacion,info_ingresos.idPartida, nombrePartida, nombreGrupo,
+        detalle_inventarios.codUnidadMedida,detalle_inventarios.idDetalle as codItem, detalle_inventarios.desItem, detalle_inventarios.mtoValorUnitario,detalle_inventarios.mtoPrecioUnitario,detalle_inventarios.tipoAfecto,detalle_inventarios.ctdUnidadItem, detalle_inventarios.mtoValorVenta,detalle_inventarios.igv,detalle_inventarios.isc,detalle_inventarios.mtoSumTributos,detalle_inventarios.mtoVentaTotal,info_ingresos.idIngreso as codOperacion
 
-from detalle_Inventarios left join info_Ingresos on detalle_Inventarios.idIngreso=info_Ingresos.idIngreso
-left join info_Productos on info_Productos.idProducto= detalle_Inventarios.idProducto
-left join info_Sucursales on info_Ingresos.codSucursal=info_Sucursales.codSucursal
-left join (select info_Partidas.idPartida,info_Partidas.nombrePartida,info_GrupoPartidas.nombreGrupo from info_Partidas join info_GrupoPartidas   
-  on info_Partidas.idGrupo =info_GrupoPartidas.idGrupoPartida) as partidas
-      on partidas.idPartida= info_Ingresos.idPartida
-      WHERE info_Ingresos.fecEmision  BETWEEN '`+ fI + `' AND '` + fF + `'`,
+from detalle_inventarios left join info_ingresos on detalle_inventarios.idIngreso=info_ingresos.idIngreso
+left join info_productos on info_productos.idProducto= detalle_inventarios.idProducto
+left join info_sucursales on info_ingresos.codSucursal=info_sucursales.codSucursal
+left join (select info_partidas.idPartida,info_partidas.nombrePartida,info_grupopartidas.nombreGrupo from info_partidas join info_grupopartidas   
+  on info_partidas.idGrupo =info_grupopartidas.idGrupoPartida) as partidas
+      on partidas.idPartida= info_ingresos.idPartida
+      WHERE info_ingresos.fecEmision  BETWEEN '`+ fI + `' AND '` + fF + `'`,
             [],
             function (err, res) {
                 if (err) {
@@ -74,13 +74,13 @@ left join (select info_Partidas.idPartida,info_Partidas.nombrePartida,info_Grupo
         var flag = (-1);
         sqlNegocio(
             cadenaDeConexion,
-            "SELECT  * from info_Ingresos WHERE idIngreso = " + newInventario.idIngreso,
+            "SELECT  * from info_ingresos WHERE idIngreso = " + newInventario.idIngreso,
             [],
             function (err, ress) {
                 if (ress[0].movimiento == 0) { flag = 1; }
                 sqlNegocio(
                     cadenaDeConexion,
-                    "insert into detalle_Inventarios set ?",
+                    "insert into detalle_inventarios set ?",
                     [ newInventario],
                     function (err, res) {
                         if (err) {
@@ -92,7 +92,7 @@ left join (select info_Partidas.idPartida,info_Partidas.nombrePartida,info_Grupo
                             ///actualziar el stock de productos cada que agrego un producto nuevo en mi inventario
                             sqlNegocio(
                                 cadenaDeConexion,
-                                "UPDATE info_Productos SET stockProducto=stockProducto+" + (newInventario.ctdUnidadItem * flag) + " WHERE idProducto =" + newInventario.idProducto,
+                                "UPDATE info_productos SET stockProducto=stockProducto+" + (newInventario.ctdUnidadItem * flag) + " WHERE idProducto =" + newInventario.idProducto,
                                 [],
                                 function (err_, res_) {
                                     if (err) {
@@ -105,7 +105,7 @@ left join (select info_Partidas.idPartida,info_Partidas.nombrePartida,info_Grupo
                             var costo_venta_total = 0;
                             sqlNegocio(
                                 cadenaDeConexion,
-                                "Select * from detalle_Inventarios where idIngreso = ? ",
+                                "Select * from detalle_inventarios where idIngreso = ? ",
                                 [newInventario.idIngreso],
                                 function (errr1, res1, fields) {
                                     Object.keys(res1).forEach(function (key) {
@@ -116,7 +116,7 @@ left join (select info_Partidas.idPartida,info_Partidas.nombrePartida,info_Grupo
                                     if (newInventario.esIngreso){
                                         sqlNegocio(
                                             cadenaDeConexion,
-                                            "UPDATE info_Ingresos SET costVenta=" + costo_venta_total + " WHERE idIngreso =" + newInventario.idIngreso,
+                                            "UPDATE info_ingresos SET costVenta=" + costo_venta_total + " WHERE idIngreso =" + newInventario.idIngreso,
                                             [],
                                             function (err_1, res_1) { });
                                     }
@@ -136,7 +136,7 @@ left join (select info_Partidas.idPartida,info_Partidas.nombrePartida,info_Grupo
         var costo_venta_total = 0;
         sqlNegocio(
             cadenaDeConexion,
-            "Select * from detalle_Inventarios where idIngreso = ? ",
+            "Select * from detalle_inventarios where idIngreso = ? ",
             [idIngreso],
             function (errr, res, fields) {
                 Object.keys(res).forEach(function (key) {
@@ -146,7 +146,7 @@ left join (select info_Partidas.idPartida,info_Partidas.nombrePartida,info_Grupo
                 });
                 sqlNegocio(
                     cadenaDeConexion,
-                    "UPDATE info_Ingresos SET costVenta=" + costo_venta_total + " WHERE idIngreso =" + idIngreso,
+                    "UPDATE info_ingresos SET costVenta=" + costo_venta_total + " WHERE idIngreso =" + idIngreso,
                     [],
                     function (err_, res_) { });
             });
@@ -160,7 +160,7 @@ left join (select info_Partidas.idPartida,info_Partidas.nombrePartida,info_Grupo
         var tipoMomiviento = null;
         sqlNegocio(
             cadenaDeConexion,
-            "UPDATE detalle_Inventarios SET costVenta=" + newCostoVenta + " WHERE idDetalle =" + idDetalle,
+            "UPDATE detalle_inventarios SET costVenta=" + newCostoVenta + " WHERE idDetalle =" + idDetalle,
             [],
             function (err, res) {
                 if (err) {
@@ -172,7 +172,7 @@ left join (select info_Partidas.idPartida,info_Partidas.nombrePartida,info_Grupo
 
                     sqlNegocio(
                         cadenaDeConexion,
-                        "Select * from info_Ingresos where idIngreso = ? ",
+                        "Select * from info_ingresos where idIngreso = ? ",
                         [idIngreso],
                         function (errrr, rres, fields) {
                             Object.keys(rres).forEach(function (key) {
@@ -184,7 +184,7 @@ left join (select info_Partidas.idPartida,info_Partidas.nombrePartida,info_Grupo
 
                     sqlNegocio(
                         cadenaDeConexion,
-                        "Select * from detalle_Inventarios where idIngreso = ? ",
+                        "Select * from detalle_inventarios where idIngreso = ? ",
                         [idIngreso],
                         function (errr, res, fields) {
                             Object.keys(res).forEach(function (key) {
@@ -194,7 +194,7 @@ left join (select info_Partidas.idPartida,info_Partidas.nombrePartida,info_Grupo
                             });
                             sqlNegocio(
                                 cadenaDeConexion,
-                                "UPDATE info_Ingresos SET costVenta=" + costo_venta_total + " WHERE idIngreso =" + idIngreso,
+                                "UPDATE info_ingresos SET costVenta=" + costo_venta_total + " WHERE idIngreso =" + idIngreso,
                                 [],
                                 function (err_, res_) { });
                         });

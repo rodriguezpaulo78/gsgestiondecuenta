@@ -24,6 +24,7 @@ class Crearusuario extends Component {
             nombres: "",
             apellidos: "",
             tipoDocumento: "",
+            doc: "",
             numeroDocumento: "",
             numeroContacto: "",
             direccion: "",
@@ -31,12 +32,32 @@ class Crearusuario extends Component {
             ciudadCuenta: "",
             provinciaCuenta: "",
             departamentoCuenta: "",
-            
-            
 
+            //Empresa
+            rucEmpresa: "",
+            razonSocial: "",
+            nombresNegocio: "",
+            apePatNegocio: "",
+            apeMatNegocio: "",
+            nombreComNegocio: "",
+            usuarioSol: "",
+            claveSol: "",
+            claveSol2: "",
+            direccionNegocio: "",
+            ubigeoNegocio: "",
+            urbanizacion: "",
+            distritoNegocio: "",
+            provinciaNegocio: "",
+            departamentoNegocio: "",
+            rubros: "",
+            contactoNegocio: "",
+            imagenNegocio: "",
+            cadenaConexion: "",
         };
 
         this.crearUsuario = this.crearUsuario.bind(this);
+        this.crearUsuarioCuenta = this.crearUsuarioCuenta.bind(this);
+        this.crearUsuarioNegocio = this.crearUsuarioNegocio.bind(this);
         // HANDLE FUNCTIONS
         this.handleChangeInput = this.handleChangeInput.bind(this);
         this.handleChangeSelectComponent = this.handleChangeSelectComponent.bind(this);
@@ -61,16 +82,37 @@ class Crearusuario extends Component {
             ruc: '',
 
             //cuenta
-            nombres: "",
-            apellidos: "",
-            tipoDocumento: "",
-            numeroDocumento: "",
-            numeroContacto: "",
-            direccion: "",
-            correo: "",
-            ciudadCuenta: "",
-            provinciaCuenta: "",
-            departamentoCuenta: "",
+            nombres: '',
+            apellidos: '',
+            tipoDocumento: '',
+            numeroDocumento: '',
+            numeroContacto: '',
+            direccion: '',
+            correo: '',
+            ciudadCuenta: '',
+            provinciaCuenta: '',
+            departamentoCuenta: '',
+
+            //empresa
+            rucEmpresa: '',
+            razonSocial: '',
+            nombresNegocio: '',
+            apePatNegocio: '',
+            apeMatNegocio: '',
+            nombreComNegocio: '',
+            usuarioSol: '',
+            claveSol: '',
+            claveSol2: '',
+            direccionNegocio: '',
+            ubigeoNegocio: '',
+            urbanizacion: '',
+            distritoNegocio: '',
+            provinciaNegocio: '',
+            departamentoNegocio: '',
+            rubros: '',
+            contactoNegocio: '',
+            imagenNegocio: '',
+            cadenaConexion: '',
             
         });
     }
@@ -143,60 +185,122 @@ class Crearusuario extends Component {
 
     //Funcion necesaria para poder cambiar los valores del INPUTCOMPONENT
     handleChangeInput(evt){
-        if (evt.target.name === "nombreUsuario"){
-            this.setState({
-                nombreUsuario: evt.target.value,
-            });
-            return 1;
-        }
-        if (evt.target.name === "clave1"){
-            this.setState({
-                clave1: evt.target.value,
-            }, () => {
-                if (this.state.clave1.length < 7){
-                    this.setState({
-                        esLargoClave: false,
-                    });
-                }else{
-                    this.setState({
-                        esLargoClave: true,
-                    });
-                }
-            });
-            return 1;
-        }
-        if (evt.target.name === "clave2"){
-            this.setState({
-                clave2: evt.target.value,
-            }, () => {
-                if (this.state.clave1 !== this.state.clave2){
-                    this.setState({
-                        correctoClaveRepetida: false,
-                    });
-                }else{
-                    this.setState({
-                        correctoClaveRepetida: true,
-                    });
-                }
-            });
-            return 1;
-        }
-        if (evt.target.name === "ruc"){
-            this.setState({
-                ruc: evt.target.value,
-            }, () => {
-                if (this.state.ruc.length < 10){
-                    this.setState({
-                        esRucCorrecto: false,
-                    });
-                }else{
-                    this.setState({
-                        esRucCorrecto: true,
-                    });
-                }
-            });
-            return 1;
-        }
+        switch(evt.target.name) {
+            case "nombreUsuario":
+                this.setState({ nombreUsuario: evt.target.value,});
+                break;
+            case "clave1":
+                this.setState({ clave1: evt.target.value,}, () => {
+                    if (this.state.clave1.length < 7){
+                        this.setState({ esLargoClave: false,});
+                    }else{
+                        this.setState({ esLargoClave: true,});
+                    }
+                });
+                break;
+            case "clave2":
+                this.setState({ clave2: evt.target.value,}, () => {
+                    if (this.state.clave1 !== this.state.clave2){
+                        this.setState({ correctoClaveRepetida: false,});
+                    }else{
+                        this.setState({ correctoClaveRepetida: true,});
+                    }
+                });
+                break;
+            case "ruc":
+                this.setState({ ruc: evt.target.value,}, () => {
+                    if (this.state.ruc.length < 10){
+                        this.setState({ esRucCorrecto: false,});
+                    }else{
+                        this.setState({ esRucCorrecto: true,});
+                    }
+                });
+                break;
+            case "nombres":
+                this.setState({ nombres: evt.target.value,});
+                break;
+            case "apellidos":
+                this.setState({ apellidos: evt.target.value,});
+                break;
+            case "tipoDocumento":
+                this.setState({ tipoDocumento: evt.target.value,});
+                break;
+            case "numeroDocumento":
+                this.setState({ numeroDocumento: evt.target.value,});
+                break;
+            case "direccion":
+                this.setState({ direccion: evt.target.value,});
+                break;
+            case "correo":
+                this.setState({ correo: evt.target.value,});
+                break;
+            case "ciudadCuenta":
+                this.setState({ ciudadCuenta: evt.target.value,});
+                break;
+            case "provinciaCuenta":
+                this.setState({ provinciaCuenta: evt.target.value,});
+                break;
+            case "departamentoCuenta":
+                this.setState({ departamentoCuenta: evt.target.value,});
+                break;
+            case "rucEmpresa":
+                this.setState({ rucEmpresa: evt.target.value,});
+                break;
+            case "razonSocial":
+                this.setState({ razonSocial: evt.target.value,});
+                break;
+            case "nombresNegocio":
+                this.setState({ nombresNegocio: evt.target.value,});
+                break;
+            case "apePatNegocio":
+                this.setState({ apePatNegocio: evt.target.value,});
+                break;
+            case "apeMatNegocio":
+                this.setState({ apeMatNegocio: evt.target.value,});
+                break;
+            case "nombreComNegocio":
+                this.setState({ nombreComNegocio: evt.target.value,});
+                break;
+            case "usuarioSol":
+                this.setState({ usuarioSol: evt.target.value,});
+                break;
+            case "claveSol":
+                this.setState({ claveSol: evt.target.value,});
+                break;
+            case "claveSol2":
+                this.setState({ claveSol2: evt.target.value,});
+                break;
+            case "direccionNegocio":
+                this.setState({ direccionNegocio: evt.target.value,});
+                break;
+            case "ubigeoNegocio":
+                this.setState({ ubigeoNegocio: evt.target.value,});
+                break;
+            case "urbanizacion":
+                this.setState({ urbanizacion: evt.target.value,});
+                break;
+            case "distritoNegocio":
+                this.setState({ distritoNegocio: evt.target.value,});
+                break;
+            case "provinciaNegocio":
+                this.setState({ provinciaNegocio: evt.target.value,});
+                break;
+            case "departamentoNegocio":
+                this.setState({ departamentoNegocio: evt.target.value,});
+                break;
+            case "rubros":
+                this.setState({ rubros: evt.target.value,});
+                break;
+            case "contactoNegocio":
+                this.setState({ contactoNegocio: evt.target.value,});
+                break;
+            case "imagenNegocio":
+                this.setState({ imagenNegocio: evt.target.value,});
+                break;
+
+            default:
+              // code block
+            }
     }
 
     //Funcion necesaria para poder elegir entre  los valores del SELECTCOMPONENT
@@ -208,7 +312,7 @@ class Crearusuario extends Component {
         }
     }
 
-    //Función BackEnd para crear un Usuario
+    //Función BackEnd para crear un Usuario Sesion
     crearUsuario(){
         this.state.fecCreacionUsuario = this.getCurrentDate(); //dar el valor que retorna la funcion a la variable fecCreacionUsuario
 
@@ -225,6 +329,7 @@ class Crearusuario extends Component {
             fetch('/usuarios/usuarios', {
                 method: 'POST',
                 body: JSON.stringify({
+
                     //Sesion
                     nombreUM: this.state.nombreUsuario,
                     rucUM: this.state.ruc.toUpperCase(),
@@ -235,21 +340,6 @@ class Crearusuario extends Component {
                     creadoPorUM: "1",
                     habilitadoUM: "1",
                     idNegocioAsignadoUM: "3",
-
-                    /*
-                    //Cuenta (ERROR NO SE PUEDE CREAR JUNTO)
-                    nombresUM: this.state.nombres.toUpperCase(),
-                    apellidosUM: this.state.apellidos.toUpperCase(),
-                    tipoDocumentoUM: this.state.tipoDocumento,
-                    numDocumentoUM: this.state.numeroDocumento,
-                    telefonosUM: this.state.numeroContacto,
-                    direccionUM: this.state.direccion,
-                    correosUM: this.state.correo,
-                    ciudad: this.state.ciudadCuenta.toUpperCase(),
-                    provincia: this.state.provinciaCuenta.toUpperCase(),
-                    departamento: this.state.departamentoCuenta.toUpperCase(),
-                    */
-
                 }),
                 headers: {
                     'Accept': 'application/json',
@@ -288,6 +378,70 @@ class Crearusuario extends Component {
                 perfilUsuario: '',
                 fecCreacionPerfil: '',
 
+            });
+        }
+    }
+
+    //Función BackEnd para crear un Usuario Cuenta
+    crearUsuarioCuenta(){
+        //Comprobar si los campos están vacios
+        if (this.state.nombreUsuario == '') {
+            toast.error('Por favor llene todos los campos', { 
+                position: "bottom-right", autoClose: 2000, hideProgressBar: false, 
+                closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
+            return;
+        }
+        //falta añadir mas comprobaciones
+        else {
+            //Añadiendo a la BD - Mandar estos parametros a través de esta ruta.
+            fetch('/usuarios/usuariosCuenta', {
+                method: 'POST',
+                body: JSON.stringify({
+
+                    //Cuenta (ERROR NO SE PUEDE CREAR JUNTO)
+                    //idDatosUM: "3",
+                    nombresUM: this.state.nombres.toUpperCase(),
+                    apellidosUM: this.state.apellidos.toUpperCase(),
+                    tipoDocumentoUM: this.state.tipoDocumento,
+                    numDocumentoUM: this.state.numeroDocumento,
+                    telefonosUM: this.state.numeroContacto,
+                    direccionUM: this.state.direccion,
+                    correosUM: this.state.correo,
+                    ciudad: this.state.ciudadCuenta.toUpperCase(),
+                    provincia: this.state.provinciaCuenta.toUpperCase(),
+                    departamento: this.state.departamentoCuenta.toUpperCase(),
+
+                }),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === "error"){
+                        toast.error('Vuelva a iniciar sesión, hay fallas en su autenticación.', { 
+                            position: "bottom-right", autoClose: 2000, hideProgressBar: false, 
+                            closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
+                    }else{
+                        console.log(data); //id que retorno
+                        if (data != -1) {
+                            toast.success('Nuevo usuario agregado', { 
+                                position: "bottom-right", autoClose: 2000, hideProgressBar: false, 
+                                closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
+                            this.borrarTodo.bind(this);
+                        }
+                        if (data == -1) {
+                            toast.error('Uusario actualizada', { 
+                                position: "bottom-right", autoClose: 2000, hideProgressBar: false, 
+                                closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
+                        }
+                    }
+                })
+                .catch(err => console.log(err));
+
+            //clear
+            this.setState({
                 //cuenta
                 nombres: "",
                 apellidos: "",
@@ -300,6 +454,99 @@ class Crearusuario extends Component {
                 provinciaCuenta: "",
                 departamentoCuenta: "",
             
+            });
+        }
+    }
+
+     //Función BackEnd para crear un Usuario Negocio
+     crearUsuarioNegocio(){
+        this.state.fecCreacionUsuario = this.getCurrentDate(); //dar el valor que retorna la funcion a la variable fecCreacionUsuario
+
+        //Comprobar si los campos están vacios
+        if (this.state.rucEmpresa == '') {
+            toast.error('Por favor llene todos los campos', { 
+                position: "bottom-right", autoClose: 2000, hideProgressBar: false, 
+                closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
+            return;
+        }
+        //falta añadir mas comprobaciones
+        else {
+            //Añadiendo a la BD - Mandar estos parametros a través de esta ruta.
+            fetch('/usuarios/usuariosNegocio', {
+                method: 'POST',
+                body: JSON.stringify({
+
+                    //negocio
+                    ruc: this.state.rucEmpresa,
+                    razonSocial: this.state.razonSocial,
+                    nombresN: this.state.nombresNegocio,
+                    apellidospN: this.state.apePatNegocio,
+                    apellidosmN: this.state.apeMatNegocio,
+                    nombreComercialIN: this.state.nombreComNegocio,
+                    usuariosolIN: this.state.usuarioSol,
+                    clavesolIN: this.state.claveSol,
+                    direccionN: this.state.direccionNegocio,
+                    ubigeoN: this.state.ubigeoNegocio,
+                    urbanizacionN: this.state.urbanizacion,
+                    distritoN: this.state.distritoNegocio,
+                    provinciaN: this.state.provinciaNegocio,
+                    departamentoN: this.state.departamentoNegocio,
+                    rubrosN: this.state.rubros,
+                    contactoN: this.state.contactoNegocio,
+                    imagenEmpresaN: this.state.imagenNegocio,
+                    cadenaDeConexion: this.state.cadenaConexion,
+                    fechaCreacionN: this.state.fecCreacionUsuario.toUpperCase(),
+                    
+                }),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === "error"){
+                        toast.error('Vuelva a iniciar sesión, hay fallas en su autenticación.', { 
+                            position: "bottom-right", autoClose: 2000, hideProgressBar: false, 
+                            closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
+                    }else{
+                        console.log(data); //id que retorno
+                        if (data != -1) {
+                            toast.success('Nuevo usuario agregado', { 
+                                position: "bottom-right", autoClose: 2000, hideProgressBar: false, 
+                                closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
+                            this.borrarTodo.bind(this);
+                        }
+                        if (data == -1) {
+                            toast.error('Uusario actualizada', { 
+                                position: "bottom-right", autoClose: 2000, hideProgressBar: false, 
+                                closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
+                        }
+                    }
+                })
+                .catch(err => console.log(err));
+
+            //clear
+            this.setState({ 
+                //negocio
+                rucEmpresa: "",
+                razonSocial: "",
+                nombresNegocio: "",
+                apePatNegocio: "",
+                apeMatNegocio: "",
+                nombreComNegocio: "",
+                usuarioSol: "",
+                claveSol: "",
+                direccionNegocio: "",
+                ubigeoNegocio: "",
+                urbanizacion: "",
+                distritoNegocio: "",
+                provinciaNegocio: "",
+                departamentoNegocio: "",
+                rubros: "",
+                contactoNegocio: "",
+                imagenNegocio: "",
+                cadenaConexion: "",
             });
         }
     }
@@ -377,6 +624,12 @@ class Crearusuario extends Component {
                             funcionControl={this.handleChangeSelectComponent}
                         />          
 
+                    </div>
+
+                    <div className="form-row justify-content-center mt-3">
+                        <div className="col-5">
+                            <button className="btn btn-success btn-block" onClick={this.crearUsuario}> REGISTRAR USUARIO </button>
+                        </div>
                     </div>
 
                     <hr/>
@@ -480,6 +733,12 @@ class Crearusuario extends Component {
                         />
                     </div>
 
+                    <div className="form-row justify-content-center mt-3">
+                        <div className="col-5">
+                            <button className="btn btn-success btn-block" onClick={this.crearUsuarioCuenta}> REGISTRAR CUENTA </button>
+                        </div>
+                    </div>
+
                     <hr/>
                     <h3>Datos de la Empresa</h3>
 
@@ -489,8 +748,8 @@ class Crearusuario extends Component {
                             classInput={this.state.esRucCorrecto === false? "is-invalid": "is-valid"}
                             bloques={"col-4"}
                             etiqueta={"RUC"}
-                            idInput={"ruc"}
-                            nombreInput={"ruc"}
+                            idInput={"rucEmpresa"}
+                            nombreInput={"rucEmpresa"}
                             mensajeValidacionError={"Verificar RUC"}
                             mensajeValidacionOk={"Formato RUC correcto"}
                             readOnly={false}
@@ -507,8 +766,8 @@ class Crearusuario extends Component {
                         <InputComponent
                             bloques={"col-4"}
                             etiqueta={"Nombre Comercial"}
-                            idInput={"razonSocial"}
-                            nombreInput={"razonSocial"}
+                            idInput={"nombreComNegocio"}
+                            nombreInput={"nombreComNegocio"}
                             readOnly={false}
                             funcionControl={this.handleChangeInput}
                         />
@@ -518,24 +777,24 @@ class Crearusuario extends Component {
                         <InputComponent
                             bloques={"col-4"}
                             etiqueta={"Nombres"}
-                            idInput={"razonSocial"}
-                            nombreInput={"razonSocial"}
+                            idInput={"nombresNegocio"}
+                            nombreInput={"nombresNegocio"}
                             readOnly={false}
                             funcionControl={this.handleChangeInput}
                         />
                         <InputComponent
                             bloques={"col-4"}
                             etiqueta={"Apellido P"}
-                            idInput={"razonSocial"}
-                            nombreInput={"razonSocial"}
+                            idInput={"apePatNegocio"}
+                            nombreInput={"apePatNegocio"}
                             readOnly={false}
                             funcionControl={this.handleChangeInput}
                         />
                         <InputComponent
                             bloques={"col-4"}
                             etiqueta={"Apellido M"}
-                            idInput={"razonSocial"}
-                            nombreInput={"razonSocial"}
+                            idInput={"apeMatNegocio"}
+                            nombreInput={"apeMatNegocio"}
                             readOnly={false}
                             funcionControl={this.handleChangeInput}
                         />
@@ -545,94 +804,110 @@ class Crearusuario extends Component {
                         <InputComponent
                             bloques={"col-3"}
                             etiqueta={"Usuario"}
-                            idInput={"razonSocial"}
-                            nombreInput={"razonSocial"}
+                            idInput={"usuarioSol"}
+                            nombreInput={"usuarioSol"}
                             readOnly={false}
                             funcionControl={this.handleChangeInput}
                         />
                         <InputComponent
+                            tipoInput={"password"}
                             bloques={"col-3"}
                             etiqueta={"Clave Sol"}
-                            idInput={"razonSocial"}
-                            nombreInput={"razonSocial"}
+                            idInput={"claveSol"}
+                            nombreInput={"claveSol"}
+                            readOnly={false}
+                            funcionControl={this.handleChangeInput}
+                        />
+                        <InputComponent
+                            tipoInput={"password"}
+                            bloques={"col-3"}
+                            etiqueta={"Clave Sol"}
+                            idInput={"claveSol2"}
+                            nombreInput={"claveSol2"}
                             readOnly={false}
                             funcionControl={this.handleChangeInput}
                         />
                         <InputComponent
                             bloques={"col-3"}
                             etiqueta={"Direccion"}
-                            idInput={"razonSocial"}
-                            nombreInput={"razonSocial"}
+                            idInput={"direccionNegocio"}
+                            nombreInput={"direccionNegocio"}
                             readOnly={false}
                             funcionControl={this.handleChangeInput}
                         />
-                        <InputComponent
-                            bloques={"col-3"}
-                            etiqueta={"Ubigeo"}
-                            idInput={"razonSocial"}
-                            nombreInput={"razonSocial"}
-                            readOnly={false}
-                            funcionControl={this.handleChangeInput}
-                        />
+                        
                     </div>
 
                     <div className="form-row mt-3">
                         <InputComponent
                             bloques={"col-3"}
+                            etiqueta={"Ubigeo"}
+                            idInput={"ubigeoNegocio"}
+                            nombreInput={"ubigeoNegocio"}
+                            readOnly={false}
+                            funcionControl={this.handleChangeInput}
+                        />
+                        <InputComponent
+                            bloques={"col-3"}
                             etiqueta={"Urbanizacion"}
-                            idInput={"razonSocial"}
-                            nombreInput={"razonSocial"}
+                            idInput={"urbanizacion"}
+                            nombreInput={"urbanizacion"}
                             readOnly={false}
                             funcionControl={this.handleChangeInput}
                         />
                         <InputComponent
                             bloques={"col-3"}
                             etiqueta={"Distrito"}
-                            idInput={"razonSocial"}
-                            nombreInput={"razonSocial"}
+                            idInput={"distritoNegocio"}
+                            nombreInput={"distritoNegocio"}
                             readOnly={false}
                             funcionControl={this.handleChangeInput}
                         />
                         <InputComponent
                             bloques={"col-3"}
                             etiqueta={"Provincia"}
-                            idInput={"razonSocial"}
-                            nombreInput={"razonSocial"}
+                            idInput={"provinciaNegocio"}
+                            nombreInput={"provinciaNegocio"}
                             readOnly={false}
                             funcionControl={this.handleChangeInput}
                         />
-                        <InputComponent
-                            bloques={"col-3"}
-                            etiqueta={"Departamento"}
-                            idInput={"razonSocial"}
-                            nombreInput={"razonSocial"}
-                            readOnly={false}
-                            funcionControl={this.handleChangeInput}
-                        />
+                        
                         </div>
                         <div className="form-row mt-3">
                         <InputComponent
+                            bloques={"col-3"}
+                            etiqueta={"Departamento"}
+                            idInput={"departamentoNegocio"}
+                            nombreInput={"departamentoNegocio"}
+                            readOnly={false}
+                            funcionControl={this.handleChangeInput}
+                        />
+                        <InputComponent
                             bloques={"col-4"}
                             etiqueta={"Rubros"}
-                            idInput={"razonSocial"}
-                            nombreInput={"razonSocial"}
+                            idInput={"rubros"}
+                            nombreInput={"rubros"}
                             readOnly={false}
                             funcionControl={this.handleChangeInput}
                         />
                         <InputComponent
                             bloques={"col-4"}
                             etiqueta={"Contacto"}
-                            idInput={"razonSocial"}
-                            nombreInput={"razonSocial"}
+                            idInput={"contactoNegocio"}
+                            nombreInput={"contactoNegocio"}
                             readOnly={false}
                             funcionControl={this.handleChangeInput}
                         />
-                        <InputComponent
-                            bloques={"col-4"}
+                        
+                    </div>
+
+                    <div className="form-row mt-3">
+                    <InputComponent
+                            bloques={"col-8"}
                             tipoInput={"file"}
                             etiqueta={"Imagen"}
-                            idInput={"razonSocial"}
-                            nombreInput={"razonSocial"}
+                            idInput={"imagenNegocio"}
+                            nombreInput={"imagenNegocio"}
                             readOnly={false}
                             funcionControl={this.handleChangeInput}
                         />
@@ -640,8 +915,7 @@ class Crearusuario extends Component {
 
                     <div className="form-row justify-content-center mt-3">
                         <div className="col-5">
-                            <button className="btn btn-success btn-block" onClick={this.crearUsuario}> REGISTRAR USUARIO </button>
-                            <button className="btn btn-success btn-block" onClick={this.borrarTodo}> limpiar USUARIO </button>
+                            <button className="btn btn-success btn-block" onClick={this.crearUsuarioNegocio}> REGISTRAR NEGOCIO </button>
                         </div>
                     </div>
                 </div>

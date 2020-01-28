@@ -11,7 +11,7 @@ class Partida {
     static createPartida(cadenaDeConexion, newPartida, result) {
         sqlNegocio(
             cadenaDeConexion,
-            "insert into info_Partidas set ?",
+            "insert into info_partidas set ?",
             [newPartida],
             function (err, res) {
                 if (err) {
@@ -28,7 +28,7 @@ class Partida {
     static createGrupo(cadenaDeConexion, newGrupo, result) {
         sqlNegocio(
             cadenaDeConexion,
-            "insert into info_GrupoPartidas (nombreGrupo) values(?) ",
+            "insert into info_grupopartidas (nombreGrupo) values(?) ",
             [newGrupo],
             function (err, res) {
                 if (err) {
@@ -45,8 +45,8 @@ class Partida {
     static getAllPartida(cadenaDeConexion, result) {
         sqlNegocio(
             cadenaDeConexion,
-            `select idPartida,nombrePartida,nombreGrupo from info_Partidas join info_GrupoPartidas   
-        on info_Partidas.idGrupo =info_GrupoPartidas.idGrupoPartida` ,
+            `select idPartida,nombrePartida,nombreGrupo from info_partidas join info_grupopartidas   
+        on info_partidas.idGrupo =info_grupopartidas.idGrupoPartida` ,
             [],
             function (err, res) {
                 if (err) {
@@ -63,7 +63,7 @@ class Partida {
     static getAllGrupoPartida(cadenaDeConexion, result) {
         sqlNegocio(
             cadenaDeConexion,
-            `select idGrupoPartida,nombreGrupo from   info_GrupoPartidas   ` ,
+            `select idGrupoPartida,nombreGrupo from   info_grupopartidas   ` ,
             [],
             function (err, res) {
                 if (err) {

@@ -18,7 +18,7 @@ class Producto {
     static getProductoById(cadenaDeConexion, productoId, result) {
         sqlNegocio(
             cadenaDeConexion,
-            "Select * from info_Productos  WHERE nombreProducto LIKE '%"+productoId+"%' ",
+            "Select * from info_productos  WHERE nombreProducto LIKE '%"+productoId+"%' ",
             [],
             function (err, res) {
               //productoId remplaza a nombre producto, hacemos la busca de todos los productos q tengas ese contenido en su campo nombreproducto
@@ -35,7 +35,7 @@ class Producto {
     static getAllProducto(cadenaDeConexion, result) {
         sqlNegocio(
             cadenaDeConexion,
-            `select *from info_Productos` ,
+            `select *from info_productos` ,
             [],
             function (err, res) {
                 if (err) {
@@ -53,7 +53,7 @@ class Producto {
         if (sucursalId < 0){
             sqlNegocio(
                 cadenaDeConexion,
-                'SELECT * FROM info_Productos',
+                'SELECT * FROM info_productos',
                 [],
                 function (err, res) {
                     if (err){
@@ -65,7 +65,7 @@ class Producto {
         }else{
             sqlNegocio(
                 cadenaDeConexion,
-                'SELECT * FROM info_Productos WHERE sucursal=?',
+                'SELECT * FROM info_productos WHERE sucursal=?',
                 [sucursalId],
                 function (err, res) {
                     if (err){
@@ -81,7 +81,7 @@ class Producto {
         if (sucursalId === "-1"){
             sqlNegocio(
                 cadenaDeConexion,
-                'SELECT * FROM info_Productos',
+                'SELECT * FROM info_productos',
                 [],
                 function (err, res) {
                     if (err) {
@@ -94,7 +94,7 @@ class Producto {
         }else{
             sqlNegocio(
                 cadenaDeConexion,
-                'SELECT * FROM info_Productos WHERE sucursal=?',
+                'SELECT * FROM info_productos WHERE sucursal=?',
                 [sucursalId],
                 function (err, res) {
                     if (err) {
@@ -112,7 +112,7 @@ class Producto {
         if (sucursalId === "-1"){
             sqlNegocio(
                 cadenaDeConexion,
-                'SELECT * FROM info_Productos WHERE ' + columnName + ' LIKE \'%' + valueColumn +'%\'',
+                'SELECT * FROM info_productos WHERE ' + columnName + ' LIKE \'%' + valueColumn +'%\'',
                 [],
                 function (err, res) {
                     if (err) {
@@ -125,7 +125,7 @@ class Producto {
         }else{
             sqlNegocio(
                 cadenaDeConexion,
-                'SELECT *  FROM (SELECT * FROM info_Productos WHERE sucursal=?) as productos WHERE ' + columnName + ' LIKE \'%' + valueColumn +'%\'',
+                'SELECT *  FROM (SELECT * FROM info_productos WHERE sucursal=?) as productos WHERE ' + columnName + ' LIKE \'%' + valueColumn +'%\'',
                 [sucursalId],
                 function (err, res) {
                     if (err) {
@@ -141,7 +141,7 @@ class Producto {
     static createProducto(cadenaDeConexion, newProducto, result) {
         sqlNegocio(
             cadenaDeConexion,
-            `select idProducto from info_Productos where nombreProducto=?`,
+            `select idProducto from info_productos where nombreProducto=?`,
             [newProducto.nombreProducto],
             function (err, res) {
                 if (err) {
@@ -155,7 +155,7 @@ class Producto {
                         newProducto.idProducto=res[0].idProducto;
                         sqlNegocio(
                             cadenaDeConexion,
-                            "update info_Productos set ?  where nombreProducto=?",
+                            "update info_productos set ?  where nombreProducto=?",
                             [ newProducto , newProducto.nombreProducto],
                             function (err_1, res_1) {
                                 if (err_1) {
@@ -171,7 +171,7 @@ class Producto {
                     else{
                         sqlNegocio(
                             cadenaDeConexion,
-                            "insert into info_Productos set ?",
+                            "insert into info_productos set ?",
                             [newProducto],
                             function (err_2, res_2) {
                                 if (err_2) {
@@ -193,7 +193,7 @@ class Producto {
         console.log(oldStock);
         sqlNegocio(
             cadenaDeConexion,
-            'UPDATE info_Productos SET stockProducto=? WHERE idProducto=?',
+            'UPDATE info_productos SET stockProducto=? WHERE idProducto=?',
             [oldStock.nuevoStock, oldStock.idProducto],
             function (err, res) {
                 if (err){

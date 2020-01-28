@@ -10,7 +10,7 @@ class Fuente {
     static createFuente(cadenaDeConexion, newFuente, result) {
         sqlNegocio(
             cadenaDeConexion,
-            `select codFuente from info_Fuente where Fuente=?`,
+            `select codFuente from info_fuente where Fuente=?`,
             [newFuente.Fuente],
             function (err, res) {
                 if (err) {
@@ -21,7 +21,7 @@ class Fuente {
                     if(res.length>0) {
                         sqlNegocio(
                             cadenaDeConexion,
-                            "update info_Fuente set ?  where Fuente=?",
+                            "update info_fuente set ?  where Fuente=?",
                             [ {codFuente:res.codFuente,
                                 Fuente: newFuente.fuente,
                                 saldo: newFuente.saldo}, newFuente.fuente],
@@ -39,7 +39,7 @@ class Fuente {
                     else{
                         sqlNegocio(
                             cadenaDeConexion,
-                            "insert into info_Fuente set ?",
+                            "insert into info_fuente set ?",
                             [newFuente],
                             function (err_2, res_2) {
                                 if (err_2) {
@@ -58,7 +58,7 @@ class Fuente {
     static getAllFuente(cadenaDeConexion, result) {
         sqlNegocio(
             cadenaDeConexion,
-            `select * from info_Fuente` ,
+            `select * from info_fuente` ,
             [],
             function (err, res) {
                 if (err) {
