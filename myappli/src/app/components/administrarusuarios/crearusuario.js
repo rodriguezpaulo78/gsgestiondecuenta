@@ -206,9 +206,10 @@ class Crearusuario extends Component {
                     claveUM: this.state.clave1.toUpperCase(),
                     fechaCreacionUM: this.state.fecCreacionUsuario.toUpperCase(),
                     tipoPerfilUM: this.state.perfilUsuario.toUpperCase(),
-                    creadoPorUM: 1,
-                    habilitadoUM: 1,
-                    idNegocioAsignadoUM: 3,
+                    //No se puede mandar numeros
+                    creadoPorUM: "1",
+                    habilitadoUM: "1",
+                    idNegocioAsignadoUM: "3",
 
                     //Cuenta
 

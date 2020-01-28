@@ -3,15 +3,22 @@
 let Usuario = require('../models/usuarios_model');
 
 exports.crearNuevoUsuario = function (req, res) {
+    //Hace la encriptacion de la contraseña
     let nuevoUsuario = new Usuario(req.body);
     nuevoUsuario.claveUM = Usuario.toHash(nuevoUsuario.claveUM);
 
     Usuario.registrarUsuarioSesion(nuevoUsuario, function(err, result) {
+        /*
         if (err){
-            res.sendStatus(err);
+            res.send(err);
         }else{
-            res.sendStatus(result);
+            res.send(result);
+            
         }
+        */
+        if (err)
+            res.send(err);
+        res.json(result);
     })
 
 };
