@@ -46,7 +46,7 @@ class Ingresos {
     static getIngresoById(cadenaDeConexion, ingresosId, result) {
         sqlNegocio(
             cadenaDeConexion,
-            "Select * from info_Ingresos where idIngreso = ? ",
+            "Select * from info_ingresos where idIngreso = ? ",
             [ingresosId],
             function (err, res) {
                 if (err) {
@@ -66,18 +66,18 @@ class Ingresos {
             movimiento_t = `WHERE tbl.movimiento=? `;
         }
 
-        let sql_comand = `select * from (select idIngreso as numero,codMes,horEmision,nombreSucursal,tipOperacion,info_Fuente.fuente as codFuente,info_Ingresos.idPartida,nombrePartida,nombreGrupo,fecEmision,fecVencimiento,tipoComprobante,
+        let sql_comand = `select * from (select idIngreso as numero,codMes,horEmision,nombreSucursal,tipOperacion,info_fuente.fuente as codFuente,info_ingresos.idPartida,nombrePartida,nombreGrupo,fecEmision,fecVencimiento,tipoComprobante,
         numSerieComprobante,numComprobante,tipDocUsuario,numDocUsuario,razSocial,desDireccionCliente,codPaisCliente,codUbigeoCliente,tipMoneda, detalleIngreso,aCreditoDias,
         sumTotValVenta,sumTotTributos,sumPrecioVenta,sumDescTotal,sumOtrosCargos,
         aCuenta,costVenta,costServicio,utilidad,movimiento,dua_dsi,editable, estado,(sumPrecioVenta - aCuenta) as saldo
-                 from info_Ingresos left join info_Sucursales 
-                                    on info_Ingresos.codSucursal=info_Sucursales.codSucursal
-                                    left join info_Clientes on info_Clientes.idCliente= info_Ingresos.idCliente
-                                    left join info_Fuente on info_Ingresos.codFuente= info_Fuente.codFuente
-                                    left join (select idPartida,nombrePartida,nombreGrupo from info_Partidas left join info_GrupoPartidas   
-                                            on info_Partidas.idGrupo =info_GrupoPartidas.idGrupoPartida) as partidas
-                                         on partidas.idPartida= info_Ingresos.idPartida
-                                         WHERE (info_Ingresos.fecEmision  BETWEEN '`+ fI + `' AND '` + fF + `')) as tbl ` + movimiento_t + ` order by tbl.numero DESC`;
+                 from info_ingresos left join info_sucursales 
+                                    on info_ingresos.codSucursal=info_sucursales.codSucursal
+                                    left join info_clientes on info_clientes.idCliente= info_ingresos.idCliente
+                                    left join info_fuente on info_ingresos.codFuente= info_fuente.codFuente
+                                    left join (select idPartida,nombrePartida,nombreGrupo from info_partidas left join info_grupopartidas   
+                                            on info_partidas.idGrupo =info_grupopartidas.idGrupoPartida) as partidas
+                                         on partidas.idPartida= info_ingresos.idPartida
+                                         WHERE (info_ingresos.fecEmision  BETWEEN '`+ fI + `' AND '` + fF + `')) as tbl ` + movimiento_t + ` order by tbl.numero DESC`;
         sqlNegocio(
             cadenaDeConexion,
             sql_comand,
@@ -100,19 +100,19 @@ class Ingresos {
 
         sqlNegocio(
             cadenaDeConexion,
-            `select idIngreso as numero,codMes,horEmision,nombreSucursal,tipOperacion,info_Fuente.fuente as codFuente,info_Ingresos.idPartida,nombrePartida,nombreGrupo,fecEmision,fecVencimiento,tipoComprobante,
+            `select idIngreso as numero,codMes,horEmision,nombreSucursal,tipOperacion,info_fuente.fuente as codFuente,info_ingresos.idPartida,nombrePartida,nombreGrupo,fecEmision,fecVencimiento,tipoComprobante,
         numSerieComprobante,numComprobante,tipDocUsuario,numDocUsuario,razSocial,desDireccionCliente,codPaisCliente,codUbigeoCliente,tipMoneda, detalleIngreso,aCreditoDias,
         sumTotValVenta,sumTotTributos,sumPrecioVenta,sumDescTotal,sumOtrosCargos,
         aCuenta,costVenta,costServicio,utilidad,movimiento,dua_dsi,editable, estado
-                 from info_Ingresos left join info_Sucursales 
-                                    on info_Ingresos.codSucursal=info_Sucursales.codSucursal
-                                    left join info_Clientes on info_Clientes.idCliente= info_Ingresos.idCliente
-                                    left join info_Fuente on info_Ingresos.codFuente= info_Fuente.codFuente
-                                    left join (select idPartida,nombrePartida,nombreGrupo from info_Partidas left join info_GrupoPartidas   
-                                            on info_Partidas.idGrupo =info_GrupoPartidas.idGrupoPartida) as partidas
-                                         on partidas.idPartida= info_Ingresos.idPartida
-                                         WHERE info_Ingresos.codOperacion = `+ idIngreso +
-            ` AND info_Ingresos.tipoComprobante =2 `,
+                 from info_ingresos left join info_sucursales 
+                                    on info_ingresos.codSucursal=info_sucursales.codSucursal
+                                    left join info_clientes on info_clientes.idCliente= info_ingresos.idCliente
+                                    left join info_fuente on info_ingresos.codFuente= info_fuente.codFuente
+                                    left join (select idPartida,nombrePartida,nombreGrupo from info_partidas left join info_grupopartidas   
+                                            on info_partidas.idGrupo =info_grupopartidas.idGrupoPartida) as partidas
+                                         on partidas.idPartida= info_ingresos.idPartida
+                                         WHERE info_ingresos.codOperacion = `+ idIngreso +
+            ` AND info_ingresos.tipoComprobante =2 `,
             [],
             function (err, res) {
                 //2 es pago
@@ -133,7 +133,7 @@ class Ingresos {
         //1 - ingreso, 0-egreso
         sqlNegocio(
             cadenaDeConexion,
-            "insert into info_Ingresos set ?",
+            "insert into info_ingresos set ?",
             [newIngreso],
             function (err, res) {
                 if (err) {
@@ -147,7 +147,7 @@ class Ingresos {
                     ///actualizar fuente- caja, sumar o restar el valor a cuenta segun sea ingreso o egreso a cada caja que se registre
                     sqlNegocio(
                         cadenaDeConexion,
-                        "UPDATE info_Fuente SET  saldo=saldo+ " + (newIngreso.aCuenta * flag) + " WHERE codFuente = " + newIngreso.codFuente,
+                        "UPDATE info_fuente SET  saldo=saldo+ " + (newIngreso.aCuenta * flag) + " WHERE codFuente = " + newIngreso.codFuente,
                         [],
                         function (err_, res_) {
                             if (err_) {
@@ -160,7 +160,7 @@ class Ingresos {
                     if ((newIngreso.codOperacion != null) && (newIngreso.tipoComprobante != 3) && (newIngreso.tipoComprobante != 2)) {
                         sqlNegocio(
                             cadenaDeConexion,
-                            "UPDATE info_Ingresos SET  costServicio = costServicio+" + newIngreso.sumPrecioVenta + " WHERE idIngreso = " + newIngreso.codOperacion,
+                            "UPDATE info_ingresos SET  costServicio = costServicio+" + newIngreso.sumPrecioVenta + " WHERE idIngreso = " + newIngreso.codOperacion,
                             [],
                             function (err_, res_) {
                                 if (err_) {
@@ -177,7 +177,7 @@ class Ingresos {
                         if (newIngreso.tipoComprobante == 2) {
                             sqlNegocio(
                                 cadenaDeConexion,
-                                "UPDATE info_Ingresos SET  aCuenta = aCuenta+" + newIngreso.aCuenta + " WHERE idIngreso = " + newIngreso.codOperacion,
+                                "UPDATE info_ingresos SET  aCuenta = aCuenta+" + newIngreso.aCuenta + " WHERE idIngreso = " + newIngreso.codOperacion,
                                 [],
                                 function (error_, resu_) {
                                     if (error_) {
@@ -207,13 +207,13 @@ class Ingresos {
         ///verificar si es ingreso o egreso para sumar o restar el valor a la caja fuente
         sqlNegocio(
             cadenaDeConexion,
-            "SELECT  * from info_Ingresos WHERE idIngreso = " + idIngreso,
+            "SELECT  * from info_ingresos WHERE idIngreso = " + idIngreso,
             [],
             function (err, res) {
                 if (res[0].movimiento == 0) { flag = 1; }
                 sqlNegocio(
                     cadenaDeConexion,
-                    "UPDATE info_Fuente SET  saldo = saldo +" + (res[0].aCuenta * flag) + " WHERE codFuente = " + res[0].codFuente,
+                    "UPDATE info_fuente SET  saldo = saldo +" + (res[0].aCuenta * flag) + " WHERE codFuente = " + res[0].codFuente,
                     [],
                     function (err, res18) {
                         if (err) {
@@ -231,12 +231,12 @@ class Ingresos {
 
         sqlNegocio(
             cadenaDeConexion,
-            "SELECT  * from info_Ingresos WHERE idIngreso = " + idIngreso,
+            "SELECT  * from info_ingresos WHERE idIngreso = " + idIngreso,
             [],
             function (err, res) {
                 sqlNegocio(
                     cadenaDeConexion,
-                    "UPDATE info_Ingresos SET  aCuenta = aCuenta-" + (res[0].aCuenta) + " WHERE idIngreso = " + res[0].codOperacion,
+                    "UPDATE info_ingresos SET  aCuenta = aCuenta-" + (res[0].aCuenta) + " WHERE idIngreso = " + res[0].codOperacion,
                     [],
                     function (err, res18) {
                         if (err) {
@@ -251,13 +251,13 @@ class Ingresos {
         var flag = (-1);
         sqlNegocio(
             cadenaDeConexion,
-            "SELECT  * from info_Ingresos WHERE idIngreso = " + ingresosId,
+            "SELECT  * from info_ingresos WHERE idIngreso = " + ingresosId,
             [],
             function (err, ress) {
                 if (ress[0].movimiento == 1) { flag = 1; }
                 sqlNegocio(
                     cadenaDeConexion,
-                    "Select * from detalle_Inventarios where idIngreso = ? ", ingresosId,
+                    "Select * from detalle_inventarios where idIngreso = ? ", ingresosId,
                     [],
                     function (errr, res, fields) {
                         Object.keys(res).forEach(function (key) {
@@ -265,7 +265,7 @@ class Ingresos {
                             // console.log(row.idDetalle, row.ctdUnidadItem)
                             sqlNegocio(
                                 cadenaDeConexion,
-                                "UPDATE info_Productos SET stockProducto=stockProducto+" + (row.ctdUnidadItem * flag) + " WHERE idProducto =" + row.idProducto,
+                                "UPDATE info_productos SET stockProducto=stockProducto+" + (row.ctdUnidadItem * flag) + " WHERE idProducto =" + row.idProducto,
                                 [],
                                 function (err_, res_) { });
                         });
@@ -282,7 +282,7 @@ class Ingresos {
 
         sqlNegocio(
             cadenaDeConexion,
-            "UPDATE info_Ingresos SET " + field + " = " + value + " WHERE idIngreso = " + id,
+            "UPDATE info_ingresos SET " + field + " = " + value + " WHERE idIngreso = " + id,
             [],
             function (err, res) {
                 if (err) {
@@ -300,20 +300,20 @@ class Ingresos {
     static GetInfoReports(cadenaDeConexion, fI, fF, idSucursal, result) {
         var sucursal = '';
         if (idSucursal != 1) {
-            sucursal = `AND info_Ingresos.codSucursal=` + idSucursal;
+            sucursal = `AND info_ingresos.codSucursal=` + idSucursal;
         }
         console.log("sucursal ", sucursal);
         sqlNegocio(
             cadenaDeConexion,
-            `SELECT info_GrupoPartidas.nombreGrupo,info_Partidas.idPartida,info_Partidas.nombrePartida,codMes,SUM(sumPrecioVenta) as PrecioVenta, (SUM(sumPrecioVenta) - SUM(aCuenta)) as pagar_cobrar,SUM(costVenta) as cost_venta
-        FROM info_Ingresos 
-            left join info_Partidas
-                on info_Ingresos.idPartida=info_Partidas.idPartida
-            left join info_Fuente 
-                on info_Ingresos.codFuente=info_Fuente.codFuente
-             left join info_GrupoPartidas
-                 on info_Partidas.idGrupo=info_GrupoPartidas.idGrupoPartida
-                where  info_Ingresos.idPartida!=1 ` + sucursal + ` and tipoComprobante!=2 and tipoComprobante!=3  
+            `SELECT info_grupopartidas.nombreGrupo,info_partidas.idPartida,info_partidas.nombrePartida,codMes,SUM(sumPrecioVenta) as PrecioVenta, (SUM(sumPrecioVenta) - SUM(aCuenta)) as pagar_cobrar,SUM(costVenta) as cost_venta
+        FROM info_ingresos 
+            left join info_partidas
+                on info_ingresos.idPartida=info_partidas.idPartida
+            left join info_fuente 
+                on info_ingresos.codFuente=info_fuente.codFuente
+             left join info_grupopartidas
+                 on info_partidas.idGrupo=info_grupopartidas.idGrupoPartida
+                where  info_ingresos.idPartida!=1 ` + sucursal + ` and tipoComprobante!=2 and tipoComprobante!=3  
                									 and fecEmision BETWEEN  '`+ fI + `' AND '` + fF + `' AND estado=1
                 group by nombreGrupo,idPartida,codMes
                 order by idGrupoPartida ASC,idPartida ASC`,
@@ -333,24 +333,24 @@ class Ingresos {
 
         var sucursal = '';
         if (idSucursal != 1) {
-            sucursal = `AND info_Ingresos.codSucursal=` + idSucursal;
+            sucursal = `AND info_ingresos.codSucursal=` + idSucursal;
         }
         console.log("sucursal ", sucursal);
         sqlNegocio(
             cadenaDeConexion,
-            `    SELECT  base.codMes, SUM(base.precioVenta) as totalVenta from (SELECT info_GrupoPartidas.nombreGrupo,info_Ingresos.codMes,
+            `    SELECT  base.codMes, SUM(base.precioVenta) as totalVenta from (SELECT info_grupopartidas.nombreGrupo,info_ingresos.codMes,
 
-            CASE  info_GrupoPartidas.nombreGrupo
-            WHEN    'EGRESOS' THEN -(SUM(info_Ingresos.sumPrecioVenta))
-            WHEN    'INGRESOS' THEN SUM(info_Ingresos.sumPrecioVenta)
+            CASE  info_grupopartidas.nombreGrupo
+            WHEN    'EGRESOS' THEN -(SUM(info_ingresos.sumPrecioVenta))
+            WHEN    'INGRESOS' THEN SUM(info_ingresos.sumPrecioVenta)
             END as precioVenta
         
         
-        from info_Ingresos  LEFT JOIN
-        info_Partidas on info_Ingresos.idPartida = info_Partidas.idPartida  LEFT JOIN 
-        info_GrupoPartidas on info_GrupoPartidas.idGrupoPartida = info_Partidas.idGrupo 
-        where info_Ingresos.fecEmision BETWEEN '`+ fI + `' AND '` + fF + `' AND info_Ingresos.estado=1 ` + sucursal + ` AND ( info_GrupoPartidas.nombreGrupo = 'EGRESOS' or info_GrupoPartidas.nombreGrupo = 'INGRESOS')
-        group by info_GrupoPartidas.nombreGrupo,info_Ingresos.codMes)as base group by  base.codMes
+        from info_ingresos  LEFT JOIN
+        info_partidas on info_ingresos.idPartida = info_partidas.idPartida  LEFT JOIN 
+        info_grupopartidas on info_grupopartidas.idGrupoPartida = info_partidas.idGrupo 
+        where info_ingresos.fecEmision BETWEEN '`+ fI + `' AND '` + fF + `' AND info_ingresos.estado=1 ` + sucursal + ` AND ( info_grupopartidas.nombreGrupo = 'EGRESOS' or info_grupopartidas.nombreGrupo = 'INGRESOS')
+        group by info_grupopartidas.nombreGrupo,info_ingresos.codMes)as base group by  base.codMes
         order by base.codMes ASC`,
             [],
             function (err, res) {
@@ -368,12 +368,12 @@ class Ingresos {
 
         var sucursal = '';
         if (idSucursal != 1) {
-            sucursal = `AND info_Ingresos.codSucursal=` + idSucursal;
+            sucursal = `AND info_ingresos.codSucursal=` + idSucursal;
         }
         console.log("sucursal ", sucursal);
         sqlNegocio(
             cadenaDeConexion,
-            `SELECT movimiento ,sum((sumPrecioVenta - aCuenta) ) as saldo from info_Ingresos
+            `SELECT movimiento ,sum((sumPrecioVenta - aCuenta) ) as saldo from info_ingresos
                      where estado=1 ` + sucursal + ` and tipoComprobante!=2 and tipoComprobante!=3  
                			   and fecEmision BETWEEN  '`+ fI + `' AND '` + fF + `' 
                         group by movimiento`,
@@ -397,7 +397,7 @@ class Ingresos {
 
         sqlNegocio(
             cadenaDeConexion,
-            "DELETE FROM detalle_Inventarios WHERE idIngreso = ?",
+            "DELETE FROM detalle_inventarios WHERE idIngreso = ?",
             [ingresosId],
             function (err, res) {
                 if (err) {
@@ -406,7 +406,7 @@ class Ingresos {
                 }else {
                     sqlNegocio(
                         cadenaDeConexion,
-                        "DELETE FROM info_Ingresos WHERE idIngreso = ?",
+                        "DELETE FROM info_ingresos WHERE idIngreso = ?",
                         [ingresosId],
                         function (err, res) {
                             if (err) {

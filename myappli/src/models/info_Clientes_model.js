@@ -16,7 +16,7 @@ class Clientes {
     static createCliente(cadenaDeConexion, newCliente, result) {
         sqlNegocio(
             cadenaDeConexion,
-            `select idCliente from info_Clientes where numDocUsuario=?`,
+            `select idCliente from info_clientes where numDocUsuario=?`,
             [newCliente.numDocUsuario],
             function (err, res) {
                 if (err) {
@@ -27,7 +27,7 @@ class Clientes {
                         newCliente.idCliente=res[0].idCliente;
                         sqlNegocio(
                             cadenaDeConexion,
-                            "update info_Clientes set ?  where numDocUsuario=?",
+                            "update info_clientes set ?  where numDocUsuario=?",
                             [ newCliente , newCliente.numDocUsuario],
                             function (err_1, res_1) {
                                 if (err_1) {
@@ -43,7 +43,7 @@ class Clientes {
                     }else{
                         sqlNegocio(
                             cadenaDeConexion,
-                            "insert into info_Clientes set ?",
+                            "insert into info_clientes set ?",
                             [newCliente],
                             function (err_2, res_2) {
                                 if (err_2) {
@@ -63,7 +63,7 @@ class Clientes {
     static getClienteById(cadenaDeConexion, clienteId, result) {
         sqlNegocio(
             cadenaDeConexion,
-            "Select * from info_Clientes where numDocUsuario = ? ",
+            "Select * from info_clientes where numDocUsuario = ? ",
             [clienteId],
             function (err, res) {
                 if (err) {

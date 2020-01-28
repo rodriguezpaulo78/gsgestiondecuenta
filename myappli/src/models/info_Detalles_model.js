@@ -21,7 +21,7 @@ class Detalle{
     static getDetalleById(cadenaDeConexion, detallesId, result) {
         sqlNegocio(
             cadenaDeConexion,
-            "Select * from detalle_Inventarios where idIngreso = ? ",
+            "Select * from detalle_inventarios where idIngreso = ? ",
             [detallesId],
             function (err, res) {
                 if (err){
@@ -40,7 +40,7 @@ class Detalle{
     static createDetalle(cadenaDeConexion, newDetalle, result) {
         sqlNegocio(
             cadenaDeConexion,
-            "insert into detalle_Inventarios set ?",
+            "insert into detalle_inventarios set ?",
             [newDetalle],
             function (err, res) {
                 if (err){
