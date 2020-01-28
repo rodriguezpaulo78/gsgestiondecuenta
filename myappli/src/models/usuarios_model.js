@@ -87,7 +87,9 @@ class Usuario{
             });
     }
 
+    /*
     static registrarUsuarioDatos(nuevoUsuario, result){
+        /*
         sqlDbNegocios(
             cadenaDeConexion,
             'INSERT INTO datosusuariosmaster(idDatosUM,nombresUM,apellidosUM,numDocumentoUM,tipoDocumentoUM,telefonosUM,direccionUM,correosUM,ciudad,departamento,provincia) VALUES (?,?,?,?,?,?,?,?,?,?,?)',
@@ -100,8 +102,26 @@ class Usuario{
                 }
             }
         );
+*/
+
+/*
+        sql.query(
+            "insert into datosusuariosmaster set ?",
+            [nuevoUsuario],
+            function (err_2, res_2) {
+                if (err_2) {
+                    console.log("error: ", err_2);
+                    result(err_2, null);
+                }
+                else {
+                    console.log(res_2.insertId);
+                    result(null, res_2.insertId);
+                }
+            });
     }
 
+    */
+   
     // FUNCIÓN PARA INICIAR SESIÓN, SE BUSCAN LOS DATOS DE TODOS DEL USUARIO ASÍ COMO LOS DATOS DEL
     // NEGOCIO AL CUAL FUE ASIGNADO, DE ESTA MANERA YA RECUPERAMOS LA CADENA DE CONEXION
     static inicioSesionMaster(usuario, result){

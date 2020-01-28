@@ -7,18 +7,30 @@ class Crearusuario extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            //sesion
             nombreUsuario: "",
             clave1: "",
             clave2: "",
             ruc: "",
             perfilUsuario: '',      //tipo de perfil seleccionado
-
             listaPerfiles: [],
-        
+
             controlUsuarioDuplicado: 0,
             esRucCorrecto: false,
             correctoClaveRepetida: true,
             esLargoClave: true,
+
+            //cuenta
+            nombres: "",
+            apellidos: "",
+            tipoDocumento: "",
+            numeroDocumento: "",
+            numeroContacto: "",
+            direccion: "",
+            correo: "",
+            ciudadCuenta: "",
+            provinciaCuenta: "",
+            departamentoCuenta: "",
             
             
 
@@ -42,10 +54,24 @@ class Crearusuario extends Component {
     borrarTodo(){
         console.log("BORRANDO TODO");
         this.setState({
+            //sesion
             nombreUsuario: '',
             clave1: '',
             clave2: '',
             ruc: '',
+
+            //cuenta
+            nombres: "",
+            apellidos: "",
+            tipoDocumento: "",
+            numeroDocumento: "",
+            numeroContacto: "",
+            direccion: "",
+            correo: "",
+            ciudadCuenta: "",
+            provinciaCuenta: "",
+            departamentoCuenta: "",
+            
         });
     }
 
@@ -187,8 +213,7 @@ class Crearusuario extends Component {
         this.state.fecCreacionUsuario = this.getCurrentDate(); //dar el valor que retorna la funcion a la variable fecCreacionUsuario
 
         //Comprobar si los campos están vacios
-        if (this.state.nombreUsuario == '' || this.state.ruc == '' || this.state.clave1 == '' ||
-            this.state.perfilUsuario == '') {
+        if (this.state.nombreUsuario == '' || this.state.ruc == '' || this.state.clave1 == '' || this.state.perfilUsuario == '') {
             toast.error('Por favor llene todos los campos', { 
                 position: "bottom-right", autoClose: 2000, hideProgressBar: false, 
                 closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
@@ -211,7 +236,19 @@ class Crearusuario extends Component {
                     habilitadoUM: "1",
                     idNegocioAsignadoUM: "3",
 
-                    //Cuenta
+                    /*
+                    //Cuenta (ERROR NO SE PUEDE CREAR JUNTO)
+                    nombresUM: this.state.nombres.toUpperCase(),
+                    apellidosUM: this.state.apellidos.toUpperCase(),
+                    tipoDocumentoUM: this.state.tipoDocumento,
+                    numDocumentoUM: this.state.numeroDocumento,
+                    telefonosUM: this.state.numeroContacto,
+                    direccionUM: this.state.direccion,
+                    correosUM: this.state.correo,
+                    ciudad: this.state.ciudadCuenta.toUpperCase(),
+                    provincia: this.state.provinciaCuenta.toUpperCase(),
+                    departamento: this.state.departamentoCuenta.toUpperCase(),
+                    */
 
                 }),
                 headers: {
@@ -228,7 +265,7 @@ class Crearusuario extends Component {
                     }else{
                         console.log(data); //id que retorno
                         if (data != -1) {
-                            toast.success('Nuevo usuario agregado agregada', { 
+                            toast.success('Nuevo usuario agregado', { 
                                 position: "bottom-right", autoClose: 2000, hideProgressBar: false, 
                                 closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
                             this.borrarTodo.bind(this);
@@ -244,11 +281,25 @@ class Crearusuario extends Component {
 
             //clear
             this.setState({
+                //sesion
                 nombreUsuario: '',
                 ruc: '',
                 clave1: '',
                 perfilUsuario: '',
                 fecCreacionPerfil: '',
+
+                //cuenta
+                nombres: "",
+                apellidos: "",
+                tipoDocumento: "",
+                numeroDocumento: "",
+                numeroContacto: "",
+                direccion: "",
+                correo: "",
+                ciudadCuenta: "",
+                provinciaCuenta: "",
+                departamentoCuenta: "",
+            
             });
         }
     }
@@ -360,6 +411,7 @@ class Crearusuario extends Component {
                             nombreValor={"cod"}
                         />
                         <InputComponent
+                            tipoInput={"number"}
                             bloques={"col-3"}
                             etiqueta={"Número de Documento"}
                             idInput={"numeroDocumento"}
@@ -405,24 +457,24 @@ class Crearusuario extends Component {
                         <InputComponent
                             bloques={"col-4"}
                             etiqueta={"Ciudad"}
-                            idInput={"ciudad"}
-                            nombreInput={"ciudad"}
+                            idInput={"ciudadCuenta"}
+                            nombreInput={"ciudadCuenta"}
                             readOnly={false}
                             funcionControl={this.handleChangeInput}
                         />
                         <InputComponent
                             bloques={"col-4"}
                             etiqueta={"Provincia"}
-                            idInput={"provincia"}
-                            nombreInput={"provincia"}
+                            idInput={"provinciaCuenta"}
+                            nombreInput={"provinciaCuenta"}
                             readOnly={false}
                             funcionControl={this.handleChangeInput}
                         />
                         <InputComponent
                             bloques={"col-4"}
                             etiqueta={"Departamento"}
-                            idInput={"departamento"}
-                            nombreInput={"departamento"}
+                            idInput={"departamentoCuenta"}
+                            nombreInput={"departamentoCuenta"}
                             readOnly={false}
                             funcionControl={this.handleChangeInput}
                         />

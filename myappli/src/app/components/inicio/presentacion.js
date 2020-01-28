@@ -17,8 +17,6 @@ import Parametros from "../parametros/parametros";
 import DatosEmpresa from "../parametros/datosempresa";
 import ConfiguracionImpresion from "../parametros/configuracionimpresion";
 
-
-
 class Presentacion extends Component{
     constructor(props){
         super(props);

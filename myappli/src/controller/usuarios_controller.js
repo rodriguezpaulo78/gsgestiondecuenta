@@ -23,6 +23,27 @@ exports.crearNuevoUsuario = function (req, res) {
 
 };
 
+/*
+exports.crearNuevoUsuarioCuenta = function (req, res) {
+    let nuevoUsuario = new Usuario(req.body);
+    Usuario.registrarUsuarioDatos(nuevoUsuario, function(err, result) {
+        /*
+        if (err){
+            res.send(err);
+        }else{
+            res.send(result);
+            
+        }
+        
+        //este es el metodo corecto
+        if (err)
+            res.send(err);
+        res.json(result);
+    })
+
+};
+*/
+
   exports.list_all_perfiles= function(req, res) {
     Usuario.getAllPerfil(req.body.dataToken.cadenaDeConexion, function(err, perfil) {
   
