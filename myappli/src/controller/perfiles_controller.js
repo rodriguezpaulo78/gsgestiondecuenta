@@ -11,6 +11,15 @@ exports.obtenerPerfiles = function (req, res) {
         }
     });
 };
+exports.obtenerPerfilesYpermisos = function (req, res) {
+  Perfil.obtenerPerfilesYpermisos(req.body.dataToken.cadenaDeConexion, (err, result) => {
+      if (err){
+          res.send({status: "error", msg: "Error al obtener los perfiles y permisos", data: []});
+      }else{
+          res.send({status: "ok", msg: "Lista de perfiles y permisos obtenidos con éxito", data: result});
+      }
+  });
+};
 
 exports.create_a_perfil = function(req, res) {
     var new_perfil = new Perfil(req.body);
@@ -46,15 +55,7 @@ exports.create_a_perfil = function(req, res) {
     });
   };
 
-  exports.obtenerPerfilesYpermisos = function (req, res) {
-    Perfil.obtenerPerfilesYpermisos(req.body.dataToken.cadenaDeConexion, (err, result) => {
-        if (err){
-            res.send({status: "error", msg: "Error al obtener los perfiles y permisos", data: []});
-        }else{
-            res.send({status: "ok", msg: "Lista de perfiles y permisos obtenidos con éxito", data: result});
-        }
-    });
-};
+ 
 
 exports.existePerfil = function (req, res) {
   console.log("CONTROLADOR:", req.body);

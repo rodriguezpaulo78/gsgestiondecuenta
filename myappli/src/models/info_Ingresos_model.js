@@ -276,10 +276,10 @@ class Ingresos {
 
     static updateById(cadenaDeConexion, id, field, value, result) {
         if (field == 'estado') {
-            this.update_fuente(id);
-            this.update_stock_items(id);
+            //ESTE ERA EL ERROR POR EL CUAL NO SE PODIA ANULAR LOS MOVIMIENTOS EN EL SERVIDOR NO PASABA LA CADENA DE CONEXION
+            this.update_fuente(cadenaDeConexion, id);
+            this.update_stock_items(cadenaDeConexion, id);
         }
-
         sqlNegocio(
             cadenaDeConexion,
             "UPDATE info_ingresos SET " + field + " = " + value + " WHERE idIngreso = " + id,

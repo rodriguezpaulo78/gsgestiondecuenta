@@ -12,8 +12,8 @@ const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
 
 //DEVELOPMENT OR PRODUCTION
-app.set('env', 'development');
-//app.set('env', 'production');
+//app.set('env', 'development');
+app.set('env', 'production');
 
 //Settingsls
 app.use(fileUpload());
@@ -54,13 +54,16 @@ app.use('/api/partidas', require('./routes/partidas.routes'));
 app.use('/api/grupos', require('./routes/partidas.routes'));
 
 app.use('/api/clientes', require('./routes/clientes.routes'));
+
 app.use('/api/productos', require('./routes/productos.routes'));
+
 app.use('/api/detalles', require('./routes/detalles.routes'));
 app.use('/api/fuentes', require('./routes/fuentes.routes'));
 app.use('/api/datos', require('./routes/cargardatos.router'));
 app.use('/api/negocio', require('./routes/negocio.router'));
 app.use('/api/comprobante', require('./routes/contadores.routes'));
 app.use('/', require('./routes/acceso.routes'));
+
 app.use('/usuarios', require('./routes/usuarios.routes'));
 
 //para perfiles.routes hay 2 rutas que seguir (revisar)

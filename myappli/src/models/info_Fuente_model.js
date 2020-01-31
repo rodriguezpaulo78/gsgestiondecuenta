@@ -10,7 +10,7 @@ class Fuente {
     static createFuente(cadenaDeConexion, newFuente, result) {
         sqlNegocio(
             cadenaDeConexion,
-            `select codFuente from info_fuente where Fuente=?`,
+            `select codFuente from info_fuente where fuente=?`,
             [newFuente.Fuente],
             function (err, res) {
                 if (err) {

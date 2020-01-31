@@ -25,6 +25,21 @@ class Perfil{
         );
     }
 
+    static obtenerPerfilesYpermisos(cadenaDeConexion, result){
+        sqlNegocio(
+            cadenaDeConexion,
+            'SELECT idPerfilAsignado,idPermisoAperfil,nombrePermiso,descripcion, nombrePerfil FROM (SELECT * FROM permisosperfiles INNER JOIN permisos ON permisosperfiles.idPermisoAperfil=permisos.idPermiso) AS PermisoPerfil INNER JOIN perfiles ON PermisoPerfil.idPerfilAsignado=perfiles.idPerfil WHERE PermisoPerfil.habilitado=true',
+            [],
+            (err, res) => {
+                if (err){
+                    result(err, null);
+                }else{
+                    result(null, res);
+                }
+            }
+        );
+    }
+
     //FUNCION PARA CREAR UN NUEVO PERFIL EN LA BD
     static createPerfil(cadenaDeConexion, newPerfil, result){
         let fechaSistema = momentTimezone(new Date()).tz('america/Lima'); // libreria para convertir zona horaria - para cuando este en servidor en la nube.
@@ -114,20 +129,7 @@ class Perfil{
             });
     }
 
-    static obtenerPerfilesYpermisos(cadenaDeConexion, result){
-        sqlNegocio(
-            cadenaDeConexion,
-            'SELECT idPerfilAsignado,idPermisoAperfil,nombrePermiso,descripcion, nombrePerfil FROM (SELECT * FROM permisosperfiles INNER JOIN permisos ON permisosperfiles.idPermisoAperfil=permisos.idPermiso) AS PermisoPerfil INNER JOIN perfiles ON PermisoPerfil.idPerfilAsignado=perfiles.idPerfil WHERE PermisoPerfil.habilitado=true',
-            [],
-            (err, res) => {
-                if (err){
-                    result(err, null);
-                }else{
-                    result(null, res);
-                }
-            }
-        );
-    }
+    
 
     static existePerfil(cadenaDeConexion, nombrePerfil, result){
         console.log("PARAMETRO:", nombrePerfil);

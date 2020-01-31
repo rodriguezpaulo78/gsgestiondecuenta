@@ -165,7 +165,11 @@ class Crearusuario extends Component {
 
     //Funcion que obtiene los nombres de los Perfiles y los inserta en el arreglo listaPerfiles
     fetchPerfilesUsuario() {
-        fetch('/usuarios/perfiles')
+        fetch('/usuarios/obtenerperfiles', { 
+                    headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+                }})
             .then(res => res.json())
             .then(
                 data => {

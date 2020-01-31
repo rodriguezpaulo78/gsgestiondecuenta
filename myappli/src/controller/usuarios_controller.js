@@ -64,16 +64,6 @@ exports.crearNuevoUsuarioNegocio = function (req, res) {
 };
 
 
-  exports.list_all_perfiles= function(req, res) {
-    Usuario.getAllPerfil(req.body.dataToken.cadenaDeConexion, function(err, perfil) {
-  
-      console.log('controller')
-      if (err)
-        res.send(err);
-        console.log('res', perfil);
-      res.send(perfil);
-    });
-  };
 
 exports.inicioSesion = function (req, res) {
     let usuario = new Usuario(req.body);
@@ -210,3 +200,17 @@ exports.existeUsuario = function (req, res) {
         }
     });
 };
+
+
+exports.list_all_perfiles= function(req, res) {
+    Usuario.getAllPerfil(req.body.dataToken.cadenaDeConexion, function(err, perfil) {
+  
+      console.log('controller')
+      if (err){
+        res.send(err);
+      }else{
+        console.log('res', perfil);
+        res.send(perfil);
+      }
+    });
+  };

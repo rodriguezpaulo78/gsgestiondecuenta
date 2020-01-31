@@ -319,7 +319,7 @@ class Presentacion extends Component{
                     {
                         //Boton cerrar sesion
                             <li>
-                                <a className="p-4 bg-dark text-white" href="/ingresar" onClick={this.handleMenu} name="cerrarsesion">Cerrar Sesion</a>
+                                <a className="bg-dark text-white" href="/ingresar" onClick={this.handleMenu} name="cerrarsesion">Cerrar Sesion</a>
                             </li>
                         
                     }
