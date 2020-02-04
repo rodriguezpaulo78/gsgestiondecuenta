@@ -75,72 +75,10 @@ class Usuario{
         sql.query(
             "insert into usuariosmaster set ?",
             [nuevoUsuario],
-            function (err_2, res_2) {
-                if (err_2) {
-                    console.log("error: ", err_2);
-                    result(err_2, null);
-                }
-                else {
-                    console.log(res_2.insertId);
-                    result(null, res_2.insertId);
-                }
-            });
-    }
-
-    
-    static registrarUsuarioCuenta(nuevoUsuario, result){
-        /*
-        sqlDbNegocios(
-            cadenaDeConexion,
-            */
-         sql.query(
+            /*
             'INSERT INTO datosusuariosmaster(idDatosUM,nombresUM,apellidosUM,numDocumentoUM,tipoDocumentoUM,telefonosUM,direccionUM,correosUM,ciudad,departamento,provincia) VALUES (?,?,?,?,?,?,?,?,?,?,?)',
             [this.idUsuarioMaster,this.nombresUM,this.apellidosUM,this.numDocumentoUM,this.tipoDocumentoUM,this.telefonosUM,this.direccionUM,this.correosUM,this.ciudad,this.departamento,this.provincia],
-            (err, res) => {
-                if (err){
-                    result(err, null);
-                }else{
-                    result(null, res);
-                }
-            }
-        );
-        
-/*
-        sql.query(
-            "insert into datosusuariosmaster set ?",
-            [nuevoUsuario],
-            function (err_2, res_2) {
-                if (err_2) {
-                    console.log("error: ", err_2);
-                    result(err_2, null);
-                }
-                else {
-                    console.log(res_2.insertId);
-                    result(null, res_2.insertId);
-                }
-            });
             */
-    }
-
-    static registrarUsuarioNegocio(nuevoUsuario, result){
-        /*
-        sqlDbNegocios(
-            cadenaDeConexion,
-            'INSERT INTO datosusuariosmaster(idDatosUM,nombresUM,apellidosUM,numDocumentoUM,tipoDocumentoUM,telefonosUM,direccionUM,correosUM,ciudad,departamento,provincia) VALUES (?,?,?,?,?,?,?,?,?,?,?)',
-            [this.idUsuarioMaster,this.nombresUM,this.apellidosUM,this.numDocumentoUM,this.tipoDocumentoUM,this.telefonosUM,this.direccionUM,this.correosUM,this.ciudad,this.departamento,this.provincia],
-            (err, res) => {
-                if (err){
-                    result(err, null);
-                }else{
-                    result(null, res);
-                }
-            }
-        );
-        */
-
-        sql.query(
-            "insert into datosnegocios set ?",
-            [nuevoUsuario],
             function (err_2, res_2) {
                 if (err_2) {
                     console.log("error: ", err_2);

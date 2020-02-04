@@ -2,8 +2,10 @@ import React, {Component} from 'react';
 import InputComponent from "../common2/inputcomponent";
 import SelectComponent from "../common2/selectcomponent";
 import {toast, ToastContainer} from "react-toastify";
+import CheckBox from "./Checkbox"
 
 class CrearPerfil extends Component {
+    
     constructor(props) {
         super(props);
         this.state = {
@@ -17,6 +19,10 @@ class CrearPerfil extends Component {
             opciones_grupos: [],    //5 grupos de permisos
             opciones_permisos: [],  //13 permisos especificos
             grupoPermisos: '',       
+
+            lista_permisos: [], //lista permisos a registrar
+
+            modoPermisos: false,
             
 
         };
@@ -25,9 +31,12 @@ class CrearPerfil extends Component {
         // HANDLE FUNCTIONS
         this.handleChangeInputComponent = this.handleChangeInputComponent.bind(this);
         this.handleChangeSelectComponent = this.handleChangeSelectComponent.bind(this);
+        this.handleButtonOnClick = this.handleButtonOnClick.bind(this);
 
         // FETCH FUNCTIONS
         this.fetchPerfilesGrupo = this.fetchPerfilesGrupo.bind(this);
+        this.fetchPerfilesPermisos = this.fetchPerfilesPermisos.bind(this);
+        this.fetchPermisosAPerfil = this.fetchPermisosAPerfil.bind(this);
 
         // ONBLUR FUNCTIONS
         this.onBlurInput = this.onBlurInput.bind(this);
@@ -102,11 +111,55 @@ class CrearPerfil extends Component {
                 })
             .catch(err => console.log(err));
     }
+
+    //Funcion que obtiene los PERMISOS y los inser en el arreglo opciones_permisos
+    fetchPerfilesPermisos() {
+        fetch('/perfiles/permisos')
+            .then(res => res.json())
+            .then(
+                data => {
+                    if (data.status === "error"){
+                        toast.error('Vuelva a iniciar sesión, hay fallas en su autenticación.', { position: "bottom-right", autoClose: 2000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
+                    }else{
+                        this.setState({ opciones_permisos: [...data] });
+                    }
+                })
+            .catch(err => console.log(err));
+    }
+
+    //Funcion que obtiene los PERMISOS y los inser en el arreglo opciones_permisos
+    fetchPermisosAPerfil() {
+        fetch('/perfiles/registrados')
+            .then(res => res.json())
+            .then(
+                data => {
+                    if (data.status === "error"){
+                        toast.error('Vuelva a iniciar sesión, hay fallas en su autenticación.', { position: "bottom-right", autoClose: 2000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
+                    }else{
+                        this.setState({ opciones_permisos: [...data] });
+                    }
+                })
+            .catch(err => console.log(err));
+    }
+
     
     //Función que muestra los datos en la interfaz(METODO REACT) llama a los demás funciones
     componentDidMount() {
         this.fetchPerfilesGrupo();
+        this.fetchPerfilesPermisos();
+        this.fetchPermisosAPerfil();
         
+    }
+
+    //Función necesaria para controlar los eventos de los Botones
+    handleButtonOnClick(evt){
+        /*
+        if (evt.target.name === "btnCrearPermisos"){
+            this.setState({
+                modoPermisos: true,
+            });
+        }
+        */
     }
 
     //Funcion necesaria para poder cambiar los valores del INPUTCOMPONENT
@@ -188,6 +241,7 @@ class CrearPerfil extends Component {
             <hr/>
             <div className="col-12 text-center">
                 <h3>Datos del Perfil</h3>
+                
                 <hr/>
                 <div className="form-row ">
                     <InputComponent
@@ -204,40 +258,38 @@ class CrearPerfil extends Component {
                         funcionControl={this.handleChangeInputComponent}
                         blurFuncionControl={this.onBlurInput}
                     />
-                            
-                    <button className="btn btn-success btn-circle btn-circle-sm m-1 text-center">
-                        <i className="fa fa-plus">Añadir permisos</i>
-                    </button>
-
                 </div>  
-
+            
                 <hr/>
                 <h3>Permisos a otorgar</h3> 
-
-                <div className="form-row">
-                    <SelectComponent
-                        bloques={"col-12"}
-                        etiqueta={"Grupos de Permisos"}
-                        idSelect={"grupoPermisos"}      //Id que será llamada a través de handleChangeSelectComponent
-                        nombreSelect={"grupoPermisos"}
-                        esJson={true}
-                        contenido={this.state.opciones_grupos}
-                        nombreValor={"idGrupo"}
-                        nombreMostrar={"nombreGrupo"}   //Aquí se coloca el campo de la BD que se mostrará en el Select (via método Handle)
-                        //valorDefecto={this.state.grupoPermisos}
-                        funcionControl={this.handleChangeSelectComponent}
-                    />
-
-                </div>
-
+                
+                {
+                    this.state.opciones_permisos.map((ele,idx)=>{
+                        return(
+                            <React.Fragment>
+                            <div className="form-row justify-content-center mt-0">
+                            <div className="form-row">
+                                <td><CheckBox
+                                        checked={true}
+                                        disabled={false}
+                                        id={"1"}
+                                        /></td>
+                                <tr>{JSON.stringify(ele).split(/"/)[3] }</tr>
+                            </div>
+                            </div>
+                            </React.Fragment>
+                        );
+                    }) 
+                }
+                    
                 <div className="form-row justify-content-center mt-3">
                     <div className="col-12">
                         <button className="btn btn-success btn-block" onClick={this.crearPerfil}> REGISTRAR PERFIL </button>
                     </div>
-                </div>
+                </div> 
+        
             </div>
             </div>
-            
         );
     }
 

@@ -24,46 +24,6 @@ exports.crearNuevoUsuario = function (req, res) {
 };
 
 
-exports.crearNuevoUsuarioCuenta = function (req, res) {
-    let nuevoUsuario = new Usuario(req.body);
-    Usuario.registrarUsuarioCuenta(nuevoUsuario, function(err, result) {
-        
-        if (err){
-            res.send(err);
-        }else{
-            res.send(result);
-            
-        }
-        
-        /*
-        if (err)
-            res.send(err);
-        res.json(result);
-        */
-    })
-
-};
-
-exports.crearNuevoUsuarioNegocio = function (req, res) {
-    let nuevoUsuario = new Usuario(req.body);
-    Usuario.registrarUsuarioNegocio(nuevoUsuario, function(err, result) {
-        /*
-        if (err){
-            res.send(err);
-        }else{
-            res.send(result);
-            
-        }
-        */
-        //este es el metodo corecto
-        if (err)
-            res.send(err);
-        res.json(result);
-    })
-
-};
-
-
 
 exports.inicioSesion = function (req, res) {
     let usuario = new Usuario(req.body);
@@ -214,3 +174,11 @@ exports.list_all_perfiles= function(req, res) {
       }
     });
   };
+
+  exports.cerrar_sesion = function(req, res){
+    res.cookie('sdgUsr', '', {
+        maxAge: new Date(Date.now() * -1), 
+        //httpOnly: true
+    });
+    res.redirect('/');
+  }

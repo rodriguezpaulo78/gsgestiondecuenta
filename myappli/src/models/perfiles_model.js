@@ -111,11 +111,11 @@ class Perfil{
             });
     }
 
-     //Función que hace la consulta a la BD para obtener todos los permisos de los grupos
+     //Función que hace la consulta a la BD para obtener todos los permisos de los grupos (si es que están habilitados)
      static getAllPermisos(cadenaDeConexion, result) {
         sqlNegocio(
             cadenaDeConexion,
-            `select  idPermisoRelacionado from   permisosgrupos   ` ,
+            `select nombrePermiso from   permisos  where habilitado=1  ` ,
             [],
             function (err, res) {
                 if (err) {

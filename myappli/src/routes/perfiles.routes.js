@@ -12,6 +12,9 @@ router.post('/perfiles', RevisarTokenReact, PerfilController.create_a_perfil );
 
 //Definer la Ruta a través de PerfilController para obtener los grupos usando GET
 router.get('/grupos', RevisarTokenReact, PerfilController.list_all_grupo);
+router.get('/permisos', RevisarTokenReact, PerfilController.list_all_permisos);
+//router.get('/registrados', RevisarTokenReact, PerfilController.give_permisos);
+
 
 router.get('/perfilesypermisos', RevisarTokenReact, PerfilController.obtenerPerfilesYpermisos);
 router.post('/validarperfil', RevisarTokenReact, PerfilController.existePerfil);

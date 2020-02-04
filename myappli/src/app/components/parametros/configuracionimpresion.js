@@ -3,7 +3,11 @@ import InputComponent from "../common2/inputcomponent";
 import SelectComponent from "../common2/selectcomponent";
 import './estilos/configuracionimprecion.css';
 
+import Draggable from 'react-draggable'; // The default
+
+
 class ConfiguracionImpresion extends Component {
+
     constructor(props){
         super(props);
         this.state = {
@@ -34,6 +38,12 @@ class ConfiguracionImpresion extends Component {
                 modoDibujando: true,
             });
         }
+
+        if (evt.target.name === "btnCancelarDibujo"){
+            this.setState({
+                modoDibujando: false,
+            });
+        }
     }
 
     handleSelectChangeComponent(evt){
@@ -51,6 +61,8 @@ class ConfiguracionImpresion extends Component {
             [evt.target.name]: evt.target.value,
         });
     }
+
+  
 
     renderSeleccionPerfil(){
         return (
@@ -122,7 +134,7 @@ class ConfiguracionImpresion extends Component {
                                     disabled={this.state.nombreNuevoPerfil === ''}
                                     onClick={this.handleButtonOnClick}
                                 >
-                                    DIBUJAR
+                                  
                                 </button>
                             )
                         }
@@ -146,12 +158,15 @@ class ConfiguracionImpresion extends Component {
     }
 
     renderDibujo(){
+        const dragHandlers = {onStart: this.onStart, onStop: this.onStop};
+        const {deltaPosition, controlledPosition} = this.state;
+
         return (
             <React.Fragment>
                 <div className="row justify-content-center mb-2">
                     <div className="col-12" style={{height: "900px", border: "solid 2px cyan"}} id="pizarra">
                         <div id="cuadro">
-                            HOLA
+
                         </div>
                     </div>
                 </div>

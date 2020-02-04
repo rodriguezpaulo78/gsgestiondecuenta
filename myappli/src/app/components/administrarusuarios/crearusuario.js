@@ -33,31 +33,10 @@ class Crearusuario extends Component {
             provinciaCuenta: "",
             departamentoCuenta: "",
 
-            //Empresa
-            rucEmpresa: "",
-            razonSocial: "",
-            nombresNegocio: "",
-            apePatNegocio: "",
-            apeMatNegocio: "",
-            nombreComNegocio: "",
-            usuarioSol: "",
-            claveSol: "",
-            claveSol2: "",
-            direccionNegocio: "",
-            ubigeoNegocio: "",
-            urbanizacion: "",
-            distritoNegocio: "",
-            provinciaNegocio: "",
-            departamentoNegocio: "",
-            rubros: "",
-            contactoNegocio: "",
-            imagenNegocio: "",
-            cadenaConexion: "",
         };
 
         this.crearUsuario = this.crearUsuario.bind(this);
-        this.crearUsuarioCuenta = this.crearUsuarioCuenta.bind(this);
-        this.crearUsuarioNegocio = this.crearUsuarioNegocio.bind(this);
+
         // HANDLE FUNCTIONS
         this.handleChangeInput = this.handleChangeInput.bind(this);
         this.handleChangeSelectComponent = this.handleChangeSelectComponent.bind(this);
@@ -93,27 +72,6 @@ class Crearusuario extends Component {
             provinciaCuenta: '',
             departamentoCuenta: '',
 
-            //empresa
-            rucEmpresa: '',
-            razonSocial: '',
-            nombresNegocio: '',
-            apePatNegocio: '',
-            apeMatNegocio: '',
-            nombreComNegocio: '',
-            usuarioSol: '',
-            claveSol: '',
-            claveSol2: '',
-            direccionNegocio: '',
-            ubigeoNegocio: '',
-            urbanizacion: '',
-            distritoNegocio: '',
-            provinciaNegocio: '',
-            departamentoNegocio: '',
-            rubros: '',
-            contactoNegocio: '',
-            imagenNegocio: '',
-            cadenaConexion: '',
-            
         });
     }
 
@@ -247,60 +205,6 @@ class Crearusuario extends Component {
             case "departamentoCuenta":
                 this.setState({ departamentoCuenta: evt.target.value,});
                 break;
-            case "rucEmpresa":
-                this.setState({ rucEmpresa: evt.target.value,});
-                break;
-            case "razonSocial":
-                this.setState({ razonSocial: evt.target.value,});
-                break;
-            case "nombresNegocio":
-                this.setState({ nombresNegocio: evt.target.value,});
-                break;
-            case "apePatNegocio":
-                this.setState({ apePatNegocio: evt.target.value,});
-                break;
-            case "apeMatNegocio":
-                this.setState({ apeMatNegocio: evt.target.value,});
-                break;
-            case "nombreComNegocio":
-                this.setState({ nombreComNegocio: evt.target.value,});
-                break;
-            case "usuarioSol":
-                this.setState({ usuarioSol: evt.target.value,});
-                break;
-            case "claveSol":
-                this.setState({ claveSol: evt.target.value,});
-                break;
-            case "claveSol2":
-                this.setState({ claveSol2: evt.target.value,});
-                break;
-            case "direccionNegocio":
-                this.setState({ direccionNegocio: evt.target.value,});
-                break;
-            case "ubigeoNegocio":
-                this.setState({ ubigeoNegocio: evt.target.value,});
-                break;
-            case "urbanizacion":
-                this.setState({ urbanizacion: evt.target.value,});
-                break;
-            case "distritoNegocio":
-                this.setState({ distritoNegocio: evt.target.value,});
-                break;
-            case "provinciaNegocio":
-                this.setState({ provinciaNegocio: evt.target.value,});
-                break;
-            case "departamentoNegocio":
-                this.setState({ departamentoNegocio: evt.target.value,});
-                break;
-            case "rubros":
-                this.setState({ rubros: evt.target.value,});
-                break;
-            case "contactoNegocio":
-                this.setState({ contactoNegocio: evt.target.value,});
-                break;
-            case "imagenNegocio":
-                this.setState({ imagenNegocio: evt.target.value,});
-                break;
 
             default:
               // code block
@@ -340,10 +244,26 @@ class Crearusuario extends Component {
                     claveUM: this.state.clave1.toUpperCase(),
                     fechaCreacionUM: this.state.fecCreacionUsuario.toUpperCase(),
                     tipoPerfilUM: this.state.perfilUsuario.toUpperCase(),
+                    tokenUM: "-",
                     //No se puede mandar numeros
                     creadoPorUM: "1",
                     habilitadoUM: "1",
-                    idNegocioAsignadoUM: "3",
+                    idNegocioAsignadoUM: "3", //id del negocio en el que esta trabajando el sistema
+
+
+                    //Cuenta (ERROR NO SE PUEDE CREAR JUNTO) MEDIANTE EL ASYNC ESPERAR EL ID DEL ANTERIOR Y AGREGARLO A IDDATOS
+                    //idDatosUM: "3",
+                    nombresUM: this.state.nombres.toUpperCase(),
+                    apellidosUM: this.state.apellidos.toUpperCase(),
+                    //no carga el tipo de documento del arreglo Documentos
+                    tipoDocumentoUM: "1",
+                    numDocumentoUM: this.state.numeroDocumento,
+                    telefonosUM: this.state.numeroContacto,
+                    direccionUM: this.state.direccion,
+                    correosUM: this.state.correo,
+                    ciudad: this.state.ciudadCuenta.toUpperCase(),
+                    provincia: this.state.provinciaCuenta.toUpperCase(),
+                    departamento: this.state.departamentoCuenta.toUpperCase(),
                 }),
                 headers: {
                     'Accept': 'application/json',
@@ -382,71 +302,7 @@ class Crearusuario extends Component {
                 perfilUsuario: '',
                 fecCreacionPerfil: '',
 
-            });
-        }
-    }
-
-    //Función BackEnd para crear un Usuario Cuenta
-    crearUsuarioCuenta(){
-        //Comprobar si los campos están vacios
-        if (this.state.nombreUsuario == '') {
-            toast.error('Por favor llene todos los campos', { 
-                position: "bottom-right", autoClose: 2000, hideProgressBar: false, 
-                closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
-            return;
-        }
-        //falta añadir mas comprobaciones
-        else {
-            //Añadiendo a la BD - Mandar estos parametros a través de esta ruta.
-            fetch('/usuarios/usuariosCuenta', {
-                method: 'POST',
-                body: JSON.stringify({
-
-                    //Cuenta (ERROR NO SE PUEDE CREAR JUNTO)
-                    //idDatosUM: "3",
-                    nombresUM: this.state.nombres.toUpperCase(),
-                    apellidosUM: this.state.apellidos.toUpperCase(),
-                    tipoDocumentoUM: this.state.tipoDocumento,
-                    numDocumentoUM: this.state.numeroDocumento,
-                    telefonosUM: this.state.numeroContacto,
-                    direccionUM: this.state.direccion,
-                    correosUM: this.state.correo,
-                    ciudad: this.state.ciudadCuenta.toUpperCase(),
-                    provincia: this.state.provinciaCuenta.toUpperCase(),
-                    departamento: this.state.departamentoCuenta.toUpperCase(),
-
-                }),
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.status === "error"){
-                        toast.error('Vuelva a iniciar sesión, hay fallas en su autenticación.', { 
-                            position: "bottom-right", autoClose: 2000, hideProgressBar: false, 
-                            closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
-                    }else{
-                        console.log(data); //id que retorno
-                        if (data != -1) {
-                            toast.success('Nuevo usuario agregado', { 
-                                position: "bottom-right", autoClose: 2000, hideProgressBar: false, 
-                                closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
-                            this.borrarTodo.bind(this);
-                        }
-                        if (data == -1) {
-                            toast.error('Uusario actualizada', { 
-                                position: "bottom-right", autoClose: 2000, hideProgressBar: false, 
-                                closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
-                        }
-                    }
-                })
-                .catch(err => console.log(err));
-
-            //clear
-            this.setState({
-                //cuenta
+                //detalles
                 nombres: "",
                 apellidos: "",
                 tipoDocumento: "",
@@ -457,100 +313,7 @@ class Crearusuario extends Component {
                 ciudadCuenta: "",
                 provinciaCuenta: "",
                 departamentoCuenta: "",
-            
-            });
-        }
-    }
 
-     //Función BackEnd para crear un Usuario Negocio
-     crearUsuarioNegocio(){
-        this.state.fecCreacionUsuario = this.getCurrentDate(); //dar el valor que retorna la funcion a la variable fecCreacionUsuario
-
-        //Comprobar si los campos están vacios
-        if (this.state.rucEmpresa == '') {
-            toast.error('Por favor llene todos los campos', { 
-                position: "bottom-right", autoClose: 2000, hideProgressBar: false, 
-                closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
-            return;
-        }
-        //falta añadir mas comprobaciones
-        else {
-            //Añadiendo a la BD - Mandar estos parametros a través de esta ruta.
-            fetch('/usuarios/usuariosNegocio', {
-                method: 'POST',
-                body: JSON.stringify({
-
-                    //negocio
-                    ruc: this.state.rucEmpresa,
-                    razonSocial: this.state.razonSocial,
-                    nombresN: this.state.nombresNegocio,
-                    apellidospN: this.state.apePatNegocio,
-                    apellidosmN: this.state.apeMatNegocio,
-                    nombreComercialIN: this.state.nombreComNegocio,
-                    usuariosolIN: this.state.usuarioSol,
-                    clavesolIN: this.state.claveSol,
-                    direccionN: this.state.direccionNegocio,
-                    ubigeoN: this.state.ubigeoNegocio,
-                    urbanizacionN: this.state.urbanizacion,
-                    distritoN: this.state.distritoNegocio,
-                    provinciaN: this.state.provinciaNegocio,
-                    departamentoN: this.state.departamentoNegocio,
-                    rubrosN: this.state.rubros,
-                    contactoN: this.state.contactoNegocio,
-                    imagenEmpresaN: this.state.imagenNegocio,
-                    cadenaDeConexion: this.state.cadenaConexion,
-                    fechaCreacionN: this.state.fecCreacionUsuario.toUpperCase(),
-                    
-                }),
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.status === "error"){
-                        toast.error('Vuelva a iniciar sesión, hay fallas en su autenticación.', { 
-                            position: "bottom-right", autoClose: 2000, hideProgressBar: false, 
-                            closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
-                    }else{
-                        console.log(data); //id que retorno
-                        if (data != -1) {
-                            toast.success('Nuevo usuario agregado', { 
-                                position: "bottom-right", autoClose: 2000, hideProgressBar: false, 
-                                closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
-                            this.borrarTodo.bind(this);
-                        }
-                        if (data == -1) {
-                            toast.error('Uusario actualizada', { 
-                                position: "bottom-right", autoClose: 2000, hideProgressBar: false, 
-                                closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
-                        }
-                    }
-                })
-                .catch(err => console.log(err));
-
-            //clear
-            this.setState({ 
-                //negocio
-                rucEmpresa: "",
-                razonSocial: "",
-                nombresNegocio: "",
-                apePatNegocio: "",
-                apeMatNegocio: "",
-                nombreComNegocio: "",
-                usuarioSol: "",
-                claveSol: "",
-                direccionNegocio: "",
-                ubigeoNegocio: "",
-                urbanizacion: "",
-                distritoNegocio: "",
-                provinciaNegocio: "",
-                departamentoNegocio: "",
-                rubros: "",
-                contactoNegocio: "",
-                imagenNegocio: "",
-                cadenaConexion: "",
             });
         }
     }
@@ -628,12 +391,6 @@ class Crearusuario extends Component {
                             funcionControl={this.handleChangeSelectComponent}
                         />          
 
-                    </div>
-
-                    <div className="form-row justify-content-center mt-3">
-                        <div className="col-5">
-                            <button className="btn btn-success btn-block" onClick={this.crearUsuario}> REGISTRAR USUARIO </button>
-                        </div>
                     </div>
 
                     <hr/>
@@ -739,189 +496,11 @@ class Crearusuario extends Component {
 
                     <div className="form-row justify-content-center mt-3">
                         <div className="col-5">
-                            <button className="btn btn-success btn-block" onClick={this.crearUsuarioCuenta}> REGISTRAR CUENTA </button>
+                            <button className="btn btn-success btn-block" onClick={this.crearUsuario}> REGISTRAR USUARIO </button>
                         </div>
                     </div>
 
-                    <hr/>
-                    <h3>Datos de la Empresa</h3>
-
-                    <div className="form-row">
-                        <InputComponent
-                            tipoInput={"number"}
-                            classInput={this.state.esRucCorrecto === false? "is-invalid": "is-valid"}
-                            bloques={"col-4"}
-                            etiqueta={"RUC"}
-                            idInput={"rucEmpresa"}
-                            nombreInput={"rucEmpresa"}
-                            mensajeValidacionError={"Verificar RUC"}
-                            mensajeValidacionOk={"Formato RUC correcto"}
-                            readOnly={false}
-                            funcionControl={this.handleChangeInput}
-                        />
-                        <InputComponent
-                            bloques={"col-4"}
-                            etiqueta={"Razon Social"}
-                            idInput={"razonSocial"}
-                            nombreInput={"razonSocial"}
-                            readOnly={false}
-                            funcionControl={this.handleChangeInput}
-                        />
-                        <InputComponent
-                            bloques={"col-4"}
-                            etiqueta={"Nombre Comercial"}
-                            idInput={"nombreComNegocio"}
-                            nombreInput={"nombreComNegocio"}
-                            readOnly={false}
-                            funcionControl={this.handleChangeInput}
-                        />
-                    </div>
-
-                    <div className="form-row mt-3">
-                        <InputComponent
-                            bloques={"col-4"}
-                            etiqueta={"Nombres"}
-                            idInput={"nombresNegocio"}
-                            nombreInput={"nombresNegocio"}
-                            readOnly={false}
-                            funcionControl={this.handleChangeInput}
-                        />
-                        <InputComponent
-                            bloques={"col-4"}
-                            etiqueta={"Apellido P"}
-                            idInput={"apePatNegocio"}
-                            nombreInput={"apePatNegocio"}
-                            readOnly={false}
-                            funcionControl={this.handleChangeInput}
-                        />
-                        <InputComponent
-                            bloques={"col-4"}
-                            etiqueta={"Apellido M"}
-                            idInput={"apeMatNegocio"}
-                            nombreInput={"apeMatNegocio"}
-                            readOnly={false}
-                            funcionControl={this.handleChangeInput}
-                        />
-                    </div>
-                    
-                    <div className="form-row mt-3">
-                        <InputComponent
-                            bloques={"col-3"}
-                            etiqueta={"Usuario"}
-                            idInput={"usuarioSol"}
-                            nombreInput={"usuarioSol"}
-                            readOnly={false}
-                            funcionControl={this.handleChangeInput}
-                        />
-                        <InputComponent
-                            tipoInput={"password"}
-                            bloques={"col-3"}
-                            etiqueta={"Clave Sol"}
-                            idInput={"claveSol"}
-                            nombreInput={"claveSol"}
-                            readOnly={false}
-                            funcionControl={this.handleChangeInput}
-                        />
-                        <InputComponent
-                            tipoInput={"password"}
-                            bloques={"col-3"}
-                            etiqueta={"Clave Sol"}
-                            idInput={"claveSol2"}
-                            nombreInput={"claveSol2"}
-                            readOnly={false}
-                            funcionControl={this.handleChangeInput}
-                        />
-                        <InputComponent
-                            bloques={"col-3"}
-                            etiqueta={"Direccion"}
-                            idInput={"direccionNegocio"}
-                            nombreInput={"direccionNegocio"}
-                            readOnly={false}
-                            funcionControl={this.handleChangeInput}
-                        />
-                        
-                    </div>
-
-                    <div className="form-row mt-3">
-                        <InputComponent
-                            bloques={"col-3"}
-                            etiqueta={"Ubigeo"}
-                            idInput={"ubigeoNegocio"}
-                            nombreInput={"ubigeoNegocio"}
-                            readOnly={false}
-                            funcionControl={this.handleChangeInput}
-                        />
-                        <InputComponent
-                            bloques={"col-3"}
-                            etiqueta={"Urbanizacion"}
-                            idInput={"urbanizacion"}
-                            nombreInput={"urbanizacion"}
-                            readOnly={false}
-                            funcionControl={this.handleChangeInput}
-                        />
-                        <InputComponent
-                            bloques={"col-3"}
-                            etiqueta={"Distrito"}
-                            idInput={"distritoNegocio"}
-                            nombreInput={"distritoNegocio"}
-                            readOnly={false}
-                            funcionControl={this.handleChangeInput}
-                        />
-                        <InputComponent
-                            bloques={"col-3"}
-                            etiqueta={"Provincia"}
-                            idInput={"provinciaNegocio"}
-                            nombreInput={"provinciaNegocio"}
-                            readOnly={false}
-                            funcionControl={this.handleChangeInput}
-                        />
-                        
-                        </div>
-                        <div className="form-row mt-3">
-                        <InputComponent
-                            bloques={"col-3"}
-                            etiqueta={"Departamento"}
-                            idInput={"departamentoNegocio"}
-                            nombreInput={"departamentoNegocio"}
-                            readOnly={false}
-                            funcionControl={this.handleChangeInput}
-                        />
-                        <InputComponent
-                            bloques={"col-4"}
-                            etiqueta={"Rubros"}
-                            idInput={"rubros"}
-                            nombreInput={"rubros"}
-                            readOnly={false}
-                            funcionControl={this.handleChangeInput}
-                        />
-                        <InputComponent
-                            bloques={"col-4"}
-                            etiqueta={"Contacto"}
-                            idInput={"contactoNegocio"}
-                            nombreInput={"contactoNegocio"}
-                            readOnly={false}
-                            funcionControl={this.handleChangeInput}
-                        />
-                        
-                    </div>
-
-                    <div className="form-row mt-3">
-                    <InputComponent
-                            bloques={"col-8"}
-                            tipoInput={"file"}
-                            etiqueta={"Imagen"}
-                            idInput={"imagenNegocio"}
-                            nombreInput={"imagenNegocio"}
-                            readOnly={false}
-                            funcionControl={this.handleChangeInput}
-                        />
-                    </div>
-
-                    <div className="form-row justify-content-center mt-3">
-                        <div className="col-5">
-                            <button className="btn btn-success btn-block" onClick={this.crearUsuarioNegocio}> REGISTRAR NEGOCIO </button>
-                        </div>
-                    </div>
+                   
                 </div>
             </div>
         );

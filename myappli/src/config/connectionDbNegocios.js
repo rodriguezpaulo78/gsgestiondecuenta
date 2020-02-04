@@ -10,6 +10,7 @@ module.exports =  async (cadenaDeConexion, query, params, result) => {
         console.log("Cadena de conexion en connect >> "  + cadenaDeConexion);        
         if (err){
             console.log("Error al conectar con la base de datos DB Negocios");
+            console.log("------------------");
             throw err;
         }else {
             console.log('Conectado a la base de datos DB NEGOCIOS :d');
