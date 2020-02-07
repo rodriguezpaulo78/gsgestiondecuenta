@@ -47,6 +47,7 @@ class Perfil{
         sqlNegocio(
             cadenaDeConexion,
             `select idPerfil from perfiles where nombrePerfil=?`,
+            
             [newPerfil.nombrePerfil],
             function (err, res) {
                 if (err) {
@@ -115,7 +116,7 @@ class Perfil{
      static getAllPermisos(cadenaDeConexion, result) {
         sqlNegocio(
             cadenaDeConexion,
-            `select nombrePermiso from   permisos  where habilitado=1  ` ,
+            `select idPermiso, nombrePermiso from   permisos  where habilitado=1  ` ,
             [],
             function (err, res) {
                 if (err) {
@@ -128,8 +129,6 @@ class Perfil{
                 }
             });
     }
-
-    
 
     static existePerfil(cadenaDeConexion, nombrePerfil, result){
         console.log("PARAMETRO:", nombrePerfil);

@@ -131,7 +131,11 @@ class AdministrarUsuarios extends Component {
                 }
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                console.log(res.status);
+                console.log(res.body);
+                return res.json();
+            })
             .then(data => {
                 if (data.status === 'ok'){
                     alert(data.msg);
@@ -153,16 +157,24 @@ class AdministrarUsuarios extends Component {
     //Renderizar la lista de usuarios registrados
     renderListarUsuarios(){
         return (
+            
             <div className="col-12">
-                <table className="table">
-                    <thead>
+                 
+                 <div className="row">
+                    <div className="col-12 text-center">
+                        <h3>Lista de Usuarios Registrados</h3>
+                    </div>
+                </div>
+                   
+                <table className="table table-bordered">
+                    <thead className="thead-dark">
                     <tr>
-                        <td>NOMBRE USUARIO</td>
-                        <td>TIPO DE PERFIL</td>
-                        <td>NOMBRES</td>
-                        <td>APELLIDOS</td>
-                        <td>FECHA DE CREACIÓN</td>
-                        <td></td>
+                        <th scope="col" className="text-center">USUARIO</th>
+                        <th scope="col" className="text-center">TIPO DE PERFIL</th>
+                        <th scope="col" className="text-center">NOMBRES</th>
+                        <th scope="col" className="text-center">APELLIDOS</th>
+                        <th scope="col" className="text-center">FECHA DE CREACIÓN</th>
+                        <th scope="col" className="text-center">ACCIÓN</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -175,22 +187,23 @@ class AdministrarUsuarios extends Component {
                                             new Date(ele.fechaCreacionUM).getFullYear();
                             return (
                                 <tr key={ind}>
-                                    <td>{ele.nombreUM}</td>
-                                    <td>{
+                                    <td className="text-center">{ele.nombreUM}</td>
+                                    <td className="text-center">{
                                     this.state.listaPerfiles.map((obj) => {
                                         if (ele.tipoPerfilUM === obj.idPerfil){
                                             return obj.nombrePerfil;
                                         }
                                         })
                                     }</td>
-                                    <td>{ele.nombresUM}</td>
-                                    <td>{ele.apellidosUM}</td>
-                                    <td>{fecha}</td>
-                                    <td>
-                                        <button className="btn btn-danger" onClick={this.fetchDeshabilitarUsuario.bind(this, ele.idUsuario)}>
+                                    <td className="text-center">{ele.nombresUM}</td>
+                                    <td className="text-center">{ele.apellidosUM}</td>
+                                    <td className="text-center">{fecha}</td>
+                                    <td className="text-center">
+                                        
+                                        <button className="btn btn-danger" onClick={this.fetchDeshabilitarUsuario.bind(this, ele.idUsuarioMaster)}>
                                             <i className="fa fa-ban"></i>
                                         </button>
-                                        <button className="btn btn-success ml-1" name="btnEditarUsuario" onClick={this.editarDatos.bind(this, ele.idUsuario)}>
+                                        <button className="btn btn-success" name="btnEditarUsuario" onClick={this.editarDatos.bind(this, ele.idUsuario)}>
                                             <i className="fa fa-pen"></i>
                                         </button>
                                     </td>

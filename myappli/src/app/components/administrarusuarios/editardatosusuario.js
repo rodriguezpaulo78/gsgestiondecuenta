@@ -44,19 +44,20 @@ class Editardatosusuario extends Component {
                 if (usuario.status === "ok"){
                     console.log(usuario);
                     this.setState({
-                        idUsuario: usuario.data[0].idUsuario,
-                        nombreUsuario: usuario.data[0].nombreUsuario,
-                        numDocumentoUsuario: usuario.data[0].numDocumento,
-                        nombresUsuario: usuario.data[0].nombres,
-                        apellidosUsuario: usuario.data[0].apellidos,
-                        tipoPerfilUsuario: usuario.data[0].tipoPerfil,
-                        nombrePerfil: usuario.data[0].nombrePerfil,
-                        habilitadoUsuario: usuario.data[0].habilitado,
-                        fechaCreacionUsuario: (new Date(usuario.data[0].fechaCreacion).getDay() < 10? '0' + new Date(usuario.data[0].fechaCreacion).getDay():new Date(usuario.data[0].fechaCreacion).getDay()) + "/" 
-                        + (new Date(usuario.data[0].fechaCreacion).getMonth()) + "/" + (new Date(usuario.data[0].fechaCreacion).getFullYear()),
+                        idUsuario: usuario.idUsuario,
+                        nombreUsuario: usuario.nombreUsuario,
+                        numDocumentoUsuario: usuario.numDocumento,
+                        nombresUsuario: usuario.nombres,
+                        apellidosUsuario: usuario.apellidos,
+                        tipoPerfilUsuario: usuario.tipoPerfil,
+                        nombrePerfil: usuario.nombrePerfil,
+                        habilitadoUsuario: usuario.habilitado,
+                        fechaCreacionUsuario: (new Date(usuario.fechaCreacion).getDay() < 10? '0' 
+                        + new Date(usuario.fechaCreacion).getDay():new Date(usuario.fechaCreacion).getDay()) + "/" 
+                        + (new Date(usuario.fechaCreacion).getMonth()) + "/" + (new Date(usuario.fechaCreacion).getFullYear()),
                     });
                 }else{
-                    alert(data.msg);
+                    alert(usuario.msg);
                 }
             })
             .catch(err => console.log("Error al obtener datos de un usuario:", err));
@@ -182,51 +183,16 @@ class Editardatosusuario extends Component {
                                 funcionControl={() => {}}
                             />
                         </div>
+
+                        <div className="form-row justify-content-center mt-3">
+                            <div className="col-5">
+                                <button className="btn btn-success btn-block" onClick={this.crearPerfil}> ACTUALIZAR DATOS </button>
+                            </div>
+                        </div> 
+
                     </div>
                 </div>
                 <hr/>
-                <div className="row">
-                    <div className="col-12 text-center">
-                        <h3>Permisos-Menu Secundario</h3>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-12">
-                        <div className="row">
-                            <div className="col-4">
-                                <div className="list-group" id="list-tab" role="tablist">
-                                    <a className="list-group-item list-group-item-action active" id="list-home-list"
-                                       data-toggle="list" href="#list-home" role="tab" aria-controls="home">Operaciones</a>
-                                    <a className="list-group-item list-group-item-action" id="list-profile-list"
-                                       data-toggle="list" href="#list-profile" role="tab"
-                                       aria-controls="profile">Grupo 2</a>
-                                    <a className="list-group-item list-group-item-action" id="list-messages-list"
-                                       data-toggle="list" href="#list-messages" role="tab"
-                                       aria-controls="messages">Grupo3</a>
-                                    <a className="list-group-item list-group-item-action" id="list-settings-list"
-                                       data-toggle="list" href="#list-settings" role="tab"
-                                       aria-controls="settings">Grupo4</a>
-                                </div>
-                            </div>
-                            <div className="col-8">
-                                <div className="tab-content" id="nav-tabContent">
-                                    <div className="tab-pane fade show active" id="list-home" role="tabpanel"
-                                         aria-labelledby="list-home-list">Home
-                                    </div>
-                                    <div className="tab-pane fade" id="list-profile" role="tabpanel"
-                                         aria-labelledby="list-profile-list">Profile
-                                    </div>
-                                    <div className="tab-pane fade" id="list-messages" role="tabpanel"
-                                         aria-labelledby="list-messages-list">Messages 
-                                    </div>
-                                    <div className="tab-pane fade" id="list-settings" role="tabpanel"
-                                         aria-labelledby="list-settings-list">Settings
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         );
     }

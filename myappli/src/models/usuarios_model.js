@@ -199,9 +199,8 @@ class Usuario{
     }
 
     static dehabilitarUsuario(id_Usuario, result){
-        sqlDbNegocios(
-            cadenaDeConexion,
-            'UPDATE usuarios SET habilitado=\'0\' WHERE idUsuario=?',
+        sql.query(
+            'UPDATE usuariosmaster SET habilitadoUM=\'0\' WHERE idUsuarioMaster=?',
             [id_Usuario],
             (err, res) => {
                 if (err){

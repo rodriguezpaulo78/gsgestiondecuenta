@@ -122,15 +122,17 @@ exports.obtenerUsuarios = function (req, res) {
     if (req.params.idUsuario === undefined){
         Usuario.obtenerUsuarios(req.body.dataToken.idNegocioAsignadoUM, 0, (err, result) => {
             if (err){
-                res.send({status: "error", msg: "Se tienen problemas al obtener usuarios", data: []});
+                
+                res.send({status: "error", msg: "Se tienen problemas al obtener usuarios1", data: []});
             }else{
                 res.send({status: "ok", msg: "Todo bien", data: result});
             }
         });
     }else{
         Usuario.obtenerUsuarios(req.body.dataToken.idNegocioAsignadoUM, req.params.idUsuario, (err, result) => {
+            
             if (err){
-                res.send({status: "error", msg: "Se tienen problemas al obtener usuarios", data: []});
+                res.send({status: "error", msg: "Se tienen problemas al obtener usuarios2 " + req.params.idUsuario, data: []});
             }else{
                 res.send({status: "ok", msg: "Todo bien", data: result});
             }
@@ -139,7 +141,7 @@ exports.obtenerUsuarios = function (req, res) {
 };
 
 exports.deshabilitarUsuarios = function (req, res){
-    Usuario.dehabilitarUsuario(req.params.idUsuario, (err, result) => {
+    Usuario.dehabilitarUsuario(req.params.idUsuarioMaster, (err, result) => {
         if (err){
             res.send({status: 'error', msg: 'Error al solicitar consultar al servidor', data: []});
         }else{

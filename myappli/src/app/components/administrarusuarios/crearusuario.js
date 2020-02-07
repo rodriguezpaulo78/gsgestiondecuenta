@@ -19,6 +19,7 @@ class Crearusuario extends Component {
             esRucCorrecto: false,
             correctoClaveRepetida: true,
             esLargoClave: true,
+            controlCorreoValido: false,
 
             //cuenta
             nombres: "",
@@ -47,6 +48,7 @@ class Crearusuario extends Component {
         // ONBLUR FUNCTIONS
         this.onBlurInput = this.onBlurInput.bind(this);
         this.borrarTodo = this.borrarTodo.bind(this);
+        
         
     }
 
@@ -194,7 +196,17 @@ class Crearusuario extends Component {
                 this.setState({ direccion: evt.target.value,});
                 break;
             case "correo":
-                this.setState({ correo: evt.target.value,});
+                this.setState({ correo: evt.target.value,}, () =>{
+                    if(/^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i.test(this.state.correo)){
+                        this.setState({
+                            controlCorreoValido: true,
+                        });
+                    } else {
+                        this.setState({
+                            controlCorreoValido: false,
+                        });
+                    }
+                });
                 break;
             case "ciudadCuenta":
                 this.setState({ ciudadCuenta: evt.target.value,});
@@ -325,7 +337,7 @@ class Crearusuario extends Component {
                 <hr/>
                 <div className="col-12 text-center">
                     <h3>Datos de la Sesión</h3>
-                    <div className="form-row">
+                    <div className="form-row justify-content-center">
 
                         <InputComponent
                             bloques={"col-3"}
@@ -378,15 +390,15 @@ class Crearusuario extends Component {
                         />
 
                         <SelectComponent
-                            bloques={"col-12"}
-                            etiqueta={"Grupos de Perfiles"}
+                            bloques={"col-6 text-center"}
+                            etiqueta={"Tipo de Perfil"}
                             idSelect={"perfilUsuario"}    //Id que será llamada a través de handleChangeSelectComponent
                             nombreSelect={"perfilUsuario"}
                             esJson={true}
                             contenido={this.state.listaPerfiles}
                             nombreValor={"tipoPerfilUM"}
                             //Falta poner id - nombre perfil 
-                            nombreMostrar={"idPerfil"}  //Aquí se coloca el campo de la BD que se mostrará en el Select (via método Handle)
+                            nombreMostrar={"nombrePerfil"}  //Aquí se coloca el campo de la BD que se mostrará en el Select (via método Handle)
                             //valorDefecto={this.state.perfilUsuario}
                             funcionControl={this.handleChangeSelectComponent}
                         />          
@@ -438,7 +450,7 @@ class Crearusuario extends Component {
                     <div className="form-row mt-3">
                         <InputComponent
                             tipoInput={"number"}
-                            bloques={"col-4"}
+                            bloques={"col-3"}
                             etiqueta={"Número de Contacto"}
                             idInput={"numeroContacto"}
                             nombreInput={"numeroContacto"}
@@ -448,7 +460,7 @@ class Crearusuario extends Component {
 
                         <InputComponent
                             //tipoInput={"number"}
-                            bloques={"col-4"}
+                            bloques={"col-5"}
                             etiqueta={"Dirección"}
                             idInput={"direccion"}
                             nombreInput={"direccion"}
@@ -457,14 +469,20 @@ class Crearusuario extends Component {
                         />
 
                         <InputComponent
-                            tipoInput={"mail"}
+                            tipoInput={"mail"}                            
                             bloques={"col-4"}
                             etiqueta={"Correo electrónico"}
                             idInput={"correo"}
                             nombreInput={"correo"}
                             readOnly={false}
                             funcionControl={this.handleChangeInput}
+                            
+                            classInput={this.state.controlCorreoValido === false? "is-invalid": "is-valid"}
+                            mensajeValidacionError={"Ingrese correo valido"}
+                            mensajeValidacionOk={"Correo valido"}
+                            
                         />
+                        
                     </div>
                     
                     <div className="form-row mt-3">

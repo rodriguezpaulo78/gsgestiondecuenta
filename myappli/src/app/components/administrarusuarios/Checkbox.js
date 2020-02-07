@@ -1,54 +1,15 @@
-import React, {Component} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
-class Checkbox extends React.Component {
-
-    constructor(props) {
-      super(props);
-      this.state = {
-        checked: props.checked
-      };
-      this._handleChange = this._handleChange.bind(this);
-      
-    }
-  
-    _handleChange(){
-      this.setState({
-        checked: !this.state.checked
-      });
-    };
-  
-    render() {
-      const { disabled } = this.props;
-      const { checked } = this.state;
-      const { id } = this.props;
-      return (
-        <div className="prueba">
-          <label>
-            <input
-              type="checkbox"
-              className="prueba2"
-              id={id}
-              checked={checked}
-              disabled={disabled}
-              onChange={this._handleChange}
-            />
-            <span className="prueba3" />
-          </label>
-        </div>
-      );
-    }
-};
+const Checkbox = ({ type = 'checkbox', name, checked = false, onChange }) => (
+  <input type={type} name={name} checked={checked} onChange={onChange} />
+);
 
 Checkbox.propTypes = {
-    checked: PropTypes.bool,
-    disabled: PropTypes.bool,
-    id: PropTypes.string,
-  };
+  type: PropTypes.string,
+  name: PropTypes.string.isRequired,
+  checked: PropTypes.bool,
+  onChange: PropTypes.func.isRequired,
+}
 
-Checkbox.defaultProps = {
-    checked: false,
-    disabled: false
-  };
-  
 export default Checkbox;
