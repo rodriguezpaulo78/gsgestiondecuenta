@@ -4,9 +4,12 @@ const momentTimezone = require('moment-timezone');
 class Perfil{
     constructor(perfil){
         
-            this.idPerfil=perfil.idPerfil,
-            this.nombrePerfil=perfil.nombrePerfil.toUpperCase()
-            this.fechaCreacion=perfil.fechaCreacion.toUpperCase()
+            this.idPerfil=perfil.idPerfil;
+            this.nombrePerfil=perfil.nombrePerfil.toUpperCase();
+            this.fechaCreacionPerfil=perfil.fechaCreacionPerfil.toUpperCase();
+            if (perfil.idPermisoAPerfil !== undefined){
+                this.idPermisoAPerfil = perfil.idPermisoAPerfil;
+            }
    
     }
 
@@ -47,7 +50,6 @@ class Perfil{
         sqlNegocio(
             cadenaDeConexion,
             `select idPerfil from perfiles where nombrePerfil=?`,
-            
             [newPerfil.nombrePerfil],
             function (err, res) {
                 if (err) {
@@ -77,8 +79,8 @@ class Perfil{
                     else{
                         sqlNegocio(
                             cadenaDeConexion,
-                            "insert into perfiles set ?",
-                            [newPerfil],
+                            "insert into perfiles(nombrePerfil,fechaCreacionPerfil) values (?,?) ",
+                            [newPerfil.nombrePerfil, newPerfil.fechaCreacionPerfil],
                             function (err_2, res_2) {
                                 if (err_2) {
                                     console.log("error: ", err_2);
@@ -86,6 +88,8 @@ class Perfil{
                                 }
                                 else {
                                     console.log(res_2.insertId);
+                                    Perfil.guardarPermisosAPerfil(cadenaDeConexion, res_2.insertId, newPerfil.idPermisoAPerfil);
+                                    //Perfil.guardarPermisosAsignados(cadenaDeConexion, res_2.insertId, newPerfil.idPermisoAPerfil);
                                     result(null, res_2.insertId);
                                 }
                             });
@@ -93,6 +97,52 @@ class Perfil{
                 }
             });
     }
+
+    static guardarPermisosAPerfil(cadenaDeConexion, idPerfil, listaPermiso){
+        console.log("GUARDANDO PERMISOS");
+        console.log(idPerfil);
+        console.log(listaPermiso);
+        let fechaSistema = momentTimezone(new Date()).tz('america/Lima'); // libreria para convertir zona horaria - para cuando este en servidor en la nube.
+        fechaSistema = fechaSistema.format("YYYY-MM-DD");
+        for (var i = 0; i < listaPermiso.length; i++){
+            sqlNegocio(
+                cadenaDeConexion,
+                "INSERT INTO permisosperfiles(idPerfilAsignado,idPermisoAperfil,fechaCreacionPP) VALUES (?,?,?)",
+                [idPerfil, listaPermiso[i],fechaSistema],
+                (err, result) => {
+                    if (err){
+                        console.log("ERROR AL GUARDAR PERMISO EN PERFIL", err);
+                    }else{
+                        console.log("Guardado con éxito... :D");
+                    }
+                }
+            );
+        }
+    }
+
+    /*
+    static guardarPermisosAsignados(cadenaDeConexion, idPerfil, listaPermiso){
+        console.log("GUARDANDO PERMISOS");
+        console.log(idPerfil);
+        console.log(listaPermiso);
+        let fechaSistema = momentTimezone(new Date()).tz('america/Lima'); // libreria para convertir zona horaria - para cuando este en servidor en la nube.
+        fechaSistema = fechaSistema.format("YYYY-MM-DD");
+        for (var i = 0; i < listaPermiso.length; i++){
+            sqlNegocio(
+                cadenaDeConexion,
+                "INSERT INTO permisosasignados(idUsuarioAsignado,idPermisoAsignado,fechaCreacionPA) VALUES (?,?,?)",
+                [idPerfil, listaPermiso[i],fechaSistema],
+                (err, result) => {
+                    if (err){
+                        console.log("ERROR AL GUARDAR PERMISO EN ASIGNADO", err);
+                    }else{
+                        console.log("Guardado con éxito... :D");
+                    }
+                }
+            );
+        }
+    }
+    */
 
     //Función que hace la consulta a la BD para obtener todos los grupos de permisos.
     static getAllGrupo(cadenaDeConexion, result) {

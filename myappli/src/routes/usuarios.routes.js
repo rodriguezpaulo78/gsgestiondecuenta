@@ -13,6 +13,8 @@ router.get('/usuarios/:idUsuario', RevisarTokenReact, UsuarioController.obtenerU
 router.get('/obtenerperfiles', RevisarTokenReact, UsuarioController.list_all_perfiles);
 router.post('/validarusuario', RevisarTokenReact, UsuarioController.existeUsuario);
 
+router.post('/actualizar', RevisarTokenReact, UsuarioController.actualizarUsuario);
+
 router.get('/cerrarsesion', UsuarioController.cerrar_sesion);
 
 module.exports = router;

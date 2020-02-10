@@ -15,6 +15,8 @@ class Crearusuario extends Component {
             perfilUsuario: '',      //tipo de perfil seleccionado
             listaPerfiles: [],
 
+            rucObtenido: '',    //ruc obtenido de empresa
+
             controlUsuarioDuplicado: 0,
             esRucCorrecto: false,
             correctoClaveRepetida: true,
@@ -142,6 +144,8 @@ class Crearusuario extends Component {
             .catch(err => console.log(err));
     }
 
+    //UN FETCH PARA OBTENER EL RUC DE LA EMPRESA PENDIENTE
+
     //Función que muestra los datos en la interfaz(METODO REACT) llama a los demás funciones
     componentDidMount() {
         this.fetchPerfilesUsuario();
@@ -262,7 +266,6 @@ class Crearusuario extends Component {
                     habilitadoUM: "1",
                     idNegocioAsignadoUM: "3", //id del negocio en el que esta trabajando el sistema
 
-
                     //Cuenta (ERROR NO SE PUEDE CREAR JUNTO) MEDIANTE EL ASYNC ESPERAR EL ID DEL ANTERIOR Y AGREGARLO A IDDATOS
                     //idDatosUM: "3",
                     nombresUM: this.state.nombres.toUpperCase(),
@@ -360,8 +363,9 @@ class Crearusuario extends Component {
                             idInput={"ruc"}
                             nombreInput={"ruc"}
                             mensajeValidacionError={"Verificar RUC"}
+                            valorDefecto={this.state.ruc}
                             mensajeValidacionOk={"Formato RUC correcto"}
-                            readOnly={false}
+                            readOnly={true}
                             funcionControl={this.handleChangeInput}
                         />
 
@@ -398,7 +402,7 @@ class Crearusuario extends Component {
                             contenido={this.state.listaPerfiles}
                             nombreValor={"tipoPerfilUM"}
                             //Falta poner id - nombre perfil 
-                            nombreMostrar={"nombrePerfil"}  //Aquí se coloca el campo de la BD que se mostrará en el Select (via método Handle)
+                            nombreMostrar={"idPerfil"}  //Aquí se coloca el campo de la BD que se mostrará en el Select (via método Handle)
                             //valorDefecto={this.state.perfilUsuario}
                             funcionControl={this.handleChangeSelectComponent}
                         />          

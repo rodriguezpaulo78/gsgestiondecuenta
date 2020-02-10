@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import InputComponent from "../common2/inputcomponent";
 import SelectComponent from "../common2/selectcomponent";
+import {toast, ToastContainer} from "react-toastify";
 
 class Editardatosusuario extends Component {
     constructor(props) {
@@ -26,14 +27,46 @@ class Editardatosusuario extends Component {
             numDocumentoUsuarioN: '',
             nombresUsuarioN: '',
             apellidosUsuarioN: '',
-            tipoPerfilUsuarioN: '',
+            perfilUsuarioN: '',
+
             habilitadoUsuarioN: '',
         };
 
+        this.actualizarUsuario = this.actualizarUsuario.bind(this);
         this.fetchDatosUsuario = this.fetchDatosUsuario.bind(this);
         this.fetchPerfiles = this.fetchPerfiles.bind(this);
+        this.handleChangeInput = this.handleChangeInput.bind(this);
+        this.handleChangeSelectComponent = this.handleChangeSelectComponent.bind(this);
     }
 
+ //Funcion necesaria para poder cambiar los valores del INPUTCOMPONENT
+ handleChangeInput(evt){
+    switch(evt.target.name) {
+        case "nombreUsuario":
+            this.setState({ nombreUsuario: evt.target.value,});
+            break;
+        case "numDocumentoUsuarioN":
+            this.setState({ numDocumentoUsuarioN: evt.target.value,});
+            break;
+        case "nombresUsuarioN":
+            this.setState({ nombresUsuarioN: evt.target.value,});
+            break;
+            case "apellidosUsuarioN":
+                this.setState({ apellidosUsuarioN: evt.target.value,});
+                break;
+        default:
+          // code block
+        }
+}
+
+      //Funcion necesaria para poder elegir entre  los valores del SELECTCOMPONENT
+      handleChangeSelectComponent(evt){
+        if (evt.target.name === "perfilUsuarioN"){
+            this.setState({
+                perfilUsuarioN: evt.target.value,
+            });
+        }
+    }
 
     fetchDatosUsuario(idUsuario){
         fetch(
@@ -44,17 +77,17 @@ class Editardatosusuario extends Component {
                 if (usuario.status === "ok"){
                     console.log(usuario);
                     this.setState({
-                        idUsuario: usuario.idUsuario,
-                        nombreUsuario: usuario.nombreUsuario,
-                        numDocumentoUsuario: usuario.numDocumento,
-                        nombresUsuario: usuario.nombres,
-                        apellidosUsuario: usuario.apellidos,
-                        tipoPerfilUsuario: usuario.tipoPerfil,
-                        nombrePerfil: usuario.nombrePerfil,
-                        habilitadoUsuario: usuario.habilitado,
-                        fechaCreacionUsuario: (new Date(usuario.fechaCreacion).getDay() < 10? '0' 
-                        + new Date(usuario.fechaCreacion).getDay():new Date(usuario.fechaCreacion).getDay()) + "/" 
-                        + (new Date(usuario.fechaCreacion).getMonth()) + "/" + (new Date(usuario.fechaCreacion).getFullYear()),
+                        idUsuario: usuario.data[0].idUsuarioMaster,
+                        nombreUsuario: usuario.data[0].nombreUM,
+                        numDocumentoUsuario: usuario.data[0].rucUM,
+                        nombresUsuario: usuario.data[0].nombresUM,
+                        apellidosUsuario: usuario.data[0].apellidosUM,
+                        tipoPerfilUsuario: usuario.data[0].tipoPerfilUM,
+                        nombrePerfil: usuario.data[0].nombrePerfil,
+                        habilitadoUsuario: usuario.data[0].habilitadoUM,
+                        fechaCreacionUsuario: (new Date(usuario.data[0].fechaCreacionUM).getDay() < 10? '0'
+                        + new Date(usuario.data[0].fechaCreacionUM).getDay():new Date(usuario.data[0].fechaCreacionUM).getDay()) + "/"
+                        + (new Date(usuario.data[0].fechaCreacionUM).getMonth()) + "/" + (new Date(usuario.data[0].fechaCreacionUM).getFullYear()),
                     });
                 }else{
                     alert(usuario.msg);
@@ -80,14 +113,85 @@ class Editardatosusuario extends Component {
             .catch(err => console.log("Error FETCH USUARIOS:", err));
     }
 
+
     componentDidMount() {
         this.fetchDatosUsuario(this.props.idUsuario);
         this.fetchPerfiles();
     }
 
+    actualizarUsuario(){
+        //Comprobar si los campos están vacios
+        if (this.state.nombreUsuario == '') {
+            toast.error('Por favor llene todos los campos', { 
+                position: "bottom-right", autoClose: 2000, hideProgressBar: false, 
+                closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
+            return;
+        }
+        //falta añadir mas comprobaciones
+        else {
+            //Añadiendo a la BD - Mandar estos parametros a través de esta ruta.
+            fetch('/usuarios/actualizar', {
+                method: 'POST',
+                body: JSON.stringify({
+                    
+                    idUsuarioMaster: this.props.idUsuario.toString(),
+
+                    //Sesion
+                    nombreUM: this.state.nombreUsuario.toString(),
+                    rucUM: this.state.numDocumentoUsuarioN.toString(),
+                  
+                    tipoPerfilUM: this.state.perfilUsuarioN.toUpperCase(),
+                   
+                    nombresUM: this.state.nombresUsuarioN.toString(),
+                    apellidosUM: this.state.apellidosUsuarioN.toString(),
+                   
+                }),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === "error"){
+                        toast.error('Vuelva a iniciar sesión, hay fallas en su autenticación.', { 
+                            position: "bottom-right", autoClose: 2000, hideProgressBar: false, 
+                            closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
+                    }else{
+                        console.log(data); //id que retorno
+                        if (data != -1) {
+                            toast.success('Usuario actualizado', { 
+                                position: "bottom-right", autoClose: 2000, hideProgressBar: false, 
+                                closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
+                            
+                        }
+                        if (data == -1) {
+                            toast.error('Uusario actualizada', { 
+                                position: "bottom-right", autoClose: 2000, hideProgressBar: false, 
+                                closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
+                        }
+                    }
+                })
+                .catch(err => console.log(err));
+
+            //clear
+            this.setState({
+                
+                
+                numDocumentoUsuarioN: '',
+                perfilUsuarioN: '',
+                nombresUsuarioN: '',
+                apellidosUsuarioN: ''
+
+            });
+        }
+    }
+
     render() {
         return (
+            
             <div className="col-12">
+                {console.log("idusuario entrando" +this.props.idUsuario)}
                 <div className="row">
                     <div className="col-12 text-center">
                         <h2>EDITANDO DATOS DE {this.state.nombreUsuario}</h2>
@@ -118,7 +222,7 @@ class Editardatosusuario extends Component {
                                 nombreInput={"nombreUsuario"}
                                 readOnly={false}
                                 placeholder={this.state.nombreUsuario}
-                                funcionControl={() => {}}
+                                funcionControl={this.handleChangeInput}
                             />
                             <InputComponent
                                 unaLinea={true}
@@ -129,7 +233,7 @@ class Editardatosusuario extends Component {
                                 nombreInput={"numDocumentoUsuarioN"}
                                 readOnly={false}
                                 placeholder={this.state.numDocumentoUsuario.toString()}
-                                funcionControl={() => {}}
+                                funcionControl={this.handleChangeInput}
                             />
                         </div>
                         <div className="form-row mb-1">
@@ -141,12 +245,16 @@ class Editardatosusuario extends Component {
                                 idSelect={"perfilUsuarioN"}
                                 nombreSelect={"perfilUsuarioN"}
                                 esJson={true}
-                                nombreValor={"idPerfil"}
-                                nombreMostrar={"nombrePerfil"}
+                                nombreValor={"tipoPerfilUM"}
+                                nombreMostrar={"idPerfil"}
                                 contenido={this.state.listaPerfiles}
                                 valorDefecto={this.state.tipoPerfilUsuario}
-                                funcionControl={() => {}}
+                                funcionControl={this.handleChangeSelectComponent}
                             />
+
+                            
+
+
                             <InputComponent
                                 unaLinea={true}
                                 labelBloques={"col-2"}
@@ -169,7 +277,7 @@ class Editardatosusuario extends Component {
                                 nombreInput={"nombresUsuarioN"}
                                 readOnly={false}
                                 placeholder={this.state.nombresUsuario}
-                                funcionControl={() => {}}
+                                funcionControl={this.handleChangeInput}
                             />
                             <InputComponent
                                 unaLinea={true}
@@ -180,13 +288,13 @@ class Editardatosusuario extends Component {
                                 nombreInput={"apellidosUsuarioN"}
                                 readOnly={false}
                                 placeholder={this.state.apellidosUsuario}
-                                funcionControl={() => {}}
+                                funcionControl={this.handleChangeInput}
                             />
                         </div>
 
                         <div className="form-row justify-content-center mt-3">
                             <div className="col-5">
-                                <button className="btn btn-success btn-block" onClick={this.crearPerfil}> ACTUALIZAR DATOS </button>
+                                <button className="btn btn-success btn-block" onClick={this.actualizarUsuario}> ACTUALIZAR DATOS </button>
                             </div>
                         </div> 
 

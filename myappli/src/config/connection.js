@@ -18,8 +18,8 @@ if (process.env.STR_CONNECTION_DB) {
     CADENA_DE_CONEXION = process.env.STR_CONNECTION_DB;
 } else {
 	//CADENA_DE_CONEXION = "mysql://gestyxtf_concada:concadamaster2020@localhost/gestyxtf_concadamaster?charset=utf8mb4&timezone=-0500";
-    CADENA_DE_CONEXION = "mysql://gestioncuentas:gestioncuentas@127.0.0.1/concadamaster?charset=utf8mb4&timezone=-0500";
-    //CADENA_DE_CONEXION = "mysql://root:@127.0.0.1/concadamaster?charset=utf8mb4&timezone=-0500";
+    //CADENA_DE_CONEXION = "mysql://gestioncuentas:gestioncuentas@127.0.0.1/concadamaster?charset=utf8mb4&timezone=-0500";
+    CADENA_DE_CONEXION = "mysql://root:@127.0.0.1/concadamaster?charset=utf8mb4&timezone=-0500";
 }
 
 let connection = mysql.createConnection(CADENA_DE_CONEXION);

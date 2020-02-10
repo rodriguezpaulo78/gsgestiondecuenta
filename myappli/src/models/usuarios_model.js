@@ -56,29 +56,11 @@ class Usuario{
     // FUNCIÓN PARA REGISTRAR UN USUARIO NUEVO
     // {nombreUsuario: "", claveUsuario: "", creadoPor: "", tipoPerfil: ""}
     static registrarUsuarioSesion(nuevoUsuario, result){
-        //let fechaSistema = momentTimezone(new Date()).tz('america/Lima'); // libreria para convertir zona horaria - para cuando este en servidor en la nube.
-        //fechaSistema = fechaSistema.format("YYYY-MM-DD");
-        /*
-        sql.query(
-            'INSERT INTO usuariosmaster(nombreUM,rucUM,claveUM,tokenUM,fechaCreacionUM,creadoPorUM,tipoPerfilUM,habilitadoUM,idNegocioAsignadoUM) VALUES (?,?,?,?,?,?,?,?,?)',
-            [this.nombreUM,this.rucUM,this.claveUM,'-',fechaSistema,this.creadoPorUM !== undefined? this.creadoPorUM: 1,this.tipoPerfilUM !== undefined?this.tipoPerfilUM:2,this.habilitadoUM,this.creadoPorUM !== undefined?this.idNegocioAsignadoUM:1],
-            (err, res) => {
-                if (err){
-                    result(err, null);
-                }else{
-                    result(null, res);
-                }
-            }
-        );
-        */
+    
 
-        sql.query(
-            "insert into usuariosmaster set ?",
-            [nuevoUsuario],
-            /*
-            'INSERT INTO datosusuariosmaster(idDatosUM,nombresUM,apellidosUM,numDocumentoUM,tipoDocumentoUM,telefonosUM,direccionUM,correosUM,ciudad,departamento,provincia) VALUES (?,?,?,?,?,?,?,?,?,?,?)',
-            [this.idUsuarioMaster,this.nombresUM,this.apellidosUM,this.numDocumentoUM,this.tipoDocumentoUM,this.telefonosUM,this.direccionUM,this.correosUM,this.ciudad,this.departamento,this.provincia],
-            */
+           sql.query(
+            "insert into usuariosmaster(nombreUM,rucUM,claveUM,tokenUM,fechaCreacionUM,creadoPorUM,tipoPerfilUM,habilitadoUM,idNegocioAsignadoUM) VALUES (?,?,?,?,?,?,?,?,?)",
+            [nuevoUsuario.nombreUM,nuevoUsuario.rucUM,nuevoUsuario.claveUM,'-',nuevoUsuario.fechaCreacionUM,nuevoUsuario.creadoPorUM !== undefined? nuevoUsuario.creadoPorUM: 1,nuevoUsuario.tipoPerfilUM !== undefined?nuevoUsuario.tipoPerfilUM:2,nuevoUsuario.habilitadoUM,nuevoUsuario.creadoPorUM !== undefined?nuevoUsuario.idNegocioAsignadoUM:1],
             function (err_2, res_2) {
                 if (err_2) {
                     console.log("error: ", err_2);
@@ -86,14 +68,33 @@ class Usuario{
                 }
                 else {
                     console.log(res_2.insertId);
+                    Usuario.guardarPermisosAPerfil(res_2.insertId, nuevoUsuario.nombresUM, nuevoUsuario.apellidosUM, nuevoUsuario.numDocumentoUM, nuevoUsuario.tipoDocumentoUM, nuevoUsuario.telefonosUM, nuevoUsuario.direccionUM, nuevoUsuario.correosUM, nuevoUsuario.ciudad, nuevoUsuario.departamento, nuevoUsuario.provincia);
                     result(null, res_2.insertId);
                 }
             });
     }
 
+    static guardarPermisosAPerfil(idDatosUM, nombresUM, apellidosUM, numDocumentoUM, tipoDocumentoUM, telefonosUM, direccionUM, correosUM, ciudad, departamento, provincia ){
+        console.log("GUARDANDO PERMISOS");
+        console.log(idDatosUM);
+            sql.query(
+                "INSERT INTO datosusuariosmaster(idDatosUM,nombresUM,apellidosUM, numDocumentoUM, tipoDocumentoUM,telefonosUM, direccionUM, correosUM, ciudad, departamento,provincia) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+                [idDatosUM, nombresUM, apellidosUM, numDocumentoUM, tipoDocumentoUM, telefonosUM, direccionUM, correosUM, ciudad, departamento, provincia ],
+                (err, result) => {
+                    if (err){
+                        console.log("ERROR AL GUARDAR PERMISO EN PERFIL", err);
+                    }else{
+                        console.log("Guardado con éxito... :D");
+                    }
+                }
+            );
+        
+    }
+
     // FUNCIÓN PARA INICIAR SESIÓN, SE BUSCAN LOS DATOS DE TODOS DEL USUARIO ASÍ COMO LOS DATOS DEL
     // NEGOCIO AL CUAL FUE ASIGNADO, DE ESTA MANERA YA RECUPERAMOS LA CADENA DE CONEXION
     static inicioSesionMaster(usuario, result){
+        console.log(usuario.body)
         sql.query(
             "SELECT * FROM (SELECT * FROM (SELECT * FROM usuariosmaster WHERE nombreUM=? AND rucUM=?) as UsuarioMaster INNER JOIN datosusuariosmaster ON UsuarioMaster.idUsuarioMaster=datosusuariosmaster.idDatosUM) as UsuariosDatosCompletos INNER JOIN datosnegocios ON UsuariosDatosCompletos.idNegocioAsignadoUM=datosnegocios.idDatoNegocio",
             [usuario.nombreUM, usuario.rucUM],
@@ -134,17 +135,35 @@ class Usuario{
         console.log("CONECTANDO PARA EXTRAENDO PERMISOS")
         sqlDbNegocios(
             cadenaDeConexion,
-            'SELECT * FROM permisosasignados WHERE idUsuarioAsignado=?',
+            'SELECT * FROM permisosperfiles WHERE idPerfilAsignado=?',
             [usuario],
             (err, res) => {
                 if (err) {
                     result(err, null);
                 } else {
                     console.log("EN FN RecuperarPermisos", res);
+                    console.log("ID PARA RECUPERAR RUC", res.idUsuarioMaster);
+                    Usuario.obtenerRucEmpresa(usuario.idUsuarioMaster);
                     result(null, res);
                 }
             }
          );
+
+    }
+
+    static obtenerRucEmpresa(idUsuario){
+        sql.query(
+            'SELECT ruc FROM usuariosmaster WHERE idUsuarioMaster=?',
+            [idUsuario],
+            (err, res) => {
+                if (err){
+                    return false;
+                }
+                console.log("RUC DE EMPRESA >> "+idUsuario.ruc);
+                return true;
+
+            }
+        );
     }
 
     static guardarTokenDb(usuario, token){
@@ -183,7 +202,7 @@ class Usuario{
             sql_command = 'SELECT * FROM (SELECT * FROM usuariosmaster WHERE idNegocioAsignadoUM=?) AS Usuarios INNER JOIN datosusuariosmaster ON Usuarios.idUsuarioMaster=datosusuariosmaster.idDatosUM';
             values = [idNegocio];
         }else{
-            sql_command = 'SELECT * FROM (SELECT * FROM usuariosmaster WHERE idUsuario=?) AS Usuarios INNER JOIN datosusuariosmaster ON Usuarios.idUsuarioMaster=datosusuariosmaster.idDatosUM';
+            sql_command = 'SELECT * FROM (SELECT * FROM usuariosmaster WHERE idUsuarioMaster=?) AS Usuarios INNER JOIN datosusuariosmaster ON Usuarios.idUsuarioMaster=datosusuariosmaster.idDatosUM';
             values = [idUsuario];
         }
         sql.query(
@@ -200,6 +219,7 @@ class Usuario{
 
     static dehabilitarUsuario(id_Usuario, result){
         sql.query(
+
             'UPDATE usuariosmaster SET habilitadoUM=\'0\' WHERE idUsuarioMaster=?',
             [id_Usuario],
             (err, res) => {
@@ -217,7 +237,7 @@ class Usuario{
     static habilitarUsuario(idUsuario, result){
         sqlDbNegocios(
             cadenaDeConexion,
-            'UDATE usuarios SET habilitado=1 WHERE idUsuario=?',
+            'UPDATE usuarios SET habilitado=1 WHERE idUsuario=?',
             [idUsuario],
             (err, res) => {
                 if (err){
@@ -243,6 +263,45 @@ class Usuario{
                 }
             }
         );
+    }
+
+    static actualizarUsuario(nuevoUsuario, result){
+        console.log("Id usuario master a actualizar >> "+nuevoUsuario.idUsuarioMaster);
+        console.log("Id perfil  a actualizar >> "+nuevoUsuario.perfilUsuarioN);
+        sql.query(
+            "update usuariosmaster set  nombreUM=?,rucUM=?,tipoPerfilUM=? where idUsuarioMaster=1",
+            [nuevoUsuario.nombreUM,nuevoUsuario.rucUM,,nuevoUsuario.perfilUsuarioN],
+            function (err_2, res_2) {
+                if (err_2) {
+                    console.log("error: ", err_2);
+                    result(err_2, null);
+                }
+                else {
+                    console.log(res_2.idUsuario);
+                    Usuario.actualizarMas(1, nuevoUsuario.nombresUM, nuevoUsuario.apellidosUM);
+                    result(null, res_2.idUsuario);
+                }
+            });
+    }
+
+
+
+    
+    static actualizarMas(idDatosUM, nombresUM, apellidosUM ){
+        console.log("GUARDANDO PERMISOS");
+        console.log(idDatosUM);
+            sql.query(
+                "update datosusuariosmaster set nombresUM=?, apellidosUM=? where idDatosUM=?",
+                [nombresUM, apellidosUM,idDatosUM],
+                (err, result) => {
+                    if (err){
+                        console.log("ERROR AL GUARDAR PERMISO EN PERFIL", err);
+                    }else{
+                        console.log("Guardado con éxito... :D");
+                    }
+                }
+            );
+        
     }
 }
 

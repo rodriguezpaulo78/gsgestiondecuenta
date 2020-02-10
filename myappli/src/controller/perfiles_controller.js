@@ -23,12 +23,15 @@ exports.obtenerPerfilesYpermisos = function (req, res) {
 };
 
 exports.create_a_perfil = function(req, res) {
+  console.log("OBJ NUEVO PERFIL", req.body);
   var new_perfil = new Perfil(req.body);
   
   Perfil.createPerfil(req.body.dataToken.cadenaDeConexion, new_perfil, function(err, perfil) {
-    if (err)
+    if (err){
       res.send(err);
-    res.json(perfil);
+    }else{
+      res.json(perfil);
+    }
     });
   };
 
@@ -45,7 +48,7 @@ exports.list_all_grupo = function(req, res) {
 exports.list_all_permisos = function(req, res) {
   Perfil.getAllPermisos(req.body.dataToken.cadenaDeConexion, function(err, permiso) {
 
-    console.log('controller')
+    console.log('controller');
     if (err)
       res.send(err);
         console.log('res', permiso);

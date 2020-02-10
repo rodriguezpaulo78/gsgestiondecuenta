@@ -203,7 +203,7 @@ class AdministrarUsuarios extends Component {
                                         <button className="btn btn-danger" onClick={this.fetchDeshabilitarUsuario.bind(this, ele.idUsuarioMaster)}>
                                             <i className="fa fa-ban"></i>
                                         </button>
-                                        <button className="btn btn-success" name="btnEditarUsuario" onClick={this.editarDatos.bind(this, ele.idUsuario)}>
+                                        <button className="btn btn-success" name="btnEditarUsuario" onClick={this.editarDatos.bind(this, ele.idUsuarioMaster)}>
                                             <i className="fa fa-pen"></i>
                                         </button>
                                     </td>

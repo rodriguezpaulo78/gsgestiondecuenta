@@ -492,6 +492,22 @@ class DatosEmpresa extends Component {
                                             funcionControl={this.handleChangeInputComponent}
                                         />
                                     </div>
+
+                                    <div className="form-row mt-2">
+                                        <InputComponent
+                                            unaLinea={"true"}
+                                            labelBloques={"col-2"}
+                                            bloques={"col-10"}
+                                            etiqueta={"Ruta del facturador SUNAT"}
+                                            idInput={"facturador"}
+                                            nombreInput={"facturador"}
+                                            readOnly={false}
+                                            //valorDefecto={this.state.nuevaImagenEmpresa}
+                                            //placeholder={this.state.imagenEmpresaE}
+                                            funcionControl={this.handleChangeInputComponent}
+                                        />
+                                    </div>
+
                                     <div className="form-row justify-content-center mt-3">
                                         <div className="col-6">
                                             <button

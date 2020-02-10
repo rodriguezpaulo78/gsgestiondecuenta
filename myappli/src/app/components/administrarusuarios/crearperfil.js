@@ -19,14 +19,14 @@ class CrearPerfil extends Component {
             opciones_grupos: [],    //5 grupos de permisos
             opciones_permisos: [],  //13 permisos especificos 
 
-            checkedItems: new Map(),
+            checkedItems: [],
 
         };
         
         this.crearPerfil = this.crearPerfil.bind(this);
         // HANDLE FUNCTIONS
         this.handleChangeInputComponent = this.handleChangeInputComponent.bind(this);
-        this.handleChange = this.handleChange.bind(this);
+        this.handleChangeCheckbox = this.handleChangeCheckbox.bind(this);
 
         // FETCH FUNCTIONS
         this.fetchPerfilesGrupo = this.fetchPerfilesGrupo.bind(this);
@@ -34,7 +34,11 @@ class CrearPerfil extends Component {
 
         // ONBLUR FUNCTIONS
         this.onBlurInput = this.onBlurInput.bind(this);
-        
+
+        // OTHER FUNCTIONS
+        this.verificarMarcado = this.verificarMarcado.bind(this);
+        this.borrarTodo = this.borrarTodo.bind(this);
+
     }
 
     //Función para limpiar todos los campos
@@ -42,6 +46,16 @@ class CrearPerfil extends Component {
         console.log("BORRANDO TODO");
         this.setState({
             nombrePerfil: '',
+            fecCreacionPerfil: '',
+
+            controlPerfilDuplicado: 0,
+
+            //Permisos
+            opciones_grupos: [],    //5 grupos de permisos
+            opciones_permisos: [],  //13 permisos especificos
+
+            checkedItems: [],
+
         });
     }
 
@@ -128,10 +142,28 @@ class CrearPerfil extends Component {
         
     }
 
-    handleChange(e) {
-        const item = e.target.name;
+    handleChangeCheckbox(evt) {
+        const idPermisoSeleccionado = parseInt(evt.target.id);
+        const idxPermiso = this.state.checkedItems.indexOf(idPermisoSeleccionado);
+        if (idxPermiso < 0){
+            let nuevaCheckedItem = this.state.checkedItems;
+            nuevaCheckedItem.push(parseInt(evt.target.id));
+            this.setState({
+                checkedItems: nuevaCheckedItem,
+            });
+        }else{
+            let nuevaListaCheckItems = [];
+            for (let i = 0; i < this.state.checkedItems.length; i++){
+                if (i !== idxPermiso)
+                    nuevaListaCheckItems.push(this.state.checkedItems[i]);
+            }
+            this.setState({
+                checkedItems: nuevaListaCheckItems,
+            });
+        }
+        /*const item = e.target.name;
         const isChecked = e.target.checked;
-        this.setState(prevState => ({ checkedItems: prevState.checkedItems.set(item, isChecked) }));
+        this.setState(prevState => ({ checkedItems: prevState.checkedItems.set(item, isChecked) }));*/
       }
 
     //Funcion necesaria para poder cambiar los valores del INPUTCOMPONENT
@@ -142,6 +174,10 @@ class CrearPerfil extends Component {
             });
             return 1;
         }
+    }
+
+    verificarMarcado(idPermiso){
+        return this.state.checkedItems.indexOf(idPermiso) >= 0;
     }
 
     //Función Back End para crear un Perfil
@@ -162,7 +198,7 @@ class CrearPerfil extends Component {
                 method: 'POST',
                 body: JSON.stringify({
                     nombrePerfil: this.state.nombrePerfil.toUpperCase(),
-                    fechaCreacion: this.state.fecCreacionPerfil.toUpperCase(),
+                    fechaCreacionPerfil: this.state.fecCreacionPerfil.toUpperCase(),
                     idPermisoAPerfil: this.state.checkedItems,
             }),
             headers: {
@@ -230,18 +266,18 @@ class CrearPerfil extends Component {
 
                 <div className="form-row justify-content-center mt-3">
                     <div className="col-6">
-                    <table className="table table-sm table-bordered">
-                {
-                    //Obtiene y mustra los datos obtenidos de la BD idPermiso y nombrePermiso a través de item
-                    this.state.opciones_permisos.map(item => (
-                        <React.Fragment>
-                            <tr className="mt-0">
-                                <td><label key={item.idPermiso}>{item.nombrePermiso}</label></td>                            
-                                <td><Checkbox name={item.nombrePermiso} checked={this.state.checkedItems.get(item.nombrePermiso)} onChange={this.handleChange} /></td>
-                            </tr>
-                        </React.Fragment>
-                    ))
-                }
+                        <table className="table table-sm table-bordered">
+                            <tbody>
+                            {
+                                //Obtiene y mustra los datos obtenidos de la BD idPermiso y nombrePermiso a través de item
+                                this.state.opciones_permisos.map((item, idx) => (
+                                    <tr className="mt-0" key={idx}>
+                                        <td><label key={item.idPermiso} htmlFor={item.nombrePermiso}>{item.nombrePermiso}</label></td>
+                                        <td><Checkbox id={item.idPermiso}  name={item.nombrePermiso} checked={this.verificarMarcado(parseInt(item.idPermiso))} onChange={this.handleChangeCheckbox} /></td>
+                                    </tr>
+                                ))
+                            }
+                            </tbody>
                         </table>
                     </div>
                 </div>
