@@ -5,7 +5,7 @@ const momentTimezone = require('moment-timezone');
 
 // ESTE MODELO MANEJA LOS DATOS DE INICIO DE SESIÓN Y LOS DATOS PERSONALES DE LOS USUARIOS, TALES DATOS NO SON TAN ESENCIALES.
 class Usuario{
-    constructor(usuario = null){
+    constructor(usuario){
         if (usuario !== null){
             // DATOS DE USUARIO PARA INCIAR SESIÓN Y PRIMER REGISTRO
             if (usuario.nombreUM !== undefined){        this.nombreUM = usuario.nombreUM;}
@@ -131,7 +131,7 @@ class Usuario{
         );
     };
 
-    static recuperarPermisos(cadenaDeConexion, usuario, result) {
+    static recuperarPermisos(cadenaDeConexion, usuario, id, result) {
         console.log("CONECTANDO PARA EXTRAENDO PERMISOS")
         sqlDbNegocios(
             cadenaDeConexion,
@@ -142,8 +142,8 @@ class Usuario{
                     result(err, null);
                 } else {
                     console.log("EN FN RecuperarPermisos", res);
-                    console.log("ID PARA RECUPERAR RUC", res.idUsuarioMaster);
-                    Usuario.obtenerRucEmpresa(usuario.idUsuarioMaster);
+                    console.log("ID PARA RECUPERAR RUC", id);
+                    Usuario.obtenerRucEmpresa(id);
                     result(null, res);
                 }
             }
@@ -153,13 +153,13 @@ class Usuario{
 
     static obtenerRucEmpresa(idUsuario){
         sql.query(
-            'SELECT ruc FROM usuariosmaster WHERE idUsuarioMaster=?',
+            'SELECT ruc FROM datosnegocios WHERE idDatoNegocio=?',
             [idUsuario],
             (err, res) => {
                 if (err){
                     return false;
                 }
-                console.log("RUC DE EMPRESA >> "+idUsuario.ruc);
+                console.log("ruc obtenido correctamente ");
                 return true;
 
             }
@@ -267,25 +267,21 @@ class Usuario{
 
     static actualizarUsuario(nuevoUsuario, result){
         console.log("Id usuario master a actualizar >> "+nuevoUsuario.idUsuarioMaster);
-        console.log("Id perfil  a actualizar >> "+nuevoUsuario.perfilUsuarioN);
+        console.log("Id perfil  a actualizar >> "+nuevoUsuario.tipoPerfilUM);
         sql.query(
-            "update usuariosmaster set  nombreUM=?,rucUM=?,tipoPerfilUM=? where idUsuarioMaster=1",
-            [nuevoUsuario.nombreUM,nuevoUsuario.rucUM,,nuevoUsuario.perfilUsuarioN],
+            "update usuariosmaster set  nombreUM=?, rucUM=?, tipoPerfilUM=? where idUsuarioMaster=?",
+            [nuevoUsuario.nombreUM,nuevoUsuario.rucUM,nuevoUsuario.tipoPerfilUM, nuevoUsuario.idUsuarioMaster],
             function (err_2, res_2) {
                 if (err_2) {
                     console.log("error: ", err_2);
                     result(err_2, null);
                 }
                 else {
-                    console.log(res_2.idUsuario);
-                    Usuario.actualizarMas(1, nuevoUsuario.nombresUM, nuevoUsuario.apellidosUM);
+                    Usuario.actualizarMas(nuevoUsuario.idUsuarioMaster, nuevoUsuario.nombresUM, nuevoUsuario.apellidosUM);
                     result(null, res_2.idUsuario);
                 }
             });
     }
-
-
-
     
     static actualizarMas(idDatosUM, nombresUM, apellidosUM ){
         console.log("GUARDANDO PERMISOS");

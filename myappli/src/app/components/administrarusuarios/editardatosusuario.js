@@ -14,8 +14,10 @@ class Editardatosusuario extends Component {
             // Datos actuales del usuario para mostrar
             idUsuario: '',
             nombreUsuario: '',
+            nombreUsuario2: '',
             numDocumentoUsuario: '',
             nombresUsuario: '',
+
             apellidosUsuario: '',
             tipoPerfilUsuario: '',
             nombrePerfilUsuario: '',
@@ -30,6 +32,7 @@ class Editardatosusuario extends Component {
             perfilUsuarioN: '',
 
             habilitadoUsuarioN: '',
+        
         };
 
         this.actualizarUsuario = this.actualizarUsuario.bind(this);
@@ -79,15 +82,18 @@ class Editardatosusuario extends Component {
                     this.setState({
                         idUsuario: usuario.data[0].idUsuarioMaster,
                         nombreUsuario: usuario.data[0].nombreUM,
+                        nombreUsuario2: usuario.data[0].nombreUM,
                         numDocumentoUsuario: usuario.data[0].rucUM,
                         nombresUsuario: usuario.data[0].nombresUM,
                         apellidosUsuario: usuario.data[0].apellidosUM,
                         tipoPerfilUsuario: usuario.data[0].tipoPerfilUM,
                         nombrePerfil: usuario.data[0].nombrePerfil,
                         habilitadoUsuario: usuario.data[0].habilitadoUM,
-                        fechaCreacionUsuario: (new Date(usuario.data[0].fechaCreacionUM).getDay() < 10? '0'
-                        + new Date(usuario.data[0].fechaCreacionUM).getDay():new Date(usuario.data[0].fechaCreacionUM).getDay()) + "/"
-                        + (new Date(usuario.data[0].fechaCreacionUM).getMonth()) + "/" + (new Date(usuario.data[0].fechaCreacionUM).getFullYear()),
+                        fechaCreacionUsuario: (new Date(usuario.data[0].fechaCreacionUM).getDate() < 10? '0' + 
+                        new Date(usuario.data[0].fechaCreacionUM).getDate():new Date(usuario.data[0].fechaCreacionUM).getDate()) + "/" + 
+                        (new Date(usuario.data[0].fechaCreacionUM).getMonth() + 1 < 10? '0' + 
+                        (new Date(usuario.data[0].fechaCreacionUM).getMonth()+1):new Date(usuario.data[0].fechaCreacionUM).getMonth()+1) + "/" + 
+                        new Date(usuario.data[0].fechaCreacionUM).getFullYear(),
                     });
                 }else{
                     alert(usuario.msg);
@@ -140,7 +146,7 @@ class Editardatosusuario extends Component {
                     nombreUM: this.state.nombreUsuario.toString(),
                     rucUM: this.state.numDocumentoUsuarioN.toString(),
                   
-                    tipoPerfilUM: this.state.perfilUsuarioN.toUpperCase(),
+                    tipoPerfilUM: this.state.perfilUsuarioN,
                    
                     nombresUM: this.state.nombresUsuarioN.toString(),
                     apellidosUM: this.state.apellidosUsuarioN.toString(),
@@ -164,6 +170,7 @@ class Editardatosusuario extends Component {
                                 position: "bottom-right", autoClose: 2000, hideProgressBar: false, 
                                 closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
                             
+                            
                         }
                         if (data == -1) {
                             toast.error('Uusario actualizada', { 
@@ -176,8 +183,6 @@ class Editardatosusuario extends Component {
 
             //clear
             this.setState({
-                
-                
                 numDocumentoUsuarioN: '',
                 perfilUsuarioN: '',
                 nombresUsuarioN: '',
@@ -194,7 +199,7 @@ class Editardatosusuario extends Component {
                 {console.log("idusuario entrando" +this.props.idUsuario)}
                 <div className="row">
                     <div className="col-12 text-center">
-                        <h2>EDITANDO DATOS DE {this.state.nombreUsuario}</h2>
+                        <h2>EDITANDO DATOS DE {this.state.nombreUsuario2}</h2>
                     </div>
                 </div>
                 <hr/>
@@ -245,15 +250,13 @@ class Editardatosusuario extends Component {
                                 idSelect={"perfilUsuarioN"}
                                 nombreSelect={"perfilUsuarioN"}
                                 esJson={true}
-                                nombreValor={"tipoPerfilUM"}
+                                nombreValor={"perfilUsuarioN"}
                                 nombreMostrar={"idPerfil"}
                                 contenido={this.state.listaPerfiles}
-                                valorDefecto={this.state.tipoPerfilUsuario}
+                                //CUANDO SE ACTIVA EL VALOR POR DEFECTO NO SE PUEDE SELECCIONAR ENTRE LOS TIPOS DE PERFILES
+                                //valorDefecto={this.state.tipoPerfilUsuario}
                                 funcionControl={this.handleChangeSelectComponent}
                             />
-
-                            
-
 
                             <InputComponent
                                 unaLinea={true}

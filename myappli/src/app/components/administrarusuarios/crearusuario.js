@@ -128,9 +128,9 @@ class Crearusuario extends Component {
     //Funcion que obtiene los nombres de los Perfiles y los inserta en el arreglo listaPerfiles
     fetchPerfilesUsuario() {
         fetch('/usuarios/obtenerperfiles', { 
-                    headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
                 }})
             .then(res => res.json())
             .then(
@@ -145,6 +145,7 @@ class Crearusuario extends Component {
     }
 
     //UN FETCH PARA OBTENER EL RUC DE LA EMPRESA PENDIENTE
+    
 
     //Función que muestra los datos en la interfaz(METODO REACT) llama a los demás funciones
     componentDidMount() {
@@ -190,9 +191,6 @@ class Crearusuario extends Component {
             case "apellidos":
                 this.setState({ apellidos: evt.target.value,});
                 break;
-            case "tipoDocumento":
-                this.setState({ tipoDocumento: evt.target.value,});
-                break;
             case "numeroDocumento":
                 this.setState({ numeroDocumento: evt.target.value,});
                 break;
@@ -234,6 +232,12 @@ class Crearusuario extends Component {
                 perfilUsuario: evt.target.value,
             });
         }
+        if (evt.target.name === "tipoDocumento"){
+            this.setState({
+                tipoDocumento: evt.target.value,
+            });
+        }
+
     }
 
     //Función BackEnd para crear un Usuario Sesion
@@ -241,7 +245,7 @@ class Crearusuario extends Component {
         this.state.fecCreacionUsuario = this.getCurrentDate(); //dar el valor que retorna la funcion a la variable fecCreacionUsuario
 
         //Comprobar si los campos están vacios
-        if (this.state.nombreUsuario == '' || this.state.ruc == '' || this.state.clave1 == '' || this.state.perfilUsuario == '') {
+        if (this.state.nombreUsuario == '' || this.state.clave1 == '' || this.state.perfilUsuario == '') {
             toast.error('Por favor llene todos los campos', { 
                 position: "bottom-right", autoClose: 2000, hideProgressBar: false, 
                 closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
@@ -259,7 +263,7 @@ class Crearusuario extends Component {
                     rucUM: this.state.ruc.toUpperCase(),
                     claveUM: this.state.clave1.toUpperCase(),
                     fechaCreacionUM: this.state.fecCreacionUsuario.toUpperCase(),
-                    tipoPerfilUM: this.state.perfilUsuario.toUpperCase(),
+                    tipoPerfilUM: this.state.perfilUsuario,
                     tokenUM: "-",
                     //No se puede mandar numeros
                     creadoPorUM: "1",
@@ -271,7 +275,7 @@ class Crearusuario extends Component {
                     nombresUM: this.state.nombres.toUpperCase(),
                     apellidosUM: this.state.apellidos.toUpperCase(),
                     //no carga el tipo de documento del arreglo Documentos
-                    tipoDocumentoUM: "1",
+                    tipoDocumentoUM: this.state.tipoDocumento,
                     numDocumentoUM: this.state.numeroDocumento,
                     telefonosUM: this.state.numeroContacto,
                     direccionUM: this.state.direccion,
@@ -363,7 +367,7 @@ class Crearusuario extends Component {
                             idInput={"ruc"}
                             nombreInput={"ruc"}
                             mensajeValidacionError={"Verificar RUC"}
-                            valorDefecto={this.state.ruc}
+                            valorDefecto={this.state.rucObtenido}
                             mensajeValidacionOk={"Formato RUC correcto"}
                             readOnly={true}
                             funcionControl={this.handleChangeInput}
@@ -400,7 +404,7 @@ class Crearusuario extends Component {
                             nombreSelect={"perfilUsuario"}
                             esJson={true}
                             contenido={this.state.listaPerfiles}
-                            nombreValor={"tipoPerfilUM"}
+                            nombreValor={"perfilUsuario"}
                             //Falta poner id - nombre perfil 
                             nombreMostrar={"idPerfil"}  //Aquí se coloca el campo de la BD que se mostrará en el Select (via método Handle)
                             //valorDefecto={this.state.perfilUsuario}
@@ -436,7 +440,7 @@ class Crearusuario extends Component {
                             nombreSelect={"tipoDocumento"}
                             esJson={true}
                             contenido={Documentos}
-                            funcionControl={() => {}}
+                            funcionControl={this.handleChangeSelectComponent}
                             nombreMostrar={"nombre"}
                             nombreValor={"cod"}
                         />

@@ -27,7 +27,7 @@ exports.crearNuevoUsuario = function (req, res) {
 };
 
 
-exports.actualizarUsuario = function (req, res) {
+exports.actualizarUsuario = function (req,res) {
     console.log("datos a actualizar:", req.body);
     let nuevoUsuario = new Usuario(req.body);
     Usuario.actualizarUsuario( nuevoUsuario, function(err, result) {
@@ -118,7 +118,7 @@ exports.obtenerPermisos = function (req, res) {
     if (req.body.apiKey === "GdC2019"){
         // LA CADENA DE CONEXION YA ESTA PASANDO POR
         // EL BODY PARA PODER SOLICITAR A SU MISMA BASE DE DATOS LA INFO REQUERIDA
-        Usuario.recuperarPermisos(req.body.dataToken.cadenaDeConexion, req.body.dataToken.tipoPerfilUM, function (err, result) {
+        Usuario.recuperarPermisos(req.body.dataToken.cadenaDeConexion, req.body.dataToken.tipoPerfilUM, req.body.dataToken.idNegocioAsignadoUM, function (err, result) {
             if (err){
                 res.send("[]");
             }else{
@@ -202,3 +202,4 @@ exports.list_all_perfiles= function(req, res) {
     });
     res.redirect('/');
   }
+  
