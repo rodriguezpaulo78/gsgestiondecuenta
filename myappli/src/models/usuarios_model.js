@@ -142,8 +142,8 @@ class Usuario{
                     result(err, null);
                 } else {
                     console.log("EN FN RecuperarPermisos", res);
-                    console.log("ID PARA RECUPERAR RUC", id);
-                    Usuario.obtenerRucEmpresa(id);
+                    //console.log("ID PARA RECUPERAR RUC", id);
+                    //Usuario.obtenerRucEmpresa(id);
                     result(null, res);
                 }
             }
@@ -151,20 +151,24 @@ class Usuario{
 
     }
 
-    static obtenerRucEmpresa(idUsuario){
+    static obtenerRucEmpresa(idUsuario, result){
         sql.query(
             'SELECT ruc FROM datosnegocios WHERE idDatoNegocio=?',
             [idUsuario],
             (err, res) => {
                 if (err){
-                    return false;
+                    result(err, null);
+                }else{
+                    console.log("ruc obtenido correctamente ", res);
+                    result(null, res);
                 }
-                console.log("ruc obtenido correctamente ");
-                return true;
+                
+                
 
             }
         );
     }
+    
 
     static guardarTokenDb(usuario, token){
         sql.query(

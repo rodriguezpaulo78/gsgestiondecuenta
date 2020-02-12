@@ -136,6 +136,20 @@ exports.obtenerPermisos = function (req, res) {
     }
 };
 
+exports.obtenerRuc = function (req, res) {
+    
+        Usuario.obtenerRucEmpresa(req.body.dataToken.idNegocioAsignadoUM, function (err, result) {
+            if (err){
+                res.send({status: "error", msg: "Se tienen problemas al obtener ruc", data: []});
+            }else{
+                res.send({status: "ok", msg: "Ruc bien", data: result});
+            }
+        });
+  
+};
+
+
+
 exports.obtenerUsuarios = function (req, res) {
     if (req.params.idUsuario === undefined){
         Usuario.obtenerUsuarios(req.body.dataToken.idNegocioAsignadoUM, 0, (err, result) => {

@@ -11,6 +11,7 @@ router.put('/usuarios/:idUsuarioMaster', RevisarTokenReact, UsuarioController.de
 router.get('/usuarios/:idUsuario', RevisarTokenReact, UsuarioController.obtenerUsuarios);
 
 router.get('/obtenerperfiles', RevisarTokenReact, UsuarioController.list_all_perfiles);
+router.get('/obtenerruc', RevisarTokenReact, UsuarioController.obtenerRuc);
 router.post('/validarusuario', RevisarTokenReact, UsuarioController.existeUsuario);
 
 router.post('/actualizar', RevisarTokenReact, UsuarioController.actualizarUsuario);

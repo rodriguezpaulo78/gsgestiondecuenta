@@ -46,6 +46,7 @@ class Crearusuario extends Component {
 
         // FECTH FUNCTIONS
         this.fetchPerfilesUsuario = this.fetchPerfilesUsuario.bind(this);
+        this.fetchRucUsuario = this.fetchRucUsuario.bind(this);
 
         // ONBLUR FUNCTIONS
         this.onBlurInput = this.onBlurInput.bind(this);
@@ -144,12 +145,29 @@ class Crearusuario extends Component {
             .catch(err => console.log(err));
     }
 
-    //UN FETCH PARA OBTENER EL RUC DE LA EMPRESA PENDIENTE
-    
+     //Funcion que obtiene los nombres de los Perfiles y los inserta en el arreglo listaPerfiles
+     fetchRucUsuario() {
+        fetch('/usuarios/obtenerruc', { 
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }})
+            .then(res => res.json())
+            .then(
+                data => {
+                    if (data.status === "error"){
+                        toast.error('Vuelva a iniciar sesión, hay fallas en su autenticación.', { position: "bottom-right", autoClose: 2000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
+                    }else{
+                        this.setState({ rucObtenido: data.data[0].ruc });
+                    }
+                })
+            .catch(err => console.log("laptmr",err));
+    }
 
     //Función que muestra los datos en la interfaz(METODO REACT) llama a los demás funciones
     componentDidMount() {
         this.fetchPerfilesUsuario();
+        this.fetchRucUsuario();
     }
 
     //Funcion necesaria para poder cambiar los valores del INPUTCOMPONENT
@@ -177,6 +195,7 @@ class Crearusuario extends Component {
                 });
                 break;
             case "ruc":
+                
                 this.setState({ ruc: evt.target.value,}, () => {
                     if (this.state.ruc.length < 10){
                         this.setState({ esRucCorrecto: false,});
@@ -184,7 +203,9 @@ class Crearusuario extends Component {
                         this.setState({ esRucCorrecto: true,});
                     }
                 });
-                break;
+                
+               //this.setState({ ruc: evt.target.value,});
+               break;
             case "nombres":
                 this.setState({ nombres: evt.target.value,});
                 break;
@@ -367,9 +388,10 @@ class Crearusuario extends Component {
                             idInput={"ruc"}
                             nombreInput={"ruc"}
                             mensajeValidacionError={"Verificar RUC"}
-                            valorDefecto={this.state.rucObtenido}
+                            //le da el ruc de la empresa asociada
+                            placeholder={this.state.rucObtenido}
                             mensajeValidacionOk={"Formato RUC correcto"}
-                            readOnly={true}
+                            readOnly={false}
                             funcionControl={this.handleChangeInput}
                         />
 
@@ -404,9 +426,8 @@ class Crearusuario extends Component {
                             nombreSelect={"perfilUsuario"}
                             esJson={true}
                             contenido={this.state.listaPerfiles}
-                            nombreValor={"perfilUsuario"}
-                            //Falta poner id - nombre perfil 
-                            nombreMostrar={"idPerfil"}  //Aquí se coloca el campo de la BD que se mostrará en el Select (via método Handle)
+                            nombreValor={"idPerfil"}        //aqui se coloca el valor de la bd que registrara
+                            nombreMostrar={"nombrePerfil"}  //Aquí se coloca el campo de la BD que se mostrará en el Select (via método Handle)
                             //valorDefecto={this.state.perfilUsuario}
                             funcionControl={this.handleChangeSelectComponent}
                         />          

@@ -237,6 +237,7 @@ class Editardatosusuario extends Component {
                                 idInput={"numDocumentoUsuarioN"}
                                 nombreInput={"numDocumentoUsuarioN"}
                                 readOnly={false}
+                    
                                 placeholder={this.state.numDocumentoUsuario.toString()}
                                 funcionControl={this.handleChangeInput}
                             />
@@ -250,8 +251,8 @@ class Editardatosusuario extends Component {
                                 idSelect={"perfilUsuarioN"}
                                 nombreSelect={"perfilUsuarioN"}
                                 esJson={true}
-                                nombreValor={"perfilUsuarioN"}
-                                nombreMostrar={"idPerfil"}
+                                nombreValor={"idPerfil"}
+                                nombreMostrar={"nombrePerfil"}
                                 contenido={this.state.listaPerfiles}
                                 //CUANDO SE ACTIVA EL VALOR POR DEFECTO NO SE PUEDE SELECCIONAR ENTRE LOS TIPOS DE PERFILES
                                 //valorDefecto={this.state.tipoPerfilUsuario}
