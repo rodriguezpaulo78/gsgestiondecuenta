@@ -1,22 +1,14 @@
 'use strict';
+let UsuarioModel = require('../models/usuarios_model');
 
-let Usuario = require('../models/usuarios_model');
-
+//Funcion que crea un nuevo Usuario
 exports.crearNuevoUsuario = function (req, res) {
     console.log("OBJ NUEVO USUARIO", req.body);
     //Hace la encriptacion de la contraseña
-    let nuevoUsuario = new Usuario(req.body);
-    nuevoUsuario.claveUM = Usuario.toHash(nuevoUsuario.claveUM);
+    let nuevoUsuario = new UsuarioModel(req.body);
+    nuevoUsuario.claveUM = UsuarioModel.toHash(nuevoUsuario.claveUM);
 
-    Usuario.registrarUsuarioSesion(nuevoUsuario, function(err, result) {
-        /*
-        if (err){
-            res.send(err);
-        }else{
-            res.send(result);
-            
-        }
-        */
+    UsuarioModel.registrarUsuarioSesion(nuevoUsuario, function(err, result) {
         if (err){
             res.send(err);
         }else{
@@ -26,11 +18,11 @@ exports.crearNuevoUsuario = function (req, res) {
 
 };
 
-
+//Función que actualiza los datos de un usuario
 exports.actualizarUsuario = function (req,res) {
     console.log("datos a actualizar:", req.body);
-    let nuevoUsuario = new Usuario(req.body);
-    Usuario.actualizarUsuario( nuevoUsuario, function(err, result) {
+    let nuevoUsuario = new UsuarioModel(req.body);
+    UsuarioModel.actualizarUsuario( nuevoUsuario, function(err, result) {
         if (err){
             console.log(err);
             res.send({status: "error", msg: "Error al actualizar", data: []});
@@ -41,11 +33,11 @@ exports.actualizarUsuario = function (req,res) {
     });
 };
 
-
+//Función llamada para iniciar sesion 
 exports.inicioSesion = function (req, res) {
-    let usuario = new Usuario(req.body);
+    let usuario = new UsuarioModel(req.body);
     console.log("INGRESANDO", req.body);
-    Usuario.inicioSesionMaster(usuario, function (err, result) {
+    UsuarioModel.inicioSesionMaster(usuario, function (err, result) {
         if (err){
             console.log("error al iniciar sesión en master");
             res.render('ingresar');
@@ -63,9 +55,8 @@ exports.inicioSesion = function (req, res) {
                         cadenaDeConexion: result.cadenaDeConexion,
                         timeStamp: new Date(),
                     };
-
-                    const TOKEN = Usuario.generarToken(tokenData);
-                    Usuario.guardarTokenDb(result, TOKEN);
+                    const TOKEN = UsuarioModel.generarToken(tokenData);
+                    UsuarioModel.guardarTokenDb(result, TOKEN);
 
                     // GUARDANDO LA COOKIE
                     res.cookie('sdgUsr', TOKEN, {
@@ -73,7 +64,6 @@ exports.inicioSesion = function (req, res) {
                         //httpOnly: true
                     });
                     res.redirect('/');
-
                 }else{
                     console.log("Credenciales incorrectos");
                     res.render('ingresar');
@@ -113,12 +103,14 @@ exports.inicioSesion = function (req, res) {
     })
 };
 */
+
+//Función para obtener permisos según el tipo de perfil que tiene el usuario 
 exports.obtenerPermisos = function (req, res) {
     console.log("PASO POR EL MIDDELWARE", req.body);
     if (req.body.apiKey === "GdC2019"){
         // LA CADENA DE CONEXION YA ESTA PASANDO POR
         // EL BODY PARA PODER SOLICITAR A SU MISMA BASE DE DATOS LA INFO REQUERIDA
-        Usuario.recuperarPermisos(req.body.dataToken.cadenaDeConexion, req.body.dataToken.tipoPerfilUM, req.body.dataToken.idNegocioAsignadoUM, function (err, result) {
+        UsuarioModel.recuperarPermisos(req.body.dataToken.cadenaDeConexion, req.body.dataToken.tipoPerfilUM, req.body.dataToken.idNegocioAsignadoUM, function (err, result) {
             if (err){
                 res.send("[]");
             }else{
@@ -136,9 +128,9 @@ exports.obtenerPermisos = function (req, res) {
     }
 };
 
+//Función para obtener el ruc del negocio o empresa
 exports.obtenerRuc = function (req, res) {
-    
-        Usuario.obtenerRucEmpresa(req.body.dataToken.idNegocioAsignadoUM, function (err, result) {
+        UsuarioModel.obtenerRucEmpresa(req.body.dataToken.idNegocioAsignadoUM, function (err, result) {
             if (err){
                 res.send({status: "error", msg: "Se tienen problemas al obtener ruc", data: []});
             }else{
@@ -148,11 +140,10 @@ exports.obtenerRuc = function (req, res) {
   
 };
 
-
-
+//Función para obtener los usuarios registrados, ya sea todos o según un ID
 exports.obtenerUsuarios = function (req, res) {
     if (req.params.idUsuario === undefined){
-        Usuario.obtenerUsuarios(req.body.dataToken.idNegocioAsignadoUM, 0, (err, result) => {
+        UsuarioModel.obtenerUsuarios(req.body.dataToken.idNegocioAsignadoUM, 0, (err, result) => {
             if (err){
                 res.send({status: "error", msg: "Se tienen problemas al obtener usuarios1", data: []});
             }else{
@@ -160,7 +151,7 @@ exports.obtenerUsuarios = function (req, res) {
             }
         });
     }else{
-        Usuario.obtenerUsuarios(req.body.dataToken.idNegocioAsignadoUM, req.params.idUsuario, (err, result) => {
+        UsuarioModel.obtenerUsuarios(req.body.dataToken.idNegocioAsignadoUM, req.params.idUsuario, (err, result) => {
             if (err){
                 res.send({status: "error", msg: "Se tienen problemas al obtener usuarios2 " + req.params.idUsuario, data: []});
             }else{
@@ -171,8 +162,9 @@ exports.obtenerUsuarios = function (req, res) {
     }
 };
 
+//Función para deshabilitar un usuario
 exports.deshabilitarUsuarios = function (req, res){
-    Usuario.dehabilitarUsuario(req.params.idUsuarioMaster, (err, result) => {
+    UsuarioModel.dehabilitarUsuario(req.params.idUsuarioMaster, (err, result) => {
         if (err){
             res.send({status: 'error', msg: 'Error al solicitar consultar al servidor', data: []});
         }else{
@@ -181,9 +173,10 @@ exports.deshabilitarUsuarios = function (req, res){
     });
 };
 
+//Función para habilitar un usuario
 exports.existeUsuario = function (req, res) {
     console.log("CONTROLADOR:", req.body);
-    Usuario.existeUsuario(req.body.dataToken.cadenaDeConexion, req.body.nombreUsuario, (err, result) => {
+    UsuarioModel.existeUsuario(req.body.dataToken.cadenaDeConexion, req.body.nombreUsuario, (err, result) => {
         if (err){
             console.log(err);
             res.send({status: "error", msg: "Error al validar si existe usuario", data: []});
@@ -194,11 +187,9 @@ exports.existeUsuario = function (req, res) {
     });
 };
 
-
-
+//Función para obtener todos los perfiles  
 exports.list_all_perfiles= function(req, res) {
-    Usuario.getAllPerfil(req.body.dataToken.cadenaDeConexion, function(err, perfil) {
-  
+    UsuarioModel.getAllPerfil(req.body.dataToken.cadenaDeConexion, function(err, perfil) {
       console.log('controller')
       if (err){
         res.send(err);
@@ -209,6 +200,7 @@ exports.list_all_perfiles= function(req, res) {
     });
   };
 
+  //Función para cerrar Sesión y eliminar la cookie Y REDIRIGIR al login
   exports.cerrar_sesion = function(req, res){
     res.cookie('sdgUsr', '', {
         maxAge: new Date(Date.now() * -1), 

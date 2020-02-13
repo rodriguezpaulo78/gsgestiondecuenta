@@ -1,9 +1,10 @@
+//SQLNegocio es la conexión a la BD 'concada'
 const sqlNegocio = require('../config/connectionDbNegocios');
 const momentTimezone = require('moment-timezone');
 
 class Perfil{
+    //Constructor de Perfil con los datos de la Tabla 
     constructor(perfil){
-        
             this.idPerfil=perfil.idPerfil;
             this.nombrePerfil=perfil.nombrePerfil.toUpperCase();
             this.fechaCreacionPerfil=perfil.fechaCreacionPerfil.toUpperCase();
@@ -13,6 +14,7 @@ class Perfil{
    
     }
 
+    //Obtiene todos los datos de la tabla perfiles
     static obtenerListaPerfiles(cadenaDeConexion, result){
         sqlNegocio(
             cadenaDeConexion,
@@ -28,6 +30,7 @@ class Perfil{
         );
     }
 
+    //Obtiene los permisos según el perfil obtenido
     static obtenerPerfilesYpermisos(cadenaDeConexion, result){
         sqlNegocio(
             cadenaDeConexion,
@@ -47,6 +50,7 @@ class Perfil{
     static createPerfil(cadenaDeConexion, newPerfil, result){
         let fechaSistema = momentTimezone(new Date()).tz('america/Lima'); // libreria para convertir zona horaria - para cuando este en servidor en la nube.
         fechaSistema = fechaSistema.format("YYYY-MM-DD");
+        //Se hace la conexion, se ingresa el query SQL y los datos a enviar entre []
         sqlNegocio(
             cadenaDeConexion,
             `select idPerfil from perfiles where nombrePerfil=?`,
@@ -55,9 +59,7 @@ class Perfil{
                 if (err) {
                     console.log("error: ", err);
                     result(null, err);
-                }
-                else {
-
+                } else {
                     if(res.length>0)
                     {
                         newPerfil.idPerfil=res[0].idPerfil;
@@ -69,14 +71,12 @@ class Perfil{
                                 if (err_1) {
                                     console.log("error: ", err_1);
                                     result(err_1, null);
-                                }
-                                else {
+                                } else {
                                     console.log(-1);
                                     result(null,-1);
                                 }
                             });
-                    }
-                    else{
+                    } else{
                         sqlNegocio(
                             cadenaDeConexion,
                             "insert into perfiles(nombrePerfil,fechaCreacionPerfil) values (?,?) ",
@@ -85,8 +85,7 @@ class Perfil{
                                 if (err_2) {
                                     console.log("error: ", err_2);
                                     result(err_2, null);
-                                }
-                                else {
+                                } else {
                                     console.log(res_2.insertId);
                                     Perfil.guardarPermisosAPerfil(cadenaDeConexion, res_2.insertId, newPerfil.idPermisoAPerfil);
                                     //Perfil.guardarPermisosAsignados(cadenaDeConexion, res_2.insertId, newPerfil.idPermisoAPerfil);
@@ -98,6 +97,7 @@ class Perfil{
             });
     }
 
+    //Funcion que guarda los permisos obtenidos de los checkbox a la tabla permisosperfiles según el ID registrado en el método anterior
     static guardarPermisosAPerfil(cadenaDeConexion, idPerfil, listaPermiso){
         console.log("GUARDANDO PERMISOS");
         console.log(idPerfil);
@@ -180,6 +180,7 @@ class Perfil{
             });
     }
 
+    //Comprueba si un perfil ya existe
     static existePerfil(cadenaDeConexion, nombrePerfil, result){
         console.log("PARAMETRO:", nombrePerfil);
         sqlNegocio(

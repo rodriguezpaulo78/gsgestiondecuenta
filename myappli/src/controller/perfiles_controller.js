@@ -1,19 +1,20 @@
 'use strict';
+let PerfilModel = require('../models/perfiles_model');
 
-let Perfil = require('../models/perfiles_model');
-
+//Método para obtener perfiles
 exports.obtenerPerfiles = function (req, res) {
-  Perfil.obtenerListaPerfiles(req.body.dataToken.cadenaDeConexion, (err, result) => {
+  PerfilModel.obtenerListaPerfiles(req.body.dataToken.cadenaDeConexion, (err, result) => {
     if (err){
-      res.send({status: "error", msg: "Error al obtener los datos almacenados.", data: []});
+      res.send({status: "error", msg: "Error al obtener los perfiles.", data: []});
     }else{
       res.send({status: "ok", msg: "Lista obtenida de perfiles", data: result});
     }
   });
 };
 
+//Método para obtener perfiles y sus permisos
 exports.obtenerPerfilesYpermisos = function (req, res) {
-  Perfil.obtenerPerfilesYpermisos(req.body.dataToken.cadenaDeConexion, (err, result) => {
+  PerfilModel.obtenerPerfilesYpermisos(req.body.dataToken.cadenaDeConexion, (err, result) => {
     if (err){
       res.send({status: "error", msg: "Error al obtener los perfiles y permisos", data: []});
     }else{
@@ -22,11 +23,12 @@ exports.obtenerPerfilesYpermisos = function (req, res) {
   });
 };
 
+//Método para crear un nuevo perfil
 exports.create_a_perfil = function(req, res) {
+  //Muestra los datos enviados antes de llegar al modelo
   console.log("OBJ NUEVO PERFIL", req.body);
-  var new_perfil = new Perfil(req.body);
-  
-  Perfil.createPerfil(req.body.dataToken.cadenaDeConexion, new_perfil, function(err, perfil) {
+  var new_perfil = new PerfilModel(req.body);
+  PerfilModel.createPerfil(req.body.dataToken.cadenaDeConexion, new_perfil, function(err, perfil) {
     if (err){
       res.send(err);
     }else{
@@ -35,8 +37,9 @@ exports.create_a_perfil = function(req, res) {
     });
   };
 
+//Método para obtener todos los grupos de permisos
 exports.list_all_grupo = function(req, res) {
-  Perfil.getAllGrupo(req.body.dataToken.cadenaDeConexion, function(err, grupo) {
+  PerfilModel.getAllGrupo(req.body.dataToken.cadenaDeConexion, function(err, grupo) {
     console.log('controller')
     if (err)
       res.send(err);
@@ -45,9 +48,9 @@ exports.list_all_grupo = function(req, res) {
     });
 };
 
+//Método para obtener todos los permisos 
 exports.list_all_permisos = function(req, res) {
-  Perfil.getAllPermisos(req.body.dataToken.cadenaDeConexion, function(err, permiso) {
-
+  PerfilModel.getAllPermisos(req.body.dataToken.cadenaDeConexion, function(err, permiso) {
     console.log('controller');
     if (err)
       res.send(err);
@@ -56,9 +59,11 @@ exports.list_all_permisos = function(req, res) {
     });
   };
 
+//Método para comprobar si existe o no un perfil
 exports.existePerfil = function (req, res) {
+  //Muestra los datos enviados antes de llegar al modelo
   console.log("CONTROLADOR:", req.body);
-  Perfil.existePerfil(req.body.dataToken.cadenaDeConexion, req.body.nombrePerfil, (err, result) => {
+  PerfilModel.existePerfil(req.body.dataToken.cadenaDeConexion, req.body.nombrePerfil, (err, result) => {
       if (err){
           console.log(err);
           res.send({status: "error", msg: "Error al validar si existe usuario", data: []});

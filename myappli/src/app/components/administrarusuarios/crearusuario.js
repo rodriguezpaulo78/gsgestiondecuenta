@@ -3,6 +3,7 @@ import InputComponent from "../common2/inputcomponent";
 import SelectComponent from "../common2/selectcomponent";
 import {toast, ToastContainer} from "react-toastify";
 
+//Clase para crear un nuevo usuario
 class Crearusuario extends Component {
     constructor(props) {
         super(props);
@@ -12,8 +13,8 @@ class Crearusuario extends Component {
             clave1: "",
             clave2: "",
             ruc: "",
-            perfilUsuario: '',      //tipo de perfil seleccionado
-            listaPerfiles: [],
+            perfilUsuario: '',  //tipo de perfil seleccionado
+            listaPerfiles: [],  //Lista de perfiles registradas en la BD
 
             rucObtenido: '',    //ruc obtenido de empresa
 
@@ -50,9 +51,7 @@ class Crearusuario extends Component {
 
         // ONBLUR FUNCTIONS
         this.onBlurInput = this.onBlurInput.bind(this);
-        this.borrarTodo = this.borrarTodo.bind(this);
-        
-        
+        this.borrarTodo = this.borrarTodo.bind(this);    
     }
 
     //Función para limpiar todos los campos
@@ -76,7 +75,6 @@ class Crearusuario extends Component {
             ciudadCuenta: '',
             provinciaCuenta: '',
             departamentoCuenta: '',
-
         });
     }
 
@@ -86,11 +84,10 @@ class Crearusuario extends Component {
         let date = newDate.getDate();
         let month = newDate.getMonth() + 1;
         let year = newDate.getFullYear();
-        
         return `${year}${separator}${month<10?`0${month}`:`${month}`}${separator}${date}`
     }
 
-    //Esta función sirve para validar si el perfil ingresado existe o no
+    //Esta función sirve para validar si el nombre de usuario ingresado existe o no
     onBlurInput(evt){
         if (evt.target.name === "nombreUsuario"){
             fetch(
@@ -145,7 +142,7 @@ class Crearusuario extends Component {
             .catch(err => console.log(err));
     }
 
-     //Funcion que obtiene los nombres de los Perfiles y los inserta en el arreglo listaPerfiles
+     //Funcion que obtiene el RUC del negocio o empresa y lo inserta como placeholder en el campo RUC del formulario
      fetchRucUsuario() {
         fetch('/usuarios/obtenerruc', { 
                 headers: {
@@ -177,6 +174,7 @@ class Crearusuario extends Component {
                 this.setState({ nombreUsuario: evt.target.value,});
                 break;
             case "clave1":
+                //Comprueba que la longitud sea >= 7 caracteres
                 this.setState({ clave1: evt.target.value,}, () => {
                     if (this.state.clave1.length < 7){
                         this.setState({ esLargoClave: false,});
@@ -186,6 +184,7 @@ class Crearusuario extends Component {
                 });
                 break;
             case "clave2":
+                //Comprueba que coincida con la clave1
                 this.setState({ clave2: evt.target.value,}, () => {
                     if (this.state.clave1 !== this.state.clave2){
                         this.setState({ correctoClaveRepetida: false,});
@@ -195,7 +194,7 @@ class Crearusuario extends Component {
                 });
                 break;
             case "ruc":
-                
+                //Comprueba que tenga una longitud >= 10 CARACTERES
                 this.setState({ ruc: evt.target.value,}, () => {
                     if (this.state.ruc.length < 10){
                         this.setState({ esRucCorrecto: false,});
@@ -203,9 +202,8 @@ class Crearusuario extends Component {
                         this.setState({ esRucCorrecto: true,});
                     }
                 });
-                
-               //this.setState({ ruc: evt.target.value,});
-               break;
+                //this.setState({ ruc: evt.target.value,});
+                break;
             case "nombres":
                 this.setState({ nombres: evt.target.value,});
                 break;
@@ -219,6 +217,7 @@ class Crearusuario extends Component {
                 this.setState({ direccion: evt.target.value,});
                 break;
             case "correo":
+                //Comprueba que tenga un formato de corre correcto
                 this.setState({ correo: evt.target.value,}, () =>{
                     if(/^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i.test(this.state.correo)){
                         this.setState({
@@ -240,13 +239,12 @@ class Crearusuario extends Component {
             case "departamentoCuenta":
                 this.setState({ departamentoCuenta: evt.target.value,});
                 break;
-
             default:
               // code block
             }
     }
 
-    //Funcion necesaria para poder elegir entre  los valores del SELECTCOMPONENT
+    //Funcion necesaria para poder elegir entre  los valores del SELECTCOMPONENT - Cambiar por un swith case
     handleChangeSelectComponent(evt){
         if (evt.target.name === "perfilUsuario"){
             this.setState({
@@ -258,10 +256,9 @@ class Crearusuario extends Component {
                 tipoDocumento: evt.target.value,
             });
         }
-
     }
 
-    //Función BackEnd para crear un Usuario Sesion
+    //Función BackEnd para crear un Usuario 
     crearUsuario(){
         this.state.fecCreacionUsuario = this.getCurrentDate(); //dar el valor que retorna la funcion a la variable fecCreacionUsuario
 
@@ -272,13 +269,11 @@ class Crearusuario extends Component {
                 closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
             return;
         }
-        //falta añadir mas comprobaciones
         else {
             //Añadiendo a la BD - Mandar estos parametros a través de esta ruta.
             fetch('/usuarios/usuarios', {
                 method: 'POST',
                 body: JSON.stringify({
-
                     //Sesion
                     nombreUM: this.state.nombreUsuario,
                     rucUM: this.state.ruc.toUpperCase(),
@@ -353,7 +348,6 @@ class Crearusuario extends Component {
                 ciudadCuenta: "",
                 provinciaCuenta: "",
                 departamentoCuenta: "",
-
             });
         }
     }
@@ -428,7 +422,7 @@ class Crearusuario extends Component {
                             contenido={this.state.listaPerfiles}
                             nombreValor={"idPerfil"}        //aqui se coloca el valor de la bd que registrara
                             nombreMostrar={"nombrePerfil"}  //Aquí se coloca el campo de la BD que se mostrará en el Select (via método Handle)
-                            //valorDefecto={this.state.perfilUsuario}
+                            //valorDefecto={this.state.perfilUsuario}   //Si se le da un valor por defecto, no se puede cambiar el valor(REVISAR)
                             funcionControl={this.handleChangeSelectComponent}
                         />          
 
@@ -505,13 +499,10 @@ class Crearusuario extends Component {
                             nombreInput={"correo"}
                             readOnly={false}
                             funcionControl={this.handleChangeInput}
-                            
                             classInput={this.state.controlCorreoValido === false? "is-invalid": "is-valid"}
                             mensajeValidacionError={"Ingrese correo valido"}
-                            mensajeValidacionOk={"Correo valido"}
-                            
+                            mensajeValidacionOk={"Correo valido"}  
                         />
-                        
                     </div>
                     
                     <div className="form-row mt-3">
@@ -546,8 +537,6 @@ class Crearusuario extends Component {
                             <button className="btn btn-success btn-block" onClick={this.crearUsuario}> REGISTRAR USUARIO </button>
                         </div>
                     </div>
-
-                   
                 </div>
             </div>
         );
@@ -580,6 +569,7 @@ class Crearusuario extends Component {
     }
 }
 
+//Tipos de Documentos de aquí jala el ID del tipo seleccionado y lo registra en la BD
 const Documentos = [
     { cod: "-1", nombre: "SELECCIONE TIPO DOCUMENTO" },
     { cod: "0", nombre: "OTROS TIPOS DE DOCUMENTOS" },

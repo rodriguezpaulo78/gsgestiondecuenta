@@ -34,7 +34,6 @@ class Usuario{
         }
     }
 
-
     //Función que hace la consulta a la BD para obtener todos los perfiles registrados
     static getAllPerfil(cadenaDeConexion, result) {
         sqlDbNegocios(
@@ -56,39 +55,20 @@ class Usuario{
     // FUNCIÓN PARA REGISTRAR UN USUARIO NUEVO
     // {nombreUsuario: "", claveUsuario: "", creadoPor: "", tipoPerfil: ""}
     static registrarUsuarioSesion(nuevoUsuario, result){
-    
-            //agregar el token 
-           sql.query(
+            //Falta agregar el token 
+            sql.query(
             "insert into usuariosmaster(nombreUM,rucUM,claveUM,tokenUM,fechaCreacionUM,creadoPorUM,tipoPerfilUM,habilitadoUM,idNegocioAsignadoUM) VALUES (?,?,?,?,?,?,?,?,?)",
             [nuevoUsuario.nombreUM,nuevoUsuario.rucUM,nuevoUsuario.claveUM,'-',nuevoUsuario.fechaCreacionUM,nuevoUsuario.creadoPorUM !== undefined? nuevoUsuario.creadoPorUM: 1,nuevoUsuario.tipoPerfilUM !== undefined?nuevoUsuario.tipoPerfilUM:2,nuevoUsuario.habilitadoUM,nuevoUsuario.creadoPorUM !== undefined?nuevoUsuario.idNegocioAsignadoUM:1],
             function (err_2, res_2) {
                 if (err_2) {
                     console.log("error: ", err_2);
                     result(err_2, null);
-                }
-                else {
+                } else {
                     console.log(res_2.insertId);
                     Usuario.guardarPermisosAPerfil(res_2.insertId, nuevoUsuario.nombresUM, nuevoUsuario.apellidosUM, nuevoUsuario.numDocumentoUM, nuevoUsuario.tipoDocumentoUM, nuevoUsuario.telefonosUM, nuevoUsuario.direccionUM, nuevoUsuario.correosUM, nuevoUsuario.ciudad, nuevoUsuario.departamento, nuevoUsuario.provincia);
                     result(null, res_2.insertId);
                 }
             });
-    }
-
-    static guardarPermisosAPerfil(idDatosUM, nombresUM, apellidosUM, numDocumentoUM, tipoDocumentoUM, telefonosUM, direccionUM, correosUM, ciudad, departamento, provincia ){
-        console.log("GUARDANDO PERMISOS");
-        console.log(idDatosUM);
-            sql.query(
-                "INSERT INTO datosusuariosmaster(idDatosUM,nombresUM,apellidosUM, numDocumentoUM, tipoDocumentoUM,telefonosUM, direccionUM, correosUM, ciudad, departamento,provincia) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
-                [idDatosUM, nombresUM, apellidosUM, numDocumentoUM, tipoDocumentoUM, telefonosUM, direccionUM, correosUM, ciudad, departamento, provincia ],
-                (err, result) => {
-                    if (err){
-                        console.log("ERROR AL GUARDAR PERMISO EN PERFIL", err);
-                    }else{
-                        console.log("Guardado con éxito... :D");
-                    }
-                }
-            );
-        
     }
 
     // FUNCIÓN PARA INICIAR SESIÓN, SE BUSCAN LOS DATOS DE TODOS DEL USUARIO ASÍ COMO LOS DATOS DEL
@@ -123,7 +103,6 @@ class Usuario{
         let dieTime = {
             expiresIn: '24h'
         };
-
         return JWT.sign(
             dataToken,
             JWT_PASS_SECRET,
@@ -131,6 +110,7 @@ class Usuario{
         );
     };
 
+    //Función para recuperar los permisos del perfil en la tabla permisosperfiles
     static recuperarPermisos(cadenaDeConexion, usuario, id, result) {
         console.log("CONECTANDO PARA EXTRAENDO PERMISOS")
         sqlDbNegocios(
@@ -148,9 +128,9 @@ class Usuario{
                 }
             }
          );
-
     }
 
+    //Función para obtener el RUC del negocio
     static obtenerRucEmpresa(idUsuario, result){
         sql.query(
             'SELECT ruc FROM datosnegocios WHERE idDatoNegocio=?',
@@ -162,14 +142,11 @@ class Usuario{
                     console.log("ruc obtenido correctamente ", res);
                     result(null, res);
                 }
-                
-                
-
             }
         );
     }
     
-
+    //Función para guardar el Token en la BD
     static guardarTokenDb(usuario, token){
         sql.query(
             'UPDATE usuarios SET token=? WHERE idUsuario=?',
@@ -183,6 +160,7 @@ class Usuario{
         );
     }
 
+    //Función para encriptar la contraseña
     static toHash(clave){
         console.log("clave:", clave);
         const salt = bcrypt.genSaltSync(10);
@@ -221,9 +199,9 @@ class Usuario{
             });
     }
 
+    //Deshabilita un usuario
     static dehabilitarUsuario(id_Usuario, result){
         sql.query(
-
             'UPDATE usuariosmaster SET habilitadoUM=\'0\' WHERE idUsuarioMaster=?',
             [id_Usuario],
             (err, res) => {
@@ -238,6 +216,7 @@ class Usuario{
         );
     }
 
+    //Habilita un usuario
     static habilitarUsuario(idUsuario, result){
         sqlDbNegocios(
             cadenaDeConexion,
@@ -253,7 +232,8 @@ class Usuario{
         );
     }
     
-    static existeUsuario(cadenaDeConexion, nombreUsuario, result){
+    //Comprueba si existe un usuario con el mismo nombre
+    static existeUsuario(nombreUsuario, result){
         console.log("PARAMETRO:", nombreUsuario);
         sql.query(
             "SELECT idUsuarioMaster FROM usuariosmaster WHERE nombreUM=?",
@@ -269,6 +249,7 @@ class Usuario{
         );
     }
 
+    //Función para actualizar la información de sesion de un usuario
     static actualizarUsuario(nuevoUsuario, result){
         console.log("Id usuario master a actualizar >> "+nuevoUsuario.idUsuarioMaster);
         console.log("Id perfil  a actualizar >> "+nuevoUsuario.tipoPerfilUM);
@@ -287,6 +268,7 @@ class Usuario{
             });
     }
     
+    //Función para actualizar la información de la cuenta de un usuario
     static actualizarMas(idDatosUM, nombresUM, apellidosUM ){
         console.log("GUARDANDO PERMISOS");
         console.log(idDatosUM);

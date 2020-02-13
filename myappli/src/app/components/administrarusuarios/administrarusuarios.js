@@ -27,17 +27,15 @@ class AdministrarUsuarios extends Component {
         this.fetchDeshabilitarUsuario = this.fetchDeshabilitarUsuario.bind(this);
         this.fetchPerfilesRegistrados = this.fetchPerfilesRegistrados.bind(this);
 
-        //Listar Usuarios
+        //Listar Usuarios FUNCTIONS
         this.renderListarUsuarios = this.renderListarUsuarios.bind(this);     
         this.editarDatos = this.editarDatos.bind(this);
-
-        // FUNCTIONS
         this.borrarTodo = this.borrarTodo.bind(this);
 
     }
 
      /*
-        Función que recibe un evento 'name' a través de una acción(button) y actualiza el valor de 'opcionElegida' según tal
+        Función Handle que recibe un evento 'name' a través de una acción(button) y actualiza el valor de 'opcionElegida' según tal
     */
     handleClickButtonMenu(evt){
         console.log(evt.target.name);
@@ -71,10 +69,10 @@ class AdministrarUsuarios extends Component {
     componentDidMount() {
         this.fetchUsuarios();
         this.fetchPerfilesRegistrados();
-        console.log("DATA PERFILES:", this.state.listaPerfiles);
+        //console.log("DATA PERFILES:", this.state.listaPerfiles);
     }
 
-    //Función para limpiar todos los campos
+    //Función para limpiar todos los atributos
     borrarTodo(){
         console.log("BORRANDO TODO");
         this.setState({
@@ -83,7 +81,7 @@ class AdministrarUsuarios extends Component {
         });
     }
 
-    //Función que obtiene los perfiles registrados para mostrarlos según el usuario que pertenecen
+    //Función FETCH que obtiene los perfiles registrados para mostrarlos según el usuario que pertenecen
     fetchPerfilesRegistrados(){
         fetch(
             '/perfiles/perfiles'
@@ -98,7 +96,7 @@ class AdministrarUsuarios extends Component {
             .catch(err => console.log("Error FETCH LISTA PERFILES REGISTRADOS", err));
     }
 
-    //Función que obtiene los usuarios registrados para mostrarlos en la tabla
+    //Función FETCH que obtiene los usuarios registrados para mostrarlos en la tabla
     fetchUsuarios(){
         fetch(
             '/usuarios/usuarios'
@@ -117,7 +115,7 @@ class AdministrarUsuarios extends Component {
             .catch(err => console.log("Error FETCH USUARIOS:", err));
     }
 
-    //Función para deshabilitar un usuario
+    //Función para deshabilitar un usuario, se le manda como parametro el ID del usuario a deshabilitar
     fetchDeshabilitarUsuario(idUsr){
         console.log("USR", idUsr);
         fetch(
@@ -146,7 +144,7 @@ class AdministrarUsuarios extends Component {
             .catch(err => console.log("Error FetchDehabilitarUsuario", err));
     }
 
-    //Función que recoge el idUsuario del usuario a Editar para obtener sus datos en el siguiente formulario
+    //Función que recoge el idUsuario del usuario a Editar para obtener sus datos en el siguiente formulario 
     editarDatos(idUsuario){
         this.setState({
             idUsuarioEditar: idUsuario,
@@ -157,9 +155,7 @@ class AdministrarUsuarios extends Component {
     //Renderizar la lista de usuarios registrados
     renderListarUsuarios(){
         return (
-            
-            <div className="col-12">
-                 
+            <div className="col-12"> 
                  <div className="row">
                     <div className="col-12 text-center">
                         <h3>Lista de Usuarios Registrados</h3>
@@ -264,6 +260,7 @@ class AdministrarUsuarios extends Component {
 
                 <div className="row justify-content-center mt-5">
                     {
+                        //Mensaje de Bienvenida al módulo de Administrador de Usuarios
                         this.state.opcionElegida === 0 && (
                             <div className="col-8 text-center">
                                 <h2>Bienvenido al Administrador de Usuario de Gestion de Cuentas</h2>

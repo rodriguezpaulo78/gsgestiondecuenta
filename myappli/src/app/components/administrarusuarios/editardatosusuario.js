@@ -3,12 +3,12 @@ import InputComponent from "../common2/inputcomponent";
 import SelectComponent from "../common2/selectcomponent";
 import {toast, ToastContainer} from "react-toastify";
 
+//Clase para Editar los datos de un usuario registrado
 class Editardatosusuario extends Component {
     constructor(props) {
         super(props);
         this.state = {
             listaPerfiles: [],
-
             idUsuarioEditar: '',
 
             // Datos actuales del usuario para mostrar
@@ -42,28 +42,28 @@ class Editardatosusuario extends Component {
         this.handleChangeSelectComponent = this.handleChangeSelectComponent.bind(this);
     }
 
- //Funcion necesaria para poder cambiar los valores del INPUTCOMPONENT
- handleChangeInput(evt){
-    switch(evt.target.name) {
-        case "nombreUsuario":
-            this.setState({ nombreUsuario: evt.target.value,});
-            break;
-        case "numDocumentoUsuarioN":
-            this.setState({ numDocumentoUsuarioN: evt.target.value,});
-            break;
-        case "nombresUsuarioN":
-            this.setState({ nombresUsuarioN: evt.target.value,});
-            break;
-            case "apellidosUsuarioN":
-                this.setState({ apellidosUsuarioN: evt.target.value,});
+    //Funcion necesaria para poder cambiar los valores del INPUTCOMPONENT
+    handleChangeInput(evt){
+        switch(evt.target.name) {
+            case "nombreUsuario":
+                this.setState({ nombreUsuario: evt.target.value,});
                 break;
-        default:
-          // code block
-        }
-}
-
-      //Funcion necesaria para poder elegir entre  los valores del SELECTCOMPONENT
-      handleChangeSelectComponent(evt){
+            case "numDocumentoUsuarioN":
+                this.setState({ numDocumentoUsuarioN: evt.target.value,});
+                break;
+            case "nombresUsuarioN":
+                this.setState({ nombresUsuarioN: evt.target.value,});
+                break;
+                case "apellidosUsuarioN":
+                    this.setState({ apellidosUsuarioN: evt.target.value,});
+                    break;
+            default:
+            // code block
+            }
+    }
+    
+    //Funcion necesaria para poder elegir entre  los valores del SELECTCOMPONENT
+    handleChangeSelectComponent(evt){
         if (evt.target.name === "perfilUsuarioN"){
             this.setState({
                 perfilUsuarioN: evt.target.value,
@@ -71,6 +71,7 @@ class Editardatosusuario extends Component {
         }
     }
 
+    //Función para obtener los datos del usuario a editar según su ID
     fetchDatosUsuario(idUsuario){
         fetch(
             '/usuarios/usuarios/' + idUsuario
@@ -102,6 +103,7 @@ class Editardatosusuario extends Component {
             .catch(err => console.log("Error al obtener datos de un usuario:", err));
     }
 
+    //Función para obtener los perfiles que se pueden manejar
     fetchPerfiles(){
         fetch(
             '/perfiles/perfiles'
@@ -119,15 +121,15 @@ class Editardatosusuario extends Component {
             .catch(err => console.log("Error FETCH USUARIOS:", err));
     }
 
-
     componentDidMount() {
         this.fetchDatosUsuario(this.props.idUsuario);
         this.fetchPerfiles();
     }
 
+    //Función BackEnd para actualizar los datos de un usuario
     actualizarUsuario(){
         //Comprobar si los campos están vacios
-        if (this.state.nombreUsuario == '') {
+        if (this.state.nombreUsuario == '' || this.state.numDocumentoUsuarioN ==='' || this.state.nombresUsuarioN === '' || this.state.apellidosUsuarioN==='') {
             toast.error('Por favor llene todos los campos', { 
                 position: "bottom-right", autoClose: 2000, hideProgressBar: false, 
                 closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
@@ -139,15 +141,11 @@ class Editardatosusuario extends Component {
             fetch('/usuarios/actualizar', {
                 method: 'POST',
                 body: JSON.stringify({
-                    
                     idUsuarioMaster: this.props.idUsuario.toString(),
-
                     //Sesion
                     nombreUM: this.state.nombreUsuario.toString(),
                     rucUM: this.state.numDocumentoUsuarioN.toString(),
-                  
                     tipoPerfilUM: this.state.perfilUsuarioN,
-                   
                     nombresUM: this.state.nombresUsuarioN.toString(),
                     apellidosUM: this.state.apellidosUsuarioN.toString(),
                    
@@ -169,13 +167,6 @@ class Editardatosusuario extends Component {
                             toast.success('Usuario actualizado', { 
                                 position: "bottom-right", autoClose: 2000, hideProgressBar: false, 
                                 closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
-                            
-                            
-                        }
-                        if (data == -1) {
-                            toast.error('Uusario actualizada', { 
-                                position: "bottom-right", autoClose: 2000, hideProgressBar: false, 
-                                closeOnClick: true, pauseOnHover: true, draggable: true, transition: "slide" });
                         }
                     }
                 })
@@ -187,14 +178,13 @@ class Editardatosusuario extends Component {
                 perfilUsuarioN: '',
                 nombresUsuarioN: '',
                 apellidosUsuarioN: ''
-
             });
         }
     }
 
+    //Renderizado
     render() {
         return (
-            
             <div className="col-12">
                 {console.log("idusuario entrando" +this.props.idUsuario)}
                 <div className="row">
@@ -237,7 +227,7 @@ class Editardatosusuario extends Component {
                                 idInput={"numDocumentoUsuarioN"}
                                 nombreInput={"numDocumentoUsuarioN"}
                                 readOnly={false}
-                    
+                                //Valor por defecto tambien se puede utilizar
                                 placeholder={this.state.numDocumentoUsuario.toString()}
                                 funcionControl={this.handleChangeInput}
                             />

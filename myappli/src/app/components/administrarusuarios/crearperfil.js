@@ -3,33 +3,29 @@ import InputComponent from "../common2/inputcomponent";
 import {toast, ToastContainer} from "react-toastify";
 import Checkbox from "./Checkbox"
 
-
+//Clase para crear un nuevo Perfil con los permisos correspondientes
 class CrearPerfil extends Component {
     
     constructor(props) {
         super(props);
         this.state = {
-                
             nombrePerfil: '',
             fecCreacionPerfil: '',
-            
             controlPerfilDuplicado: 0,
 
             //Permisos
-            opciones_grupos: [],    //5 grupos de permisos
+            //opciones_grupos: [],    //5 grupos de permisos
             opciones_permisos: [],  //13 permisos especificos 
 
             checkedItems: [],
-
         };
         
-        this.crearPerfil = this.crearPerfil.bind(this);
         // HANDLE FUNCTIONS
         this.handleChangeInputComponent = this.handleChangeInputComponent.bind(this);
         this.handleChangeCheckbox = this.handleChangeCheckbox.bind(this);
 
         // FETCH FUNCTIONS
-        this.fetchPerfilesGrupo = this.fetchPerfilesGrupo.bind(this);
+        //this.fetchPerfilesGrupo = this.fetchPerfilesGrupo.bind(this);
         this.fetchPerfilesPermisos = this.fetchPerfilesPermisos.bind(this);
 
         // ONBLUR FUNCTIONS
@@ -38,6 +34,7 @@ class CrearPerfil extends Component {
         // OTHER FUNCTIONS
         this.verificarMarcado = this.verificarMarcado.bind(this);
         this.borrarTodo = this.borrarTodo.bind(this);
+        this.crearPerfil = this.crearPerfil.bind(this);
 
     }
 
@@ -47,13 +44,9 @@ class CrearPerfil extends Component {
         this.setState({
             nombrePerfil: '',
             fecCreacionPerfil: '',
-
             controlPerfilDuplicado: 0,
-
-            //Permisos
-            opciones_grupos: [],    //5 grupos de permisos
+            //opciones_grupos: [],    //5 grupos de permisos
             opciones_permisos: [],  //13 permisos especificos
-
             checkedItems: [],
 
         });
@@ -65,7 +58,6 @@ class CrearPerfil extends Component {
         let date = newDate.getDate();
         let month = newDate.getMonth() + 1;
         let year = newDate.getFullYear();
-        
         return `${year}${separator}${month<10?`0${month}`:`${month}`}${separator}${date}`
     }
 
@@ -105,6 +97,7 @@ class CrearPerfil extends Component {
         }
     }
 
+    /*
     //Funcion que obtiene los nombres de los Grupos y los inserta en el arreglo opciones_grupos
     fetchPerfilesGrupo() {
         fetch('/perfiles/grupos')
@@ -119,8 +112,9 @@ class CrearPerfil extends Component {
                 })
             .catch(err => console.log(err));
     }
+    */
 
-    //Funcion que obtiene los PERMISOS y los inser en el arreglo opciones_permisos
+    //Funcion que obtiene todos los PERMISOS y los inserta en el arreglo opciones_permisos
     fetchPerfilesPermisos() {
         fetch('/perfiles/permisos')
             .then(res => res.json())
@@ -137,11 +131,12 @@ class CrearPerfil extends Component {
 
     //Función que muestra los datos en la interfaz(METODO REACT) llama a los demás funciones
     componentDidMount() {
-        this.fetchPerfilesGrupo();
+        //this.fetchPerfilesGrupo();
         this.fetchPerfilesPermisos();
-        
     }
 
+    //Función que maneja los campos seleccionados en el checbox y los inserta en el arreglo checkedItems[]
+    //Si uno es deseleccionado asimismo elimina tal id del arreglo y vuelve a llenar el arreglo para no afectar los demas valores
     handleChangeCheckbox(evt) {
         const idPermisoSeleccionado = parseInt(evt.target.id);
         const idxPermiso = this.state.checkedItems.indexOf(idPermisoSeleccionado);
@@ -176,14 +171,15 @@ class CrearPerfil extends Component {
         }
     }
 
+    //Función para verificar marcado
     verificarMarcado(idPermiso){
         return this.state.checkedItems.indexOf(idPermiso) >= 0;
     }
 
-    //Función Back End para crear un Perfil
+    //Función Back End para crear un nuevo Perfil
     crearPerfil(){
         this.state.fecCreacionPerfil = this.getCurrentDate(); //dar el valor que retorna la funcion a la variable fecCreacionPerfil
-        if (this.state.nombrePerfil  == '' || this.state.checkedItems.size == 0) {
+        if (this.state.nombrePerfil  == '' || this.state.checkedItems.length == 0) {
             toast.error('Por favor ingrese el nombre de perfil o los permisos', { 
             position: "bottom-right", 
             autoClose: 2000, 
@@ -223,11 +219,10 @@ class CrearPerfil extends Component {
             })
             .catch(err => console.log(err));
 
-            //clear
+            //LimiparDatos
             this.setState({
                 nombrePerfil: '',
-                grupoPermisos: '',
-                
+                        
             });
             borrarTodo();
         }    
