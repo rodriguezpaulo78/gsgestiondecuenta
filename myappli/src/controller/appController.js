@@ -63,3 +63,15 @@ exports.delete_a_task = function(req, res) {
     res.json({ message: 'Task successfully deleted' });
   });
 };
+
+exports.importBD = function(req, res) {
+  Task.importarABD( req.files.file_data, function(err, task) {
+    if (err){
+      res.send(err);
+    }else{
+      res.json({ message: 'Importacion exitosa' });
+      
+    }
+    
+  });
+};

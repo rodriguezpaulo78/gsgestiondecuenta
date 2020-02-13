@@ -57,7 +57,7 @@ class Usuario{
     // {nombreUsuario: "", claveUsuario: "", creadoPor: "", tipoPerfil: ""}
     static registrarUsuarioSesion(nuevoUsuario, result){
     
-
+            //agregar el token 
            sql.query(
             "insert into usuariosmaster(nombreUM,rucUM,claveUM,tokenUM,fechaCreacionUM,creadoPorUM,tipoPerfilUM,habilitadoUM,idNegocioAsignadoUM) VALUES (?,?,?,?,?,?,?,?,?)",
             [nuevoUsuario.nombreUM,nuevoUsuario.rucUM,nuevoUsuario.claveUM,'-',nuevoUsuario.fechaCreacionUM,nuevoUsuario.creadoPorUM !== undefined? nuevoUsuario.creadoPorUM: 1,nuevoUsuario.tipoPerfilUM !== undefined?nuevoUsuario.tipoPerfilUM:2,nuevoUsuario.habilitadoUM,nuevoUsuario.creadoPorUM !== undefined?nuevoUsuario.idNegocioAsignadoUM:1],

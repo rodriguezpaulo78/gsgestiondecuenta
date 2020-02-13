@@ -1,0 +1,4 @@
+id;nombreProducto;stockProducto;codUnidadMedida;precioProducto;costVenta;sucursal;serie
+1;Producto 1;12;Unidad (Bienes);123.21;150;PRINCIPAL;87654323456
+2;Producto 2;9;Pliego;12.21;15;SECUNDARIO;999999999999
+3;Producto 3;45;Millón de Unidades;122;130;PRINCIPAL;5656565656

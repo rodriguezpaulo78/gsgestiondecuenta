@@ -16,6 +16,7 @@ import OperacionV2 from "../operacionv2/operacionv2";
 import Parametros from "../parametros/parametros";
 import DatosEmpresa from "../parametros/datosempresa";
 import ConfiguracionImpresion from "../parametros/configuracionimpresion";
+import ImportarBD from "../parametros/importarBD";
 
 class Presentacion extends Component{
     constructor(props){
@@ -45,6 +46,7 @@ class Presentacion extends Component{
         502 => Datos de la Empresa
 
         503 => Configuración de Impresión
+        504 => Importar BD
 
         */
         this.state = {
@@ -176,6 +178,14 @@ class Presentacion extends Component{
                 titulo: "Configuración de Impresión",
             });
         }
+        
+        if (opcionMenu === "importarBD"){
+            this.setState({
+                contenido: '504',
+                titulo: "Importar Base de Datos",
+            });
+        }
+        
         //Cerrar Sesion
         
     }
@@ -304,6 +314,14 @@ class Presentacion extends Component{
                                             </li>
                                         )
                                     }
+                                    {
+                                        (this.state.permisos.indexOf(13) > -1) && (
+                                            <li>
+                                                <a href="#" onClick={this.handleMenu} name="importarBD">Importar Base de Datos</a>
+                                            </li>
+                                        )
+                                    }
+                                    
                                 </ul>
                             </li>
                         )
@@ -430,6 +448,9 @@ class Presentacion extends Component{
                     {this.state.contenido === "502" && <DatosEmpresa/>}
 
                     {this.state.contenido === "503" && <ConfiguracionImpresion/>}
+
+                    {this.state.contenido === "504" && <ImportarBD/>}
+                
 
                 </div>
 

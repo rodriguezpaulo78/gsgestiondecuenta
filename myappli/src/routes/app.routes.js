@@ -12,5 +12,8 @@ router.route('/tasks/:taskId')
 .put(todoList.update_a_task)
 .delete(todoList.delete_a_task);
 
+router.route('/import')
+.post(todoList.importBD);
+
 module.exports = router;
       

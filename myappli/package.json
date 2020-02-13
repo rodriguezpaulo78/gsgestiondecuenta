@@ -32,6 +32,7 @@
     "express-fileupload": "^1.1.6-alpha.5",
     "express-session": "^1.15.6",
     "file-saver": "^2.0.2",
+    "file-system": "^2.2.2",
     "html-pdf": "^2.2.0",
     "html2canvas": "^1.0.0-alpha.12",
     "js-cookie": "^2.2.1",
